@@ -5,19 +5,33 @@ using namespace std;
 float w, h, w2, h2;
 class MyApp : public App
 {
+	vector<string> resnames = {
+		"wood.png",
+		"stone.png"
+	};
 	IntVec2 ch;
-	
+	enum TypeRes
+	{
+		Wood,
+		Stone
+	};
 	bool nowObjInter = false;
-	int wood = 0;
-	int stone = 0;
     void load()
     {
-		for (int x=0;x<9;x++)
-			for (int y = 0; y < 5; y++)
+		Menu.hide();
+		int i = 0;
+		for (int y = 0; y < 5; y++)
+			for (int x=0;x<9;x++)
 			{
-				auto& slo = slot.load("slot.json", x*w2-w2*4.5+w2/2, y*h2-h2*2.5+h2/2.8);
-				slo.
+				Slot sl;
+				sl.num = i;
+				slots.push_back(sl);
+				auto& slo = slot.load("slot.json", x*w2, y*h2);
+				slo.child<Texture>("obj").hide();
+				slo.child<DrawObj>("num").hide();
+				i++;
 			}
+		
 		hideCursor();
 		auto& nowChunk=createchunk(IntVec2(0, 0));
 		nowChunk.map[5][5] = gamer;
@@ -42,6 +56,31 @@ class MyApp : public App
 	void nexti(int i)
 	{
 		changer.select(i);
+		if (i == 0)
+		{
+			for (auto& a : slots)
+			{
+				if (a.empty)
+				{
+					continue;
+				}
+				for (auto& b : slot.all())
+				{
+					if (b.id() == a.num)
+					{
+						b.child<DrawObj>("num").show();
+						if (a.type == Slot::resources)
+						{
+							b.child<Label>("col").setText(toString(a.data.resource.number));
+							b.child<Texture>("obj").setImageName(resnames[a.data.resource.type]);
+						}
+						b.child<Texture>("obj").show();
+					}
+				}
+			}
+			design.update();
+			fieldInventor.setView(4 * w2, 2 * h2);
+		}
 	}
 	void updateNO(vector<GameObj> objs)
 	{
@@ -54,9 +93,52 @@ class MyApp : public App
 			objs.front().anim.play("highlight");
 		}
 	}
+	void seekSlot(TypeRes type)
+	{
+		int b=1;
+		for (auto& a : slots)
+		{
+			if (a.type == Slot::resources)
+			{
+				if (!a.data.resource.full() && a.data.resource.type==type)
+				{
+					a.data.resource.number++;
+					b--;
+					break;
+				}
+			}
+		}
+		if (b > 0)
+		{
+			for (auto& a : slots)
+			{
+				if (a.empty)
+				{
+					a.type = Slot::resources;
+					a.data.resource.type = type;
+					a.data.resource.number=1;
+					a.empty = false;
+					break;
+				}
+			}
+		}
+	}
+
+
+	int Vec2ToInt(Vec2 i)
+	{
+		IntVec2 a;
+		a.x = (i.x + w2 / 2) / w2;
+		a.y = (i.y + h2 / 2) / h2;
+		int b = a.y * 9 + a.x;
+		return b;
+	}
+
+
     void process(Input input)
     {
         using namespace gamebase::InputKey;
+		
 		if (selector.selected() == 2)
 		{
 			if (input.justPressed(Escape))
@@ -64,6 +146,21 @@ class MyApp : public App
 				selector.select(1);
 				hideCursor();
 				return;
+			}
+			if (input.justPressed(MouseRight))
+			{
+				int a = Vec2ToInt(fieldInventor.mousePos());
+				nowSlot = a;
+				if (!slots[nowSlot].empty)
+				{
+					for (auto b : slot.all())
+					{
+						if (nowSlot == b.id())
+							Menu.setPos(b.pos().x + w2, b.pos().y);
+					}
+					Menu.show();
+				}
+				design.update();
 			}
 		}
 		if (selector.selected() == 1)
@@ -77,25 +174,25 @@ class MyApp : public App
 			if (input.justPressed(M))
 			{
 				selector.select(2);
-				changer.select(2);
+				nexti(2);
 				showCursor();
 			}
 			if (input.justPressed(T))
 			{
 				selector.select(2);
-				changer.select(1);
+				nexti(1);
 				showCursor();
 			}
 			if (input.justPressed(Y))
 			{
 				selector.select(2);
-				changer.select(4);
+				nexti(4);
 				showCursor();
 			}
 			if (input.justPressed(U))
 			{
 				selector.select(2);
-				changer.select(3);
+				nexti(3);
 				showCursor();
 			}
 			if (input.pressed(A))
@@ -154,7 +251,7 @@ class MyApp : public App
 			if (input.pressed(Tab))
 			{
 				selector.select(2);
-				changer.select(0);
+				nexti(0);
 				showCursor();
 			}
 			if (input.justPressed(E))
@@ -168,19 +265,18 @@ class MyApp : public App
 					roundWorld.data(nowObj).hp -= 10;
 					if (roundWorld.data(nowObj).type == Tree)
 					{
-						wood++;
+						seekSlot(Wood);
 					}
 					if (roundWorld.data(nowObj).type == Boulder)
 					{
-						stone++;
+						seekSlot(Stone);
 					}
 					if (roundWorld.data(nowObj).hp <= 0)
 					{
-						auto&obj = roundWorld.find(nowObj).front();
+						auto obj = roundWorld.find(nowObj).front();
 						GameObj i;
 						nowObj = i;
 						chunks[Vec2ToIntVec2(obj.pos())].map[roundWorld.data(obj).thisObj] = None;
-
 						obj.kill();
 						nowObjInter = false;
 					}
@@ -188,6 +284,8 @@ class MyApp : public App
 			}
 		}
     }
+
+
 	IntVec2 Vec2ToIntVec2(Vec2 v)
 	{
 		IntVec2 iv;
@@ -209,8 +307,11 @@ class MyApp : public App
 		}
 		return iv;
 	}
+
+
     void move()
     {
+		
 		field.setView(player.pos());
 		auto viewBox = field.viewBox();
 		viewBox.extend(w, h);
@@ -224,8 +325,9 @@ class MyApp : public App
 				genchunk(IntVec2(x, y));
 			}
 		}
-		
     }
+
+
 	enum chunkType {
 		Swamp,
 		Forest,
@@ -254,6 +356,8 @@ class MyApp : public App
 		chunk.pos = i;
 		return chunk;
 	}
+
+
 	enum Rarity
 	{
 		Common,
@@ -306,19 +410,25 @@ class MyApp : public App
 		bool isLeft;
 		bool isRight;
 	};
+
 	struct Resource
 	{
-		enum Type
-		{
-			Wood,
-			Stone
-		};
+		
 		int number;
-		Type type;
+		TypeRes type;
+		bool full() { return number == 20; };
 	};
 	struct Slot
 	{
 		bool empty;
+		enum Type
+		{
+			armors,
+			weapons,
+			resources,
+			potions
+		};
+		Type type;
 		union 
 		{
 			Armor armor;
@@ -326,7 +436,10 @@ class MyApp : public App
 			Resource resource;
 			Potion potion;
 		} data;
+		int x, y,num;
 	};
+
+
 	/*struct A
 	{
 		int x, y;
@@ -354,6 +467,10 @@ class MyApp : public App
 			double c;
 		} data;
 	};*/
+
+
+	vector <Slot> slots;
+
 
 	void chunkload(Chunk& chunk)
 	{
@@ -396,6 +513,8 @@ class MyApp : public App
 			}
 		}
 	}
+
+
 	Chunk& genchunk(IntVec2 i)
 	{
 		if (chunks.count(i)==0)
@@ -409,6 +528,8 @@ class MyApp : public App
 			return chunks[i];
 		}
 	}
+
+
 	struct objset
 	{
 		int hp=50;
@@ -416,6 +537,8 @@ class MyApp : public App
 		chunkObj type;
 		float vision=255;
 	};
+
+
 	map<IntVec2, Chunk> chunks;
 	LayerFromDesign(void, Back);
 	LayerFromDesign(void, slot);
@@ -436,8 +559,10 @@ class MyApp : public App
 	FromDesign(GameView, fieldMap);
 	FromDesign(GameView, fieldSkill);
 	FromDesign(GameView, fieldCrafts);
+	FromDesign(Layout, Menu);
 	GameObj nowObj;
 	IntVec2 p;
+	int nowSlot;
 };
 
 int main(int argc, char** argv)
@@ -448,8 +573,8 @@ int main(int argc, char** argv)
 	randomize();
 	w = sf::VideoMode::getDesktopMode().width / 10.0;
 	h = sf::VideoMode::getDesktopMode().height / 6.0;
-	w2 = sf::VideoMode::getDesktopMode().width / 9.0;
-	h2 = (sf::VideoMode::getDesktopMode().height - sf::VideoMode::getDesktopMode().height*0.05) / 5.0;
+	w2 = sf::VideoMode::getDesktopMode().width * 0.11;
+	h2 = sf::VideoMode::getDesktopMode().height * 0.19;
 	app.setSize(sf::VideoMode::getDesktopMode().width, sf::VideoMode::getDesktopMode().height);
 	app.setMinSize(sf::VideoMode::getDesktopMode().width, sf::VideoMode::getDesktopMode().height);
     if (!app.init(&argc, argv))

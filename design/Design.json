@@ -652,8 +652,8 @@
                                     "_typeName" : "RelativeBox",
                                     "height" : {
                                        "_typeName" : "RelativeValue",
-                                       "type" : 0,
-                                       "value" : 0
+                                       "type" : 2,
+                                       "value" : 0.949999988079071
                                     },
                                     "offset" : {
                                        "_empty" : true
@@ -676,6 +676,254 @@
                                        "order" : {
                                           "_typeName" : "SortByIDOrder"
                                        }
+                                    },
+                                    {
+                                       "_name" : "menu",
+                                       "_typeName" : "Layer",
+                                       "index" : {
+                                          "_typeName" : "FlatIndex",
+                                          "keyType" : 2
+                                       },
+                                       "list" : [
+                                          {
+                                             "_name" : "Menu",
+                                             "_typeName" : "CanvasLayout",
+                                             "adjustment" : 0,
+                                             "box" : {
+                                                "_typeName" : "RelativeBox",
+                                                "height" : {
+                                                   "_typeName" : "RelativeValue",
+                                                   "type" : 0,
+                                                   "value" : 0
+                                                },
+                                                "offset" : {
+                                                   "_empty" : true
+                                                },
+                                                "width" : {
+                                                   "_typeName" : "RelativeValue",
+                                                   "type" : 0,
+                                                   "value" : 0
+                                                }
+                                             },
+                                             "list" : [
+                                                {
+                                                   "_typeName" : "LinearLayout",
+                                                   "list" : [
+                                                      {
+                                                         "_name" : "info",
+                                                         "_typeName" : "Button",
+                                                         "position" : {
+                                                            "_typeName" : "AligningOffset",
+                                                            "horAlign" : 1,
+                                                            "horOffset" : {
+                                                               "_typeName" : "RelativeValue",
+                                                               "type" : 1,
+                                                               "value" : 0
+                                                            },
+                                                            "vertAlign" : 0,
+                                                            "vertOffset" : {
+                                                               "_typeName" : "RelativeValue",
+                                                               "type" : 1,
+                                                               "value" : 0
+                                                            }
+                                                         },
+                                                         "skin" : {
+                                                            "_typeName" : "SimpleRectangleButtonSkin",
+                                                            "borderColor" : [ 0.5098039507865906, 0.3921568691730499, 0, 1 ],
+                                                            "borderWidth" : 1,
+                                                            "box" : {
+                                                               "_typeName" : "RelativeBox",
+                                                               "height" : {
+                                                                  "_typeName" : "RelativeValue",
+                                                                  "type" : 2,
+                                                                  "value" : 0.05000000074505806
+                                                               },
+                                                               "offset" : {
+                                                                  "_empty" : true
+                                                               },
+                                                               "width" : {
+                                                                  "_typeName" : "RelativeValue",
+                                                                  "type" : 2,
+                                                                  "value" : 0.1000000014901161
+                                                               }
+                                                            },
+                                                            "fillColor" : [ 0.5490196347236633, 0.3921568691730499, 0, 1 ],
+                                                            "font" : {
+                                                               "_typeName" : "FontDesc",
+                                                               "family" : "Roboto",
+                                                               "size" : 20
+                                                            },
+                                                            "text" : "Информация",
+                                                            "textColor" : [ 1, 1, 1, 1 ],
+                                                            "textOutlineColor" : [ 1, 1, 1, 1 ],
+                                                            "useGradient" : true
+                                                         }
+                                                      },
+                                                      {
+                                                         "_name" : "drop",
+                                                         "_typeName" : "Button",
+                                                         "position" : {
+                                                            "_typeName" : "AligningOffset",
+                                                            "horAlign" : 1,
+                                                            "horOffset" : {
+                                                               "_typeName" : "RelativeValue",
+                                                               "type" : 1,
+                                                               "value" : 0
+                                                            },
+                                                            "vertAlign" : 0,
+                                                            "vertOffset" : {
+                                                               "_typeName" : "RelativeValue",
+                                                               "type" : 1,
+                                                               "value" : -0
+                                                            }
+                                                         },
+                                                         "skin" : {
+                                                            "_typeName" : "SimpleRectangleButtonSkin",
+                                                            "borderColor" : [ 0.5098039507865906, 0.3921568691730499, 0, 1 ],
+                                                            "borderWidth" : 1,
+                                                            "box" : {
+                                                               "_typeName" : "RelativeBox",
+                                                               "height" : {
+                                                                  "_typeName" : "RelativeValue",
+                                                                  "type" : 2,
+                                                                  "value" : 0.05000000074505806
+                                                               },
+                                                               "offset" : {
+                                                                  "_empty" : true
+                                                               },
+                                                               "width" : {
+                                                                  "_typeName" : "RelativeValue",
+                                                                  "type" : 2,
+                                                                  "value" : 0.1000000014901161
+                                                               }
+                                                            },
+                                                            "fillColor" : [ 0.5490196347236633, 0.3921568691730499, 0, 1 ],
+                                                            "font" : {
+                                                               "_typeName" : "FontDesc",
+                                                               "family" : "Roboto",
+                                                               "size" : 20
+                                                            },
+                                                            "text" : "Выбросить",
+                                                            "textColor" : [ 1, 1, 1, 1 ],
+                                                            "textOutlineColor" : [ 1, 1, 1, 1 ],
+                                                            "useGradient" : true
+                                                         }
+                                                      },
+                                                      {
+                                                         "_name" : "use",
+                                                         "_typeName" : "Button",
+                                                         "position" : {
+                                                            "_typeName" : "AligningOffset",
+                                                            "horAlign" : 1,
+                                                            "horOffset" : {
+                                                               "_typeName" : "RelativeValue",
+                                                               "type" : 1,
+                                                               "value" : 0
+                                                            },
+                                                            "vertAlign" : 0,
+                                                            "vertOffset" : {
+                                                               "_typeName" : "RelativeValue",
+                                                               "type" : 1,
+                                                               "value" : -0
+                                                            }
+                                                         },
+                                                         "skin" : {
+                                                            "_typeName" : "SimpleRectangleButtonSkin",
+                                                            "borderColor" : [ 0.5098039507865906, 0.3921568691730499, 0, 1 ],
+                                                            "borderWidth" : 1,
+                                                            "box" : {
+                                                               "_typeName" : "RelativeBox",
+                                                               "height" : {
+                                                                  "_typeName" : "RelativeValue",
+                                                                  "type" : 2,
+                                                                  "value" : 0.05000000074505806
+                                                               },
+                                                               "offset" : {
+                                                                  "_empty" : true
+                                                               },
+                                                               "width" : {
+                                                                  "_typeName" : "RelativeValue",
+                                                                  "type" : 2,
+                                                                  "value" : 0.1000000014901161
+                                                               }
+                                                            },
+                                                            "fillColor" : [ 0.5490196347236633, 0.3921568691730499, 0, 1 ],
+                                                            "font" : {
+                                                               "_typeName" : "FontDesc",
+                                                               "family" : "Roboto",
+                                                               "size" : 20
+                                                            },
+                                                            "text" : "Надеть",
+                                                            "textColor" : [ 1, 1, 1, 1 ],
+                                                            "textOutlineColor" : [ 1, 1, 1, 1 ],
+                                                            "useGradient" : true
+                                                         }
+                                                      }
+                                                   ],
+                                                   "position" : {
+                                                      "_typeName" : "AligningOffset",
+                                                      "horAlign" : 1,
+                                                      "horOffset" : {
+                                                         "_typeName" : "RelativeValue",
+                                                         "type" : 1,
+                                                         "value" : 0
+                                                      },
+                                                      "vertAlign" : 1,
+                                                      "vertOffset" : {
+                                                         "_typeName" : "RelativeValue",
+                                                         "type" : 1,
+                                                         "value" : 0
+                                                      }
+                                                   },
+                                                   "skin" : {
+                                                      "_typeName" : "VerticalLayoutSkin",
+                                                      "adjustment" : 1,
+                                                      "align" : 1,
+                                                      "box" : {
+                                                         "_typeName" : "RelativeBox",
+                                                         "height" : {
+                                                            "_typeName" : "RelativeValue",
+                                                            "type" : 0,
+                                                            "value" : 0
+                                                         },
+                                                         "offset" : {
+                                                            "_empty" : true
+                                                         },
+                                                         "width" : {
+                                                            "_typeName" : "RelativeValue",
+                                                            "type" : 0,
+                                                            "value" : 0
+                                                         }
+                                                      },
+                                                      "padding" : {
+                                                         "_typeName" : "RelativeValue",
+                                                         "type" : 1,
+                                                         "value" : -0
+                                                      }
+                                                   },
+                                                   "skipInvisibleElements" : false
+                                                }
+                                             ],
+                                             "position" : {
+                                                "_typeName" : "AligningOffset",
+                                                "horAlign" : 1,
+                                                "horOffset" : {
+                                                   "_typeName" : "RelativeValue",
+                                                   "type" : 1,
+                                                   "value" : 0
+                                                },
+                                                "vertAlign" : 1,
+                                                "vertOffset" : {
+                                                   "_typeName" : "RelativeValue",
+                                                   "type" : 1,
+                                                   "value" : 0
+                                                }
+                                             }
+                                          }
+                                       ],
+                                       "order" : {
+                                          "_typeName" : "SortByIDOrder"
+                                       }
                                     }
                                  ],
                                  "position" : {
@@ -686,7 +934,7 @@
                                        "type" : 1,
                                        "value" : 0
                                     },
-                                    "vertAlign" : 1,
+                                    "vertAlign" : 2,
                                     "vertOffset" : {
                                        "_typeName" : "RelativeValue",
                                        "type" : 1,
@@ -2495,7 +2743,7 @@
                               "type" : 1,
                               "value" : 0
                            },
-                           "vertAlign" : 1,
+                           "vertAlign" : 2,
                            "vertOffset" : {
                               "_typeName" : "RelativeValue",
                               "type" : 1,
