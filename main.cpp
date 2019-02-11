@@ -52,7 +52,29 @@ class MyApp : public App
 		connect(crafts, nexti, 4);
 		connect(skill, nexti, 3);
 		connect(inventor, nexti, 0);
+		
     }
+
+	void updateSlot(int i)
+	{
+		auto& a = slots[i];
+		auto b = slot.get(i);
+		if (a.empty)
+		{
+			b.child<Texture>("obj").hide();
+			b.child<DrawObj>("num").hide();
+			return;
+		}
+		b.child<DrawObj>("num").show();
+		if (a.type == Slot::resources)
+		{
+			b.child<Label>("col").setText(toString(a.data.resource.number));
+			b.child<Texture>("obj").setImageName(resnames[a.data.resource.type]);
+		}
+		b.child<Texture>("obj").show();
+
+	}
+	
 	void nexti(int i)
 	{
 		changer.select(i);
@@ -60,23 +82,7 @@ class MyApp : public App
 		{
 			for (auto& a : slots)
 			{
-				if (a.empty)
-				{
-					continue;
-				}
-				for (auto& b : slot.all())
-				{
-					if (b.id() == a.num)
-					{
-						b.child<DrawObj>("num").show();
-						if (a.type == Slot::resources)
-						{
-							b.child<Label>("col").setText(toString(a.data.resource.number));
-							b.child<Texture>("obj").setImageName(resnames[a.data.resource.type]);
-						}
-						b.child<Texture>("obj").show();
-					}
-				}
+				updateSlot(a.num);
 			}
 			design.update();
 			fieldInventor.setView(4 * w2, 2 * h2);
@@ -98,6 +104,8 @@ class MyApp : public App
 		int b=1;
 		for (auto& a : slots)
 		{
+			if (a.empty)
+				continue;
 			if (a.type == Slot::resources)
 			{
 				if (!a.data.resource.full() && a.data.resource.type==type)
@@ -134,7 +142,16 @@ class MyApp : public App
 		return b;
 	}
 
-
+	void Drop(int i)
+	{
+		auto b = slot.get(i);
+		b.child<Texture>("obj").hide();
+		b.child<DrawObj>("num").hide();
+		slots[i].empty=true;
+		Menu.hide();
+		nowSlot = -1;
+	}
+	int isMouse=0;
     void process(Input input)
     {
         using namespace gamebase::InputKey;
@@ -147,20 +164,70 @@ class MyApp : public App
 				hideCursor();
 				return;
 			}
+			
 			if (input.justPressed(MouseRight))
 			{
-				int a = Vec2ToInt(fieldInventor.mousePos());
-				nowSlot = a;
-				if (!slots[nowSlot].empty)
+				if (isMouse == 1)
 				{
-					for (auto b : slot.all())
-					{
-						if (nowSlot == b.id())
-							Menu.setPos(b.pos().x + w2, b.pos().y);
-					}
-					Menu.show();
+					slot.get(nowSlot).child<DrawObj>("sel").hide();
+					nowSlot = -1;
+					isMouse = 0;
 				}
-				design.update();
+				else
+				{
+					int a = Vec2ToInt(fieldInventor.mousePos());
+					nowSlot = a;
+					if (!slots[nowSlot].empty)
+					{
+						auto b = slot.get(nowSlot);
+						Menu.setPos(b.pos().x + w2, b.pos().y);
+						Menu.show();
+						Menu.child<Button>("use").show();
+						if (slots[nowSlot].type == Slot::resources)
+							Menu.child<Button>("use").hide();
+						connect(drop, Drop, nowSlot);
+					}
+					isMouse = 2;
+					design.update();
+				}
+			}
+			if (input.justPressed(MouseLeft))
+			{
+				if (isMouse == 2
+					&& !impl::isMouseOn(
+						dynamic_cast<impl::Drawable*>(Menu.getImpl()->getInternalObj().get())))
+				{
+					Menu.hide();
+					nowSlot = -1;
+					isMouse = 0;
+					design.update();
+				}
+				else if (isMouse==0)
+				{
+					isMouse = 1;
+					nowSlot = Vec2ToInt(fieldInventor.mousePos());
+					auto b = slot.get(nowSlot);
+					b.child<DrawObj>("sel").show();
+				}
+				else
+				{
+					isMouse = 0;
+					int a = Vec2ToInt(fieldInventor.mousePos());
+					auto b2 = slot.get(nowSlot);
+					b2.child<DrawObj>("sel").hide();
+					swap(slots[nowSlot], slots[a]);
+					updateSlot(nowSlot);
+					updateSlot(a);
+					design.update();
+					/*if (slots[a].type == Slot::resources)
+					b2.child<Texture>("obj").setImageName(resnames[slots[a].data.resource.type]);
+					b2.child<Label>("col").setText(toString(slots[a].num));
+					if (slots[nowSlot].type == Slot::resources)
+						a2.child<Texture>("obj").setImageName(resnames[slots[nowSlot].data.resource.type]);
+					a2.child<Label>("col").setText(toString(slots[nowSlot].num));
+					nowSlot = -1;
+					b2.child<DrawObj>("sel").hide();*/
+				}
 			}
 		}
 		if (selector.selected() == 1)
@@ -420,7 +487,7 @@ class MyApp : public App
 	};
 	struct Slot
 	{
-		bool empty;
+		bool empty = true;
 		enum Type
 		{
 			armors,
@@ -550,6 +617,7 @@ class MyApp : public App
 	FromDesign(Button, map);
 	FromDesign(Button, equiped);
 	FromDesign(Button, skill);
+	FromDesign(Button, drop);
 	FromDesign(GameView, field);
 	FromDesign(GameObj, player);
 	FromDesign(Selector, selector);
