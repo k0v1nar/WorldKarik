@@ -52,9 +52,16 @@ class MyApp : public App
 		connect(crafts, nexti, 4);
 		connect(skill, nexti, 3);
 		connect(inventor, nexti, 0);
-		
+		connect(outfit, nextCr, 0);
+		connect(tools, nextCr, 1);
+		connect(items, nextCr, 2);
+		connect(furniture, nextCr, 3);
+		connect(material, nextCr, 4);
     }
-
+	void nextCr(int i)
+	{
+		changerCr.select(i);
+	}
 	void updateSlot(int i)
 	{
 		auto& a = slots[i];
@@ -72,7 +79,7 @@ class MyApp : public App
 			b.child<Texture>("obj").setImageName(resnames[a.data.resource.type]);
 		}
 		b.child<Texture>("obj").show();
-
+		design.update();
 	}
 	
 	void nexti(int i)
@@ -164,69 +171,72 @@ class MyApp : public App
 				hideCursor();
 				return;
 			}
-			
-			if (input.justPressed(MouseRight))
-			{
-				if (isMouse == 1)
+			if (changer.selected()==0)
+			{ 
+				if (input.justPressed(MouseRight))
 				{
-					slot.get(nowSlot).child<DrawObj>("sel").hide();
-					nowSlot = -1;
-					isMouse = 0;
-				}
-				else
-				{
-					int a = Vec2ToInt(fieldInventor.mousePos());
-					nowSlot = a;
-					if (!slots[nowSlot].empty)
+					if (isMouse == 1)
 					{
-						auto b = slot.get(nowSlot);
-						Menu.setPos(b.pos().x + w2, b.pos().y);
-						Menu.show();
-						Menu.child<Button>("use").show();
-						if (slots[nowSlot].type == Slot::resources)
-							Menu.child<Button>("use").hide();
-						connect(drop, Drop, nowSlot);
+						slot.get(nowSlot).child<DrawObj>("sel").hide();
+						nowSlot = -1;
+						isMouse = 0;
 					}
-					isMouse = 2;
-					design.update();
+					else
+					{
+						int a = Vec2ToInt(fieldInventor.mousePos());
+						nowSlot = a;
+						if (!slots[nowSlot].empty)
+						{
+							auto b = slot.get(nowSlot);
+							Menu.setPos(b.pos().x + w2, b.pos().y);
+							Menu.show();
+							Menu.child<Button>("use").show();
+							if (slots[nowSlot].type == Slot::resources)
+								Menu.child<Button>("use").hide();
+							connect(drop, Drop, nowSlot);
+						}
+						isMouse = 2;
+						design.update();
+					}
 				}
-			}
-			if (input.justPressed(MouseLeft))
-			{
-				if (isMouse == 2
-					&& !impl::isMouseOn(
-						dynamic_cast<impl::Drawable*>(Menu.getImpl()->getInternalObj().get())))
+			if (!Menu.isVisible())
+				if (input.justPressed(MouseLeft))
 				{
-					Menu.hide();
-					nowSlot = -1;
-					isMouse = 0;
-					design.update();
-				}
-				else if (isMouse==0)
-				{
-					isMouse = 1;
-					nowSlot = Vec2ToInt(fieldInventor.mousePos());
-					auto b = slot.get(nowSlot);
-					b.child<DrawObj>("sel").show();
-				}
-				else
-				{
-					isMouse = 0;
-					int a = Vec2ToInt(fieldInventor.mousePos());
-					auto b2 = slot.get(nowSlot);
-					b2.child<DrawObj>("sel").hide();
-					swap(slots[nowSlot], slots[a]);
-					updateSlot(nowSlot);
-					updateSlot(a);
-					design.update();
-					/*if (slots[a].type == Slot::resources)
-					b2.child<Texture>("obj").setImageName(resnames[slots[a].data.resource.type]);
-					b2.child<Label>("col").setText(toString(slots[a].num));
-					if (slots[nowSlot].type == Slot::resources)
-						a2.child<Texture>("obj").setImageName(resnames[slots[nowSlot].data.resource.type]);
-					a2.child<Label>("col").setText(toString(slots[nowSlot].num));
-					nowSlot = -1;
-					b2.child<DrawObj>("sel").hide();*/
+					if (isMouse == 2
+						&& !impl::isMouseOn(
+							dynamic_cast<impl::Drawable*>(Menu.getImpl()->getInternalObj().get())))
+					{
+						Menu.hide();
+						nowSlot = -1;
+						isMouse = 0;
+						design.update();
+					}
+					else if (isMouse == 0)
+					{
+						isMouse = 1;
+						nowSlot = Vec2ToInt(fieldInventor.mousePos());
+						auto b = slot.get(nowSlot);
+						b.child<DrawObj>("sel").show();
+					}
+					else
+					{
+						isMouse = 0;
+						int a = Vec2ToInt(fieldInventor.mousePos());
+						auto b2 = slot.get(nowSlot);
+						b2.child<DrawObj>("sel").hide();
+						swap(slots[nowSlot], slots[a]);
+						updateSlot(nowSlot);
+						updateSlot(a);
+						design.update();
+						/*if (slots[a].type == Slot::resources)
+						b2.child<Texture>("obj").setImageName(resnames[slots[a].data.resource.type]);
+						b2.child<Label>("col").setText(toString(slots[a].num));
+						if (slots[nowSlot].type == Slot::resources)
+							a2.child<Texture>("obj").setImageName(resnames[slots[nowSlot].data.resource.type]);
+						a2.child<Label>("col").setText(toString(slots[nowSlot].num));
+						nowSlot = -1;
+						b2.child<DrawObj>("sel").hide();*/
+					}
 				}
 			}
 		}
@@ -618,10 +628,16 @@ class MyApp : public App
 	FromDesign(Button, equiped);
 	FromDesign(Button, skill);
 	FromDesign(Button, drop);
+	FromDesign(Button, items);
+	FromDesign(Button, outfit);
+	FromDesign(Button, tools);
+	FromDesign(Button, furniture);
+	FromDesign(Button, material);
 	FromDesign(GameView, field);
 	FromDesign(GameObj, player);
 	FromDesign(Selector, selector);
 	FromDesign(Selector, changer);
+	FromDesign(Selector, changerCr);
 	FromDesign(GameView, fieldInventor);
 	FromDesign(GameView, fieldEquiped);
 	FromDesign(GameView, fieldMap);
