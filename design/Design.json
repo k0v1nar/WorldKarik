@@ -39,7 +39,7 @@
                "value" : 0
             }
          },
-         "currentID" : 2,
+         "currentID" : 1,
          "objects" : [
             {
                "_key" : 0,
@@ -3020,11 +3020,12 @@
                                                          "value" : 0.8600000143051147
                                                       }
                                                    },
-                                                   "currentID" : 0,
+                                                   "currentID" : 2,
                                                    "objects" : [
                                                       {
                                                          "_key" : 0,
                                                          "_value" : {
+                                                            "_name" : "cr0",
                                                             "_typeName" : "CanvasLayout",
                                                             "adjustment" : 0,
                                                             "box" : {
@@ -3043,7 +3044,55 @@
                                                                   "value" : 0
                                                                }
                                                             },
-                                                            "list" : [],
+                                                            "list" : [
+                                                               {
+                                                                  "_name" : "stolb",
+                                                                  "_typeName" : "LinearLayout",
+                                                                  "list" : [],
+                                                                  "position" : {
+                                                                     "_typeName" : "AligningOffset",
+                                                                     "horAlign" : 1,
+                                                                     "horOffset" : {
+                                                                        "_typeName" : "RelativeValue",
+                                                                        "type" : 1,
+                                                                        "value" : 0
+                                                                     },
+                                                                     "vertAlign" : 1,
+                                                                     "vertOffset" : {
+                                                                        "_typeName" : "RelativeValue",
+                                                                        "type" : 1,
+                                                                        "value" : 0
+                                                                     }
+                                                                  },
+                                                                  "skin" : {
+                                                                     "_typeName" : "VerticalLayoutSkin",
+                                                                     "adjustment" : 1,
+                                                                     "align" : 1,
+                                                                     "box" : {
+                                                                        "_typeName" : "RelativeBox",
+                                                                        "height" : {
+                                                                           "_typeName" : "RelativeValue",
+                                                                           "type" : 0,
+                                                                           "value" : 0
+                                                                        },
+                                                                        "offset" : {
+                                                                           "_empty" : true
+                                                                        },
+                                                                        "width" : {
+                                                                           "_typeName" : "RelativeValue",
+                                                                           "type" : 0,
+                                                                           "value" : 0
+                                                                        }
+                                                                     },
+                                                                     "padding" : {
+                                                                        "_typeName" : "RelativeValue",
+                                                                        "type" : 1,
+                                                                        "value" : -0
+                                                                     }
+                                                                  },
+                                                                  "skipInvisibleElements" : false
+                                                               }
+                                                            ],
                                                             "position" : {
                                                                "_typeName" : "AligningOffset",
                                                                "horAlign" : 1,
@@ -3064,6 +3113,7 @@
                                                       {
                                                          "_key" : 1,
                                                          "_value" : {
+                                                            "_name" : "cr1",
                                                             "_typeName" : "CanvasLayout",
                                                             "adjustment" : 0,
                                                             "box" : {
@@ -3082,7 +3132,55 @@
                                                                   "value" : 0
                                                                }
                                                             },
-                                                            "list" : [],
+                                                            "list" : [
+                                                               {
+                                                                  "_name" : "stolb",
+                                                                  "_typeName" : "LinearLayout",
+                                                                  "list" : [],
+                                                                  "position" : {
+                                                                     "_typeName" : "AligningOffset",
+                                                                     "horAlign" : 1,
+                                                                     "horOffset" : {
+                                                                        "_typeName" : "RelativeValue",
+                                                                        "type" : 1,
+                                                                        "value" : 0
+                                                                     },
+                                                                     "vertAlign" : 1,
+                                                                     "vertOffset" : {
+                                                                        "_typeName" : "RelativeValue",
+                                                                        "type" : 1,
+                                                                        "value" : 0
+                                                                     }
+                                                                  },
+                                                                  "skin" : {
+                                                                     "_typeName" : "VerticalLayoutSkin",
+                                                                     "adjustment" : 1,
+                                                                     "align" : 1,
+                                                                     "box" : {
+                                                                        "_typeName" : "RelativeBox",
+                                                                        "height" : {
+                                                                           "_typeName" : "RelativeValue",
+                                                                           "type" : 0,
+                                                                           "value" : 0
+                                                                        },
+                                                                        "offset" : {
+                                                                           "_empty" : true
+                                                                        },
+                                                                        "width" : {
+                                                                           "_typeName" : "RelativeValue",
+                                                                           "type" : 0,
+                                                                           "value" : 0
+                                                                        }
+                                                                     },
+                                                                     "padding" : {
+                                                                        "_typeName" : "RelativeValue",
+                                                                        "type" : 1,
+                                                                        "value" : -0
+                                                                     }
+                                                                  },
+                                                                  "skipInvisibleElements" : false
+                                                               }
+                                                            ],
                                                             "position" : {
                                                                "_typeName" : "AligningOffset",
                                                                "horAlign" : 1,
@@ -3103,6 +3201,7 @@
                                                       {
                                                          "_key" : 2,
                                                          "_value" : {
+                                                            "_name" : "cr2",
                                                             "_typeName" : "CanvasLayout",
                                                             "adjustment" : 0,
                                                             "box" : {
@@ -3121,7 +3220,55 @@
                                                                   "value" : 0
                                                                }
                                                             },
-                                                            "list" : [],
+                                                            "list" : [
+                                                               {
+                                                                  "_name" : "stolb",
+                                                                  "_typeName" : "LinearLayout",
+                                                                  "list" : [],
+                                                                  "position" : {
+                                                                     "_typeName" : "AligningOffset",
+                                                                     "horAlign" : 0,
+                                                                     "horOffset" : {
+                                                                        "_typeName" : "RelativeValue",
+                                                                        "type" : 1,
+                                                                        "value" : 0
+                                                                     },
+                                                                     "vertAlign" : 0,
+                                                                     "vertOffset" : {
+                                                                        "_typeName" : "RelativeValue",
+                                                                        "type" : 1,
+                                                                        "value" : 0
+                                                                     }
+                                                                  },
+                                                                  "skin" : {
+                                                                     "_typeName" : "VerticalLayoutSkin",
+                                                                     "adjustment" : 1,
+                                                                     "align" : 1,
+                                                                     "box" : {
+                                                                        "_typeName" : "RelativeBox",
+                                                                        "height" : {
+                                                                           "_typeName" : "RelativeValue",
+                                                                           "type" : 0,
+                                                                           "value" : 0
+                                                                        },
+                                                                        "offset" : {
+                                                                           "_empty" : true
+                                                                        },
+                                                                        "width" : {
+                                                                           "_typeName" : "RelativeValue",
+                                                                           "type" : 0,
+                                                                           "value" : 0
+                                                                        }
+                                                                     },
+                                                                     "padding" : {
+                                                                        "_typeName" : "RelativeValue",
+                                                                        "type" : 1,
+                                                                        "value" : -0
+                                                                     }
+                                                                  },
+                                                                  "skipInvisibleElements" : false
+                                                               }
+                                                            ],
                                                             "position" : {
                                                                "_typeName" : "AligningOffset",
                                                                "horAlign" : 1,
@@ -3142,6 +3289,7 @@
                                                       {
                                                          "_key" : 3,
                                                          "_value" : {
+                                                            "_name" : "cr3",
                                                             "_typeName" : "CanvasLayout",
                                                             "adjustment" : 0,
                                                             "box" : {
@@ -3160,7 +3308,55 @@
                                                                   "value" : 0
                                                                }
                                                             },
-                                                            "list" : [],
+                                                            "list" : [
+                                                               {
+                                                                  "_name" : "stolb",
+                                                                  "_typeName" : "LinearLayout",
+                                                                  "list" : [],
+                                                                  "position" : {
+                                                                     "_typeName" : "AligningOffset",
+                                                                     "horAlign" : 1,
+                                                                     "horOffset" : {
+                                                                        "_typeName" : "RelativeValue",
+                                                                        "type" : 1,
+                                                                        "value" : 0
+                                                                     },
+                                                                     "vertAlign" : 1,
+                                                                     "vertOffset" : {
+                                                                        "_typeName" : "RelativeValue",
+                                                                        "type" : 1,
+                                                                        "value" : 0
+                                                                     }
+                                                                  },
+                                                                  "skin" : {
+                                                                     "_typeName" : "VerticalLayoutSkin",
+                                                                     "adjustment" : 1,
+                                                                     "align" : 1,
+                                                                     "box" : {
+                                                                        "_typeName" : "RelativeBox",
+                                                                        "height" : {
+                                                                           "_typeName" : "RelativeValue",
+                                                                           "type" : 0,
+                                                                           "value" : 0
+                                                                        },
+                                                                        "offset" : {
+                                                                           "_empty" : true
+                                                                        },
+                                                                        "width" : {
+                                                                           "_typeName" : "RelativeValue",
+                                                                           "type" : 0,
+                                                                           "value" : 0
+                                                                        }
+                                                                     },
+                                                                     "padding" : {
+                                                                        "_typeName" : "RelativeValue",
+                                                                        "type" : 1,
+                                                                        "value" : -0
+                                                                     }
+                                                                  },
+                                                                  "skipInvisibleElements" : false
+                                                               }
+                                                            ],
                                                             "position" : {
                                                                "_typeName" : "AligningOffset",
                                                                "horAlign" : 1,
@@ -3181,6 +3377,7 @@
                                                       {
                                                          "_key" : 4,
                                                          "_value" : {
+                                                            "_name" : "cr4",
                                                             "_typeName" : "CanvasLayout",
                                                             "adjustment" : 0,
                                                             "box" : {
@@ -3199,7 +3396,55 @@
                                                                   "value" : 0
                                                                }
                                                             },
-                                                            "list" : [],
+                                                            "list" : [
+                                                               {
+                                                                  "_name" : "stolb",
+                                                                  "_typeName" : "LinearLayout",
+                                                                  "list" : [],
+                                                                  "position" : {
+                                                                     "_typeName" : "AligningOffset",
+                                                                     "horAlign" : 1,
+                                                                     "horOffset" : {
+                                                                        "_typeName" : "RelativeValue",
+                                                                        "type" : 1,
+                                                                        "value" : 0
+                                                                     },
+                                                                     "vertAlign" : 1,
+                                                                     "vertOffset" : {
+                                                                        "_typeName" : "RelativeValue",
+                                                                        "type" : 1,
+                                                                        "value" : 0
+                                                                     }
+                                                                  },
+                                                                  "skin" : {
+                                                                     "_typeName" : "VerticalLayoutSkin",
+                                                                     "adjustment" : 1,
+                                                                     "align" : 1,
+                                                                     "box" : {
+                                                                        "_typeName" : "RelativeBox",
+                                                                        "height" : {
+                                                                           "_typeName" : "RelativeValue",
+                                                                           "type" : 0,
+                                                                           "value" : 0
+                                                                        },
+                                                                        "offset" : {
+                                                                           "_empty" : true
+                                                                        },
+                                                                        "width" : {
+                                                                           "_typeName" : "RelativeValue",
+                                                                           "type" : 0,
+                                                                           "value" : 0
+                                                                        }
+                                                                     },
+                                                                     "padding" : {
+                                                                        "_typeName" : "RelativeValue",
+                                                                        "type" : 1,
+                                                                        "value" : -0
+                                                                     }
+                                                                  },
+                                                                  "skipInvisibleElements" : false
+                                                               }
+                                                            ],
                                                             "position" : {
                                                                "_typeName" : "AligningOffset",
                                                                "horAlign" : 1,

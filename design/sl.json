@@ -1,0 +1,124 @@
+{
+   "_typeName" : "LinearLayout",
+   "_version" : "VER3",
+   "list" : [
+      {
+         "_name" : "pict",
+         "_typeName" : "StaticTextureRect",
+         "box" : {
+            "_typeName" : "PixelBox",
+            "height" : 75,
+            "width" : 75
+         },
+         "color" : [ 1, 1, 1, 1 ],
+         "imageName" : ".\\stone.png",
+         "position" : {
+            "_typeName" : "AligningOffset",
+            "horAlign" : 0,
+            "horOffset" : {
+               "_typeName" : "RelativeValue",
+               "type" : 1,
+               "value" : 0
+            },
+            "vertAlign" : 1,
+            "vertOffset" : {
+               "_typeName" : "RelativeValue",
+               "type" : 1,
+               "value" : 0
+            }
+         }
+      },
+      {
+         "_name" : "col",
+         "_typeName" : "StaticLabel",
+         "adjustSize" : true,
+         "box" : {
+            "_typeName" : "RelativeBox",
+            "height" : {
+               "_typeName" : "RelativeValue",
+               "type" : 0,
+               "value" : 0
+            },
+            "offset" : {
+               "_empty" : true
+            },
+            "width" : {
+               "_typeName" : "RelativeValue",
+               "type" : 0,
+               "value" : 0
+            }
+         },
+         "color" : [ 0, 0, 0, 1 ],
+         "outlineColor" : [ 1, 1, 1, 1 ],
+         "position" : {
+            "_typeName" : "AligningOffset",
+            "horAlign" : 0,
+            "horOffset" : {
+               "_typeName" : "RelativeValue",
+               "type" : 1,
+               "value" : 0
+            },
+            "vertAlign" : 1,
+            "vertOffset" : {
+               "_typeName" : "RelativeValue",
+               "type" : 1,
+               "value" : 0
+            }
+         },
+         "properties" : {
+            "_typeName" : "AlignProperties",
+            "enableStacking" : false,
+            "font" : {
+               "_typeName" : "FontDesc",
+               "family" : "Roboto",
+               "size" : 28
+            },
+            "horAlign" : 0,
+            "vertAlign" : 0
+         },
+         "text" : "x1"
+      }
+   ],
+   "position" : {
+      "_typeName" : "AligningOffset",
+      "horAlign" : 1,
+      "horOffset" : {
+         "_typeName" : "RelativeValue",
+         "type" : 1,
+         "value" : 0
+      },
+      "vertAlign" : 1,
+      "vertOffset" : {
+         "_typeName" : "RelativeValue",
+         "type" : 1,
+         "value" : 0
+      }
+   },
+   "skin" : {
+      "_typeName" : "HorizontalLayoutSkin",
+      "adjustment" : 1,
+      "align" : 1,
+      "box" : {
+         "_typeName" : "RelativeBox",
+         "height" : {
+            "_typeName" : "RelativeValue",
+            "type" : 0,
+            "value" : 0
+         },
+         "offset" : {
+            "_empty" : true
+         },
+         "width" : {
+            "_typeName" : "RelativeValue",
+            "type" : 0,
+            "value" : 0
+         }
+      },
+      "padding" : {
+         "_typeName" : "RelativeValue",
+         "type" : 1,
+         "value" : 0
+      }
+   },
+   "skipInvisibleElements" : false
+}
