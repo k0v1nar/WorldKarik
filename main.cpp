@@ -7,13 +7,17 @@ class MyApp : public App
 {
 	vector<string> resnames = {
 		"./obj/wood.png",
-		"./obj/stone.png"
+		"./obj/stone.png",
+		"./obj/grass.png",
+		"./obj/stick.png"
 	};
 	IntVec2 ch;
 	enum TypeRes
 	{
 		Wood,
-		Stone
+		Stone,
+		Gras,
+		Stick
 	};
 	bool nowObjInter = false;
     void load()
@@ -31,7 +35,6 @@ class MyApp : public App
 				slo.child<DrawObj>("num").hide();
 				i++;
 			}
-		
 		hideCursor();
 		auto& nowChunk=createchunk(IntVec2(0, 0));
 		nowChunk.map[5][5] = gamer;
@@ -57,10 +60,211 @@ class MyApp : public App
 		connect(items, nextCr, 2);
 		connect(furniture, nextCr, 3);
 		connect(material, nextCr, 4);
+		connect(back, drm, 0);
+		connect(cont, drm, 1);
+		connect(less, drm, 2);
+		connect(more, drm, 3);
+		connect(Min, drm, 4);
+		connect(Max, drm, 5);
     }
+	int dropnum = 0;
+	void drm(int i)
+	{
+		if (i == 0)
+		{
+			Menudr.hide();
+			nowSlot = -1;
+			dropnum = 0;
+		}
+		if (i == 1)
+		{
+			Menudr.hide();
+			slots[nowSlot].data.resource.number -= dropnum;
+			if (slots[nowSlot].data.resource.number == 0)
+			{
+				slots[nowSlot].empty = true;
+			}
+			updateSlot(nowSlot);
+			design.update();
+			Menudr.hide();
+			dropnum = 0;
+			nowSlot = -1;
+		}
+		if (i == 2)
+		{
+			dropnum -= 1;
+			Max.show();
+			more.show();
+			if (dropnum == 0)
+			{
+				less.hide();
+				Min.hide();
+			}
+		}
+		if (i == 3)
+		{
+			dropnum += 1;
+			Min.show();
+			less.show();
+			if (dropnum == slots[nowSlot].data.resource.number)
+			{
+				Max.hide();
+				more.hide();
+			}
+		}
+		if (i == 4)
+		{
+			dropnum = 1;
+			Min.hide();
+			less.hide();
+			Max.show();
+			more.show();
+		}
+		if (i == 5)
+		{
+			dropnum = slots[nowSlot].data.resource.number;
+			Min.show();
+			less.show();
+			Max.hide();
+			more.hide();
+		}
+		coldrop << dropnum;
+	}
 	void nextCr(int i)
 	{
 		changerCr.select(i);
+		if (i == 0)
+		{
+			cr0.child<Layout>("stolb").clear();
+			ifstream input("data/recipe/recipe1.txt");
+			int yyy = 0;
+			input >> yyy;
+			cout << yyy << endl;
+			for (int y = 0; y < yyy; y++)
+			{
+				auto b = cr0.child<Layout>("stolb").load("recipe.json");
+				string i;
+				input >> i;
+				cout << i << endl;
+				b.child<Texture>("crpict").setImageName(i);
+				input >> i;
+				b.child<Label>("name").setText(i);
+				int a;
+				input >> a;
+				cout << a << endl;
+				for (int x = 0; x < a; x++)
+				{
+					auto bb = b.child<Layout>("item").load("sl.json");
+					input >> i;
+					cout << i << endl;
+					bb.child<Texture>("pict").setImageName(i);
+					input >> i;
+					cout << i << endl;
+					bb.child<Label>("col") << " x " << i;
+				}
+			}
+			input.close();
+			design.update();
+		}
+		if (i == 1)
+		{
+			cr1.child<Layout>("stolb").clear();
+			ifstream input("data/recipe/recipe2.txt");
+			int yyy = 0;
+			input >> yyy;
+			cout << yyy << endl;
+			for (int y = 0; y < yyy; y++)
+			{
+				auto b = cr1.child<Layout>("stolb").load("recipe.json");
+				string i;
+				input >> i;
+				cout << i << endl;
+				b.child<Texture>("crpict").setImageName(i);
+				input >> i;
+				b.child<Label>("name").setText(i);
+				int a;
+				input >> a;
+				cout << a << endl;
+				for (int x = 0; x < a; x++)
+				{
+					auto bb = b.child<Layout>("item").load("sl.json");
+					input >> i;
+					cout << i << endl;
+					bb.child<Texture>("pict").setImageName(i);
+					input >> i;
+					cout << i << endl;
+					bb.child<Label>("col") << " x " << i;
+				}
+			}
+			input.close();
+			design.update();
+		}
+		if (i == 3)
+		{
+			cr3.child<Layout>("stolb").clear();
+			ifstream input("data/recipe/recipe4.txt");
+			int yyy = 0;
+			input >> yyy;
+			cout << yyy << endl;
+			for (int y = 0; y < yyy; y++)
+			{
+				auto b = cr3.child<Layout>("stolb").load("recipe.json");
+				string i;
+				input >> i;
+				cout << i << endl;
+				b.child<Texture>("crpict").setImageName(i);
+				input >> i;
+				b.child<Label>("name").setText(i);
+				int a;
+				input >> a;
+				cout << a << endl;
+				for (int x = 0; x < a; x++)
+				{
+					auto bb = b.child<Layout>("item").load("sl.json");
+					input >> i;
+					cout << i << endl;
+					bb.child<Texture>("pict").setImageName(i);
+					input >> i;
+					cout << i << endl;
+					bb.child<Label>("col") << " x " << i;
+				}
+			}
+			input.close();
+			design.update();
+		}
+		if (i == 4)
+		{
+			cr4.child<Layout>("srolb").clear();
+			ifstream input("data/recipe/recipe5.txt");
+			int yyy = 0;
+			input >> yyy;
+			cout << yyy << endl;
+			for (int y = 0; y < yyy; y++)
+			{
+				auto b = cr4.child<Layout>("stolb").load("recipe.json");
+				string i;
+				input >> i;
+				cout << i << endl;
+				b.child<Texture>("crpict").setImageName(i);
+				input >> i;
+				b.child<Label>("name").setText(i);
+				int a;
+				input >> a;
+				cout << a << endl;
+				for (int x = 0; x < a; x++)
+				{
+					auto bb = b.child<Layout>("item").load("sl.json");
+					input >> i;
+					cout << i << endl;
+					bb.child<Texture>("pict").setImageName(i);
+					input >> i;
+					cout << i << endl;
+					bb.child<Label>("col") << " x " << i;
+				}
+			}
+			input.close();
+			design.update();
+		}
 	}
 	void updateSlot(int i)
 	{
@@ -96,7 +300,8 @@ class MyApp : public App
 		}
 		if (i == 4)
 		{
-			ifstream input("recipe3.txt");
+			cr2.child<Layout>("stolb").clear();
+			ifstream input("data/recipe/recipe3.txt");
 			int yyy = 0;
 			input >> yyy;
 			cout << yyy << endl;
@@ -183,12 +388,20 @@ class MyApp : public App
 
 	void Drop(int i)
 	{
-		auto b = slot.get(i);
-		b.child<Texture>("obj").hide();
-		b.child<DrawObj>("num").hide();
-		slots[i].empty=true;
+		if (slots[nowSlot].type == Slot::resources || slots[nowSlot].type == Slot::potions)
+		{
+			Menudr.show();
+		}
+		else
+		{
+			slots[nowSlot].empty = true;
+			updateSlot(nowSlot);
+		}
 		Menu.hide();
-		nowSlot = -1;
+		Min.hide();
+		less.hide();
+		Max.show();
+		more.show();
 	}
 	int isMouse=0;
     void process(Input input)
@@ -200,10 +413,15 @@ class MyApp : public App
 			if (input.justPressed(Escape))
 			{
 				selector.select(1);
+				cr0.child<Layout>("stolb").clear();
+				cr1.child<Layout>("stolb").clear();
+				cr2.child<Layout>("stolb").clear();
+				cr3.child<Layout>("stolb").clear();
+				cr4.child<Layout>("stolb").clear();
 				hideCursor();
 				return;
 			}
-			if (changer.selected()==0)
+			if (changer.selected()==0 && !Menudr.isVisible())
 			{ 
 				if (input.justPressed(MouseRight))
 				{
@@ -374,11 +592,20 @@ class MyApp : public App
 					roundWorld.data(nowObj).hp -= 10;
 					if (roundWorld.data(nowObj).type == Tree)
 					{
+						int i = randomInt(0, 5);
+						if (i == 0)
+						{
+							seekSlot(Stick);
+						}
 						seekSlot(Wood);
 					}
 					if (roundWorld.data(nowObj).type == Boulder)
 					{
 						seekSlot(Stone);
+					}
+					if (roundWorld.data(nowObj).type == Grass)
+					{
+						seekSlot(Gras);
 					}
 					if (roundWorld.data(nowObj).hp <= 0)
 					{
@@ -449,6 +676,7 @@ class MyApp : public App
 		None,
 		Boulder,
 		Tree,
+		Grass,
 		gamer
 	};
 	struct Chunk
@@ -596,8 +824,8 @@ class MyApp : public App
 					back.skin<Texture>().setImageName("./roundWorld/grass2.png");
 				if (chunk.map[x][y] == gamer)
 					continue;
-				int obt = randomInt(1, 30);
-				if (obt == 1 || obt == 2 || obt == 3)
+				int obt = randomInt(1, 45);
+				if (obt == 1 || obt == 2 || obt == 3 || obt ==4)
 				{
 					chunk.map[x][y] = Tree;
 					auto&obj = roundWorld.load("obj.json", (i.x * 10 + x) * w, (i.y * 10 + y) * h);
@@ -609,7 +837,7 @@ class MyApp : public App
 					roundWorld.data(obj).thisObj = IntVec2(x, y);
 					roundWorld.data(obj).type = Tree;
 				}
-				if (obt == 4 || obt == 5)
+				if (obt == 5)
 				{
 					chunk.map[x][y] = Boulder;
 					auto&obj = roundWorld.load("obj.json", (i.x * 10 + x) * w, (i.y * 10 + y) * h);
@@ -618,6 +846,16 @@ class MyApp : public App
 					obj.skin<Texture>().setImageName("./roundWorld/boulder.png");
 					roundWorld.data(obj).thisObj = IntVec2(x, y);
 					roundWorld.data(obj).type = Boulder;
+				}
+				if (obt == 6 || obt == 7)
+				{
+					chunk.map[x][y] = Grass;
+					auto&obj = roundWorld.load("obj.json", (i.x * 10 + x) * w, (i.y * 10 + y) * h);
+					roundWorld.data(obj).hp = 20;
+					obj.setSize(w - 0.01, h - 0.01);
+					obj.skin<Texture>().setImageName("./roundWorld/gras1.png");
+					roundWorld.data(obj).thisObj = IntVec2(x, y);
+					roundWorld.data(obj).type = Grass;
 				}
 			}
 		}
@@ -665,6 +903,12 @@ class MyApp : public App
 	FromDesign(Button, tools);
 	FromDesign(Button, furniture);
 	FromDesign(Button, material);
+	FromDesign(Button, cont);
+	FromDesign(Button, back);
+	FromDesign(Button, more);
+	FromDesign(Button, less);
+	FromDesign(Button, Min);
+	FromDesign(Button, Max);
 	FromDesign(GameView, field);
 	FromDesign(GameObj, player);
 	FromDesign(Selector, selector);
@@ -681,6 +925,8 @@ class MyApp : public App
 	FromDesign(Layout, cr3);
 	FromDesign(Layout, cr4);
 	FromDesign(Layout, Menu);
+	FromDesign(Layout, Menudr);
+	FromDesign(Label, coldrop);
 	GameObj nowObj;
 	IntVec2 p;
 	int nowSlot;

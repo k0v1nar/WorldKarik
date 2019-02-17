@@ -1,0 +1,10 @@
+1
+./obj/axe.png
+Каменный топор
+3
+./obj/stick.png
+2
+./obj/rope.png
+1
+./obj/stone.png
+2

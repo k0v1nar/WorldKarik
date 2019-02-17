@@ -1,7 +1,6 @@
-﻿1
+1
 obj/rope.png
 Веревка
-1
 1
 obj/grass.png
 4
