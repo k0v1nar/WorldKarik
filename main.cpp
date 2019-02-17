@@ -7,17 +7,13 @@ class MyApp : public App
 {
 	vector<string> resnames = {
 		"wood.png",
-		"stone.png",
-		"gras.png",
-		"stick.png"
+		"stone.png"
 	};
 	IntVec2 ch;
 	enum TypeRes
 	{
 		Wood,
-		Stone,
-		Gras,
-		Stick
+		Stone
 	};
 	bool nowObjInter = false;
     void load()
@@ -56,76 +52,9 @@ class MyApp : public App
 		connect(crafts, nexti, 4);
 		connect(skill, nexti, 3);
 		connect(inventor, nexti, 0);
-		connect(back, drm, 0);
-		connect(cont, drm, 1);
-		connect(less, drm, 2);
-		connect(more, drm, 3);
-		connect(Min, drm, 4);
-		connect(Max, drm, 5);
+		
     }
-	int dropnum = 0;
-	void drm(int i)
-	{
-		if (i == 0)
-		{
-			Menudr.hide();
-			nowSlot = -1;
-			dropnum = 0;
-		}
-		if (i == 1)
-		{
-			Menudr.hide();
-			slots[nowSlot].data.resource.number -= dropnum;
-			if (slots[nowSlot].data.resource.number == 0)
-			{
-				slots[nowSlot].empty = true;
-			}
-			updateSlot(nowSlot);
-			design.update();
-			Menudr.hide();
-			dropnum = 0;
-			nowSlot = -1;
-		}
-		if (i == 2)
-		{
-			dropnum -= 1;
-			Max.show();
-			more.show();
-			if (dropnum == 1)
-			{
-				less.hide();
-				Min.hide();
-			}
-		}
-		if (i == 3)
-		{
-			dropnum += 1;
-			Min.show();
-			less.show();
-			if (dropnum == 20)
-			{
-				Max.hide();
-				more.hide();
-			}
-		}
-		if (i == 4)
-		{
-			dropnum = 1;
-			Min.hide();
-			less.hide();
-			Max.show();
-			more.show();
-		}
-		if (i == 5)
-		{
-			dropnum = slots[nowSlot].data.resource.number;
-			Min.show();
-			less.show();
-			Max.hide();
-			more.hide();
-		}
-		coldrop << dropnum;
-	}
+
 	void updateSlot(int i)
 	{
 		auto& a = slots[i];
@@ -213,22 +142,14 @@ class MyApp : public App
 		return b;
 	}
 
-	void Drop()
+	void Drop(int i)
 	{
-		if (slots[nowSlot].type == Slot::resources || slots[nowSlot].type == Slot::potions)
-		{
-			Menudr.show();
-		}
-		else
-		{
-			slots[nowSlot].empty = true;
-			updateSlot(nowSlot);
-		}
+		auto b = slot.get(i);
+		b.child<Texture>("obj").hide();
+		b.child<DrawObj>("num").hide();
+		slots[i].empty=true;
 		Menu.hide();
-		Min.hide();
-		less.hide();
-		Max.show();
-		more.show();
+		nowSlot = -1;
 	}
 	int isMouse=0;
     void process(Input input)
@@ -243,71 +164,69 @@ class MyApp : public App
 				hideCursor();
 				return;
 			}
-			if (!Menudr.isVisible())
+			
+			if (input.justPressed(MouseRight))
 			{
-				if (input.justPressed(MouseRight))
+				if (isMouse == 1)
 				{
-					if (isMouse == 1)
-					{
-						slot.get(nowSlot).child<DrawObj>("sel").hide();
-						nowSlot = -1;
-						isMouse = 0;
-					}
-					else
-					{
-						int a = Vec2ToInt(fieldInventor.mousePos());
-						nowSlot = a;
-						if (!slots[nowSlot].empty)
-						{
-							auto b = slot.get(nowSlot);
-							Menu.setPos(b.pos().x + w2, b.pos().y);
-							Menu.show();
-							Menu.child<Button>("use").show();
-							if (slots[nowSlot].type == Slot::resources)
-								Menu.child<Button>("use").hide();
-							connect(drop, Drop);
-						}
-						isMouse = 2;
-						design.update();
-					}
+					slot.get(nowSlot).child<DrawObj>("sel").hide();
+					nowSlot = -1;
+					isMouse = 0;
 				}
-				if (input.justPressed(MouseLeft))
+				else
 				{
-					if (isMouse == 2
-						&& !impl::isMouseOn(
-							dynamic_cast<impl::Drawable*>(Menu.getImpl()->getInternalObj().get())))
+					int a = Vec2ToInt(fieldInventor.mousePos());
+					nowSlot = a;
+					if (!slots[nowSlot].empty)
 					{
-						Menu.hide();
-						nowSlot = -1;
-						isMouse = 0;
-						design.update();
-					}
-					else if (isMouse == 0)
-					{
-						isMouse = 1;
-						nowSlot = Vec2ToInt(fieldInventor.mousePos());
 						auto b = slot.get(nowSlot);
-						b.child<DrawObj>("sel").show();
-					}
-					else if (isMouse == 1)
-					{
-						isMouse = 0;
-						int a = Vec2ToInt(fieldInventor.mousePos());
-						auto b2 = slot.get(nowSlot);
-						b2.child<DrawObj>("sel").hide();
-						swap(slots[nowSlot], slots[a]);
-						updateSlot(nowSlot);
-						updateSlot(a);
-						design.update();
-						/*if (slots[a].type == Slot::resources)
-						b2.child<Texture>("obj").setImageName(resnames[slots[a].data.resource.type]);
-						b2.child<Label>("col").setText(toString(slots[a].num));
+						Menu.setPos(b.pos().x + w2, b.pos().y);
+						Menu.show();
+						Menu.child<Button>("use").show();
 						if (slots[nowSlot].type == Slot::resources)
-							a2.child<Texture>("obj").setImageName(resnames[slots[nowSlot].data.resource.type]);
-						a2.child<Label>("col").setText(toString(slots[nowSlot].num));
-						nowSlot = -1;
-						b2.child<DrawObj>("sel").hide();*/
+							Menu.child<Button>("use").hide();
+						connect(drop, Drop, nowSlot);
 					}
+					isMouse = 2;
+					design.update();
+				}
+			}
+			if (input.justPressed(MouseLeft))
+			{
+				if (isMouse == 2
+					&& !impl::isMouseOn(
+						dynamic_cast<impl::Drawable*>(Menu.getImpl()->getInternalObj().get())))
+				{
+					Menu.hide();
+					nowSlot = -1;
+					isMouse = 0;
+					design.update();
+				}
+				else if (isMouse==0)
+				{
+					isMouse = 1;
+					nowSlot = Vec2ToInt(fieldInventor.mousePos());
+					auto b = slot.get(nowSlot);
+					b.child<DrawObj>("sel").show();
+				}
+				else
+				{
+					isMouse = 0;
+					int a = Vec2ToInt(fieldInventor.mousePos());
+					auto b2 = slot.get(nowSlot);
+					b2.child<DrawObj>("sel").hide();
+					swap(slots[nowSlot], slots[a]);
+					updateSlot(nowSlot);
+					updateSlot(a);
+					design.update();
+					/*if (slots[a].type == Slot::resources)
+					b2.child<Texture>("obj").setImageName(resnames[slots[a].data.resource.type]);
+					b2.child<Label>("col").setText(toString(slots[a].num));
+					if (slots[nowSlot].type == Slot::resources)
+						a2.child<Texture>("obj").setImageName(resnames[slots[nowSlot].data.resource.type]);
+					a2.child<Label>("col").setText(toString(slots[nowSlot].num));
+					nowSlot = -1;
+					b2.child<DrawObj>("sel").hide();*/
 				}
 			}
 		}
@@ -413,20 +332,11 @@ class MyApp : public App
 					roundWorld.data(nowObj).hp -= 10;
 					if (roundWorld.data(nowObj).type == Tree)
 					{
-						int i = randomInt(0, 5);
-						if (i == 0)
-						{
-							seekSlot(Stick);
-						}
 						seekSlot(Wood);
 					}
 					if (roundWorld.data(nowObj).type == Boulder)
 					{
 						seekSlot(Stone);
-					}
-					if (roundWorld.data(nowObj).type == Grass)
-					{
-						seekSlot(Gras);
 					}
 					if (roundWorld.data(nowObj).hp <= 0)
 					{
@@ -497,7 +407,6 @@ class MyApp : public App
 		None,
 		Boulder,
 		Tree,
-		Grass,
 		gamer
 	};
 	struct Chunk
@@ -645,12 +554,12 @@ class MyApp : public App
 					back.skin<Texture>().setImageName("grass2.png");
 				if (chunk.map[x][y] == gamer)
 					continue;
-				int obt = randomInt(1, 45);
-				if (obt == 1 || obt == 2 || obt == 3 || obt == 4)
+				int obt = randomInt(1, 30);
+				if (obt == 1 || obt == 2 || obt == 3)
 				{
 					chunk.map[x][y] = Tree;
 					auto&obj = roundWorld.load("obj.json", (i.x * 10 + x) * w, (i.y * 10 + y) * h);
-					obj.setSize(w-0.1, h-0.1);
+					obj.setSize(w-0.001, h-0.01);
 					if (chunk.Type == Forest)
 						obj.skin<Texture>().setImageName("wood1.png");
 					if (chunk.Type == Swamp)
@@ -658,7 +567,7 @@ class MyApp : public App
 					roundWorld.data(obj).thisObj = IntVec2(x, y);
 					roundWorld.data(obj).type = Tree;
 				}
-				if (obt == 5)
+				if (obt == 4 || obt == 5)
 				{
 					chunk.map[x][y] = Boulder;
 					auto&obj = roundWorld.load("obj.json", (i.x * 10 + x) * w, (i.y * 10 + y) * h);
@@ -667,16 +576,6 @@ class MyApp : public App
 					obj.skin<Texture>().setImageName("boulder.png");
 					roundWorld.data(obj).thisObj = IntVec2(x, y);
 					roundWorld.data(obj).type = Boulder;
-				}
-				if (obt == 6 || obt == 7)
-				{
-					chunk.map[x][y] = Grass;
-					auto&obj = roundWorld.load("obj.json", (i.x * 10 + x) * w, (i.y * 10 + y) * h);
-					roundWorld.data(obj).hp = 20;
-					obj.setSize(w - 0.01, h - 0.01);
-					obj.skin<Texture>().setImageName("gras1.png");
-					roundWorld.data(obj).thisObj = IntVec2(x, y);
-					roundWorld.data(obj).type = Grass;
 				}
 			}
 		}
@@ -713,19 +612,12 @@ class MyApp : public App
 	LayerFromDesign(void, slot2);
 	LayerFromDesign(objset, roundWorld);
 	LayerFromDesign(void, Player);
-	FromDesign(Label, coldrop);
 	FromDesign(Button, inventor);
 	FromDesign(Button, crafts);
 	FromDesign(Button, map);
 	FromDesign(Button, equiped);
 	FromDesign(Button, skill);
 	FromDesign(Button, drop);
-	FromDesign(Button, cont);
-	FromDesign(Button, back);
-	FromDesign(Button, more);
-	FromDesign(Button, less);
-	FromDesign(Button, Min);
-	FromDesign(Button, Max);
 	FromDesign(GameView, field);
 	FromDesign(GameObj, player);
 	FromDesign(Selector, selector);
@@ -735,7 +627,6 @@ class MyApp : public App
 	FromDesign(GameView, fieldMap);
 	FromDesign(GameView, fieldSkill);
 	FromDesign(GameView, fieldCrafts);
-	FromDesign(Layout, Menudr);
 	FromDesign(Layout, Menu);
 	GameObj nowObj;
 	IntVec2 p;
