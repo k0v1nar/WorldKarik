@@ -28,7 +28,7 @@
          "width" : 200
       },
       "color" : [ 1, 1, 1, 1 ],
-      "imageName" : ".\\grass1.png",
+      "imageName" : "roundWorld\\grass1.png",
       "position" : {
          "_typeName" : "AligningOffset",
          "horAlign" : 1,
