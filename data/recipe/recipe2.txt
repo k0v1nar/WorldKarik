@@ -1,10 +1,9 @@
 1
-./obj/axe.png
-Каменный топор
+wooden_axe
 3
-./obj/stick.png
+stick
 2
-./obj/rope.png
+rope
 1
-./obj/stone.png
+stone
 2

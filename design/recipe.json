@@ -14,8 +14,8 @@
       },
       "width" : {
          "_typeName" : "RelativeValue",
-         "type" : 2,
-         "value" : 0.699999988079071
+         "type" : 0,
+         "value" : 0
       }
    },
    "list" : [

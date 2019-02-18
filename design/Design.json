@@ -1782,7 +1782,7 @@
                                                                }
                                                             },
                                                             "color" : [ 1, 1, 1, 0.5058823823928833 ],
-                                                            "imageName" : ".\\icon_helmet.png",
+                                                            "imageName" : "icon\\icon_helmet.png",
                                                             "position" : {
                                                                "_typeName" : "AligningOffset",
                                                                "horAlign" : 1,
@@ -1915,7 +1915,7 @@
                                                                }
                                                             },
                                                             "color" : [ 1, 1, 1, 0.5058823823928833 ],
-                                                            "imageName" : ".\\icon_chain_armor.png",
+                                                            "imageName" : "icon\\icon_chain_armor.png",
                                                             "position" : {
                                                                "_typeName" : "AligningOffset",
                                                                "horAlign" : 1,
@@ -2048,7 +2048,7 @@
                                                                }
                                                             },
                                                             "color" : [ 1, 1, 1, 0.5058823823928833 ],
-                                                            "imageName" : ".\\icon_leggs.png",
+                                                            "imageName" : "icon\\icon_leggs.png",
                                                             "position" : {
                                                                "_typeName" : "AligningOffset",
                                                                "horAlign" : 1,
@@ -2181,7 +2181,7 @@
                                                                }
                                                             },
                                                             "color" : [ 1, 1, 1, 0.5058823823928833 ],
-                                                            "imageName" : ".\\icon_boots.png",
+                                                            "imageName" : "icon\\icon_boots.png",
                                                             "position" : {
                                                                "_typeName" : "AligningOffset",
                                                                "horAlign" : 1,
@@ -2314,7 +2314,7 @@
                                                                }
                                                             },
                                                             "color" : [ 1, 1, 1, 0.5058823823928833 ],
-                                                            "imageName" : ".\\icon_weapon.png",
+                                                            "imageName" : "icon\\icon_weapon.png",
                                                             "position" : {
                                                                "_typeName" : "AligningOffset",
                                                                "horAlign" : 1,
@@ -2447,7 +2447,7 @@
                                                                }
                                                             },
                                                             "color" : [ 1, 1, 1, 0.5058823823928833 ],
-                                                            "imageName" : ".\\icon_weapon.png",
+                                                            "imageName" : "icon\\icon_weapon.png",
                                                             "position" : {
                                                                "_typeName" : "AligningOffset",
                                                                "horAlign" : 1,
@@ -2580,7 +2580,7 @@
                                                                }
                                                             },
                                                             "color" : [ 1, 1, 1, 0.5058823823928833 ],
-                                                            "imageName" : ".\\icon_potion.png",
+                                                            "imageName" : "icon\\icon_potion.png",
                                                             "position" : {
                                                                "_typeName" : "AligningOffset",
                                                                "horAlign" : 1,
@@ -2713,7 +2713,7 @@
                                                                }
                                                             },
                                                             "color" : [ 1, 1, 1, 0.5058823823928833 ],
-                                                            "imageName" : ".\\icon_potion.png",
+                                                            "imageName" : "icon\\icon_potion.png",
                                                             "position" : {
                                                                "_typeName" : "AligningOffset",
                                                                "horAlign" : 1,
@@ -2846,7 +2846,7 @@
                                                                }
                                                             },
                                                             "color" : [ 1, 1, 1, 0.5058823823928833 ],
-                                                            "imageName" : ".\\icon_amulet.png",
+                                                            "imageName" : "icon\\icon_amulet.png",
                                                             "position" : {
                                                                "_typeName" : "AligningOffset",
                                                                "horAlign" : 1,
@@ -2979,7 +2979,7 @@
                                                                }
                                                             },
                                                             "color" : [ 1, 1, 1, 0.5058823823928833 ],
-                                                            "imageName" : ".\\icon_amulet.png",
+                                                            "imageName" : "icon\\icon_amulet.png",
                                                             "position" : {
                                                                "_typeName" : "AligningOffset",
                                                                "horAlign" : 1,
@@ -3112,7 +3112,7 @@
                                                                }
                                                             },
                                                             "color" : [ 1, 1, 1, 0.5058823823928833 ],
-                                                            "imageName" : ".\\icon_amulet.png",
+                                                            "imageName" : "icon\\icon_amulet.png",
                                                             "position" : {
                                                                "_typeName" : "AligningOffset",
                                                                "horAlign" : 1,
@@ -3245,7 +3245,7 @@
                                                                }
                                                             },
                                                             "color" : [ 1, 1, 1, 0.5058823823928833 ],
-                                                            "imageName" : ".\\icon_amulet.png",
+                                                            "imageName" : "icon\\icon_amulet.png",
                                                             "position" : {
                                                                "_typeName" : "AligningOffset",
                                                                "horAlign" : 1,
@@ -3755,13 +3755,13 @@
                                                                   "list" : [],
                                                                   "position" : {
                                                                      "_typeName" : "AligningOffset",
-                                                                     "horAlign" : 1,
+                                                                     "horAlign" : 0,
                                                                      "horOffset" : {
                                                                         "_typeName" : "RelativeValue",
                                                                         "type" : 1,
                                                                         "value" : 0
                                                                      },
-                                                                     "vertAlign" : 1,
+                                                                     "vertAlign" : 0,
                                                                      "vertOffset" : {
                                                                         "_typeName" : "RelativeValue",
                                                                         "type" : 1,
@@ -3799,13 +3799,13 @@
                                                             ],
                                                             "position" : {
                                                                "_typeName" : "AligningOffset",
-                                                               "horAlign" : 1,
+                                                               "horAlign" : 0,
                                                                "horOffset" : {
                                                                   "_typeName" : "RelativeValue",
                                                                   "type" : 1,
                                                                   "value" : 0
                                                                },
-                                                               "vertAlign" : 1,
+                                                               "vertAlign" : 0,
                                                                "vertOffset" : {
                                                                   "_typeName" : "RelativeValue",
                                                                   "type" : 1,
@@ -3843,13 +3843,13 @@
                                                                   "list" : [],
                                                                   "position" : {
                                                                      "_typeName" : "AligningOffset",
-                                                                     "horAlign" : 1,
+                                                                     "horAlign" : 0,
                                                                      "horOffset" : {
                                                                         "_typeName" : "RelativeValue",
                                                                         "type" : 1,
                                                                         "value" : 0
                                                                      },
-                                                                     "vertAlign" : 1,
+                                                                     "vertAlign" : 0,
                                                                      "vertOffset" : {
                                                                         "_typeName" : "RelativeValue",
                                                                         "type" : 1,
@@ -4019,13 +4019,13 @@
                                                                   "list" : [],
                                                                   "position" : {
                                                                      "_typeName" : "AligningOffset",
-                                                                     "horAlign" : 1,
+                                                                     "horAlign" : 0,
                                                                      "horOffset" : {
                                                                         "_typeName" : "RelativeValue",
                                                                         "type" : 1,
                                                                         "value" : 0
                                                                      },
-                                                                     "vertAlign" : 1,
+                                                                     "vertAlign" : 0,
                                                                      "vertOffset" : {
                                                                         "_typeName" : "RelativeValue",
                                                                         "type" : 1,
@@ -4107,13 +4107,13 @@
                                                                   "list" : [],
                                                                   "position" : {
                                                                      "_typeName" : "AligningOffset",
-                                                                     "horAlign" : 1,
+                                                                     "horAlign" : 0,
                                                                      "horOffset" : {
                                                                         "_typeName" : "RelativeValue",
                                                                         "type" : 1,
                                                                         "value" : 0
                                                                      },
-                                                                     "vertAlign" : 1,
+                                                                     "vertAlign" : 0,
                                                                      "vertOffset" : {
                                                                         "_typeName" : "RelativeValue",
                                                                         "type" : 1,

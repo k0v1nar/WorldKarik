@@ -1,7 +1,6 @@
 1
-obj/rope.png
-Веревка
+rope
 1
-obj/grass.png
+grass
 4
 

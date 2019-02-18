@@ -12,6 +12,13 @@ class MyApp : public App
 		"./obj/stick.png"
 	};
 	IntVec2 ch;
+	enum TypeIt
+	{
+		armors,
+		weapons,
+		resources,
+		potions
+	};
 	enum TypeRes
 	{
 		Wood,
@@ -19,9 +26,70 @@ class MyApp : public App
 		Gras,
 		Stick
 	};
+	void readDB()
+	{
+		ifstream input("data/item/db.txt");
+		for (;1<2;)
+		{
+			string name2;
+			input >> name2;
+			if (name2 == "end")
+				break;
+			string b;
+			input >> b;
+			if (b == "resources")
+			{
+				string name;
+				input >> name;
+				for (auto& f : name)
+				{
+					if (f == '_')
+					{
+						f = ' ';
+					}
+				}
+				DB[name2].name = name;
+				string file;
+				input >> file;
+				DB[name2].file = file;
+				DB[name2].type = resources;
+			}
+			else if (b=="weapon")
+			{
+				string name;
+				string file;
+				string typ;
+				input >> name;
+				for (auto& f : name)
+				{
+					if (f == '_')
+					{
+						f = ' ';
+					}
+				}
+				DB[name2].name = name;
+				DB[name2].type = weapons;
+				int g;
+				input >> g;
+				DB[name2].data.weapon.level = g;
+				input >> typ;
+				if (typ == "axe")
+				{
+					DB[name2].data.weapon.typeW = DB[name2].data.weapon.axe;
+					input >> typ;
+					DB[name2].data.weapon.typeD = DB[name2].data.weapon.Near_natural;
+					input >> g;
+					DB[name2].data.weapon.dam = g;
+				}
+				input >> file;
+				DB[name2].file = file;
+			}
+		}
+	}
 	bool nowObjInter = false;
     void load()
     {
+		readDB();
 		Menu.hide();
 		int i = 0;
 		for (int y = 0; y < 5; y++)
@@ -133,138 +201,7 @@ class MyApp : public App
 	void nextCr(int i)
 	{
 		changerCr.select(i);
-		if (i == 0)
-		{
-			cr0.child<Layout>("stolb").clear();
-			ifstream input("data/recipe/recipe1.txt");
-			int yyy = 0;
-			input >> yyy;
-			cout << yyy << endl;
-			for (int y = 0; y < yyy; y++)
-			{
-				auto b = cr0.child<Layout>("stolb").load("recipe.json");
-				string i;
-				input >> i;
-				cout << i << endl;
-				b.child<Texture>("crpict").setImageName(i);
-				input >> i;
-				b.child<Label>("name").setText(i);
-				int a;
-				input >> a;
-				cout << a << endl;
-				for (int x = 0; x < a; x++)
-				{
-					auto bb = b.child<Layout>("item").load("sl.json");
-					input >> i;
-					cout << i << endl;
-					bb.child<Texture>("pict").setImageName(i);
-					input >> i;
-					cout << i << endl;
-					bb.child<Label>("col") << " x " << i;
-				}
-			}
-			input.close();
-			design.update();
-		}
-		if (i == 1)
-		{
-			cr1.child<Layout>("stolb").clear();
-			ifstream input("data/recipe/recipe2.txt");
-			int yyy = 0;
-			input >> yyy;
-			cout << yyy << endl;
-			for (int y = 0; y < yyy; y++)
-			{
-				auto b = cr1.child<Layout>("stolb").load("recipe.json");
-				string i;
-				input >> i;
-				cout << i << endl;
-				b.child<Texture>("crpict").setImageName(i);
-				input >> i;
-				b.child<Label>("name").setText(i);
-				int a;
-				input >> a;
-				cout << a << endl;
-				for (int x = 0; x < a; x++)
-				{
-					auto bb = b.child<Layout>("item").load("sl.json");
-					input >> i;
-					cout << i << endl;
-					bb.child<Texture>("pict").setImageName(i);
-					input >> i;
-					cout << i << endl;
-					bb.child<Label>("col") << " x " << i;
-				}
-			}
-			input.close();
-			design.update();
-		}
-		if (i == 3)
-		{
-			cr3.child<Layout>("stolb").clear();
-			ifstream input("data/recipe/recipe4.txt");
-			int yyy = 0;
-			input >> yyy;
-			cout << yyy << endl;
-			for (int y = 0; y < yyy; y++)
-			{
-				auto b = cr3.child<Layout>("stolb").load("recipe.json");
-				string i;
-				input >> i;
-				cout << i << endl;
-				b.child<Texture>("crpict").setImageName(i);
-				input >> i;
-				b.child<Label>("name").setText(i);
-				int a;
-				input >> a;
-				cout << a << endl;
-				for (int x = 0; x < a; x++)
-				{
-					auto bb = b.child<Layout>("item").load("sl.json");
-					input >> i;
-					cout << i << endl;
-					bb.child<Texture>("pict").setImageName(i);
-					input >> i;
-					cout << i << endl;
-					bb.child<Label>("col") << " x " << i;
-				}
-			}
-			input.close();
-			design.update();
-		}
-		if (i == 4)
-		{
-			cr4.child<Layout>("srolb").clear();
-			ifstream input("data/recipe/recipe5.txt");
-			int yyy = 0;
-			input >> yyy;
-			cout << yyy << endl;
-			for (int y = 0; y < yyy; y++)
-			{
-				auto b = cr4.child<Layout>("stolb").load("recipe.json");
-				string i;
-				input >> i;
-				cout << i << endl;
-				b.child<Texture>("crpict").setImageName(i);
-				input >> i;
-				b.child<Label>("name").setText(i);
-				int a;
-				input >> a;
-				cout << a << endl;
-				for (int x = 0; x < a; x++)
-				{
-					auto bb = b.child<Layout>("item").load("sl.json");
-					input >> i;
-					cout << i << endl;
-					bb.child<Texture>("pict").setImageName(i);
-					input >> i;
-					cout << i << endl;
-					bb.child<Label>("col") << " x " << i;
-				}
-			}
-			input.close();
-			design.update();
-		}
+		design.update();
 	}
 	void updateSlot(int i)
 	{
@@ -277,7 +214,7 @@ class MyApp : public App
 			return;
 		}
 		b.child<DrawObj>("num").show();
-		if (a.type == Slot::resources)
+		if (a.type == resources)
 		{
 			b.child<Label>("col").setText(toString(a.data.resource.number));
 			b.child<Texture>("obj").setImageName(resnames[a.data.resource.type]);
@@ -300,36 +237,35 @@ class MyApp : public App
 		}
 		if (i == 4)
 		{
-			cr2.child<Layout>("stolb").clear();
-			ifstream input("data/recipe/recipe3.txt");
-			int yyy = 0;
-			input >> yyy;
-			cout << yyy << endl;
-			for (int y = 0; y < yyy; y++)
+			for (int a = 1; a <= 5; a++)
 			{
-				auto b = cr2.child<Layout>("stolb").load("recipe.json");
-				string i;
-				input >> i;
-				cout << i << endl;
-				b.child<Texture>("crpict").setImageName(i);
-				input >> i;
-				b.child<Label>("name").setText(i);
-				int a;
-				input >> a;
-				cout << a << endl;
-				for (int x = 0; x < a; x++)
+				auto cr = design.child<Layout>("cr" + toString(a - 1));
+				cr.child<Layout>("stolb").clear();
+				ifstream input("data/recipe/recipe" + toString(a) + ".txt");
+				int yyy = 0;
+				input >> yyy;
+				cout << yyy << endl;
+				for (int y = 0; y < yyy; y++)
 				{
-					auto bb = b.child<Layout>("item").load("sl.json");
+					auto b = cr.child<Layout>("stolb").load("recipe.json");
+					string i;
 					input >> i;
-					cout << i << endl;
-					bb.child<Texture>("pict").setImageName(i);
-					input >> i;
-					cout << i << endl;
-					bb.child<Label>("col") << " x " << i;
+					b.child<Label>("name").setText(DB[i].name);
+					b.child<Texture>("crpict").setImageName(DB[i].file);
+					int a;
+					input >> a;
+					for (int x = 0; x < a; x++)
+					{
+						auto bb = b.child<Layout>("item").load("sl.json");
+						input >> i;
+						bb.child<Texture>("pict").setImageName(DB[i].file);
+						input >> i;
+						bb.child<Label>("col") << " x " << i;
+					}
 				}
+				input.close();
+				design.update();
 			}
-			input.close();
-			design.update();
 		}
 	}
 	void updateNO(vector<GameObj> objs)
@@ -350,7 +286,7 @@ class MyApp : public App
 		{
 			if (a.empty)
 				continue;
-			if (a.type == Slot::resources)
+			if (a.type == resources)
 			{
 				if (!a.data.resource.full() && a.data.resource.type==type)
 				{
@@ -366,7 +302,7 @@ class MyApp : public App
 			{
 				if (a.empty)
 				{
-					a.type = Slot::resources;
+					a.type = resources;
 					a.data.resource.type = type;
 					a.data.resource.number=1;
 					a.empty = false;
@@ -388,7 +324,7 @@ class MyApp : public App
 
 	void Drop(int i)
 	{
-		if (slots[nowSlot].type == Slot::resources || slots[nowSlot].type == Slot::potions)
+		if (slots[nowSlot].type == resources || slots[nowSlot].type == potions)
 		{
 			Menudr.show();
 		}
@@ -441,7 +377,7 @@ class MyApp : public App
 							Menu.setPos(b.pos().x + w2, b.pos().y);
 							Menu.show();
 							Menu.child<Button>("use").show();
-							if (slots[nowSlot].type == Slot::resources)
+							if (slots[nowSlot].type == resources)
 								Menu.child<Button>("use").hide();
 							connect(drop, Drop, nowSlot);
 						}
@@ -514,6 +450,36 @@ class MyApp : public App
 			{
 				selector.select(2);
 				nexti(4);
+
+				for (int a = 1; a <= 5; a++)
+				{
+					auto cr = design.child<Layout>("cr" + toString(a - 1));
+					cr.child<Layout>("stolb").clear();
+					ifstream input("data/recipe/recipe" + toString(a) + ".txt");
+					int yyy = 0;
+					input >> yyy;
+					cout << yyy << endl;
+					for (int y = 0; y < yyy; y++)
+					{
+						auto b = cr.child<Layout>("stolb").load("recipe.json");
+						string i;
+						input >> i;
+						b.child<Label>("name").setText(DB[i].name);
+						b.child<Texture>("crpict").setImageName(DB[i].file);
+						int a;
+						input >> a;
+						for (int x = 0; x < a; x++)
+						{
+							auto bb = b.child<Layout>("item").load("sl.json");
+							input >> i;
+							bb.child<Texture>("pict").setImageName(DB[i].file);
+							input >> i;
+							bb.child<Label>("col") << " x " << i;
+						}
+					}
+					input.close();
+				}
+				design.update();
 				showCursor();
 			}
 			if (input.justPressed(U))
@@ -725,7 +691,6 @@ class MyApp : public App
 			leggs,
 			boots
 		};
-
 		Type type;
 		int def, level;
 		Rarity rarity;
@@ -740,8 +705,15 @@ class MyApp : public App
 			Near_magic,
 			Distant_magic,
 		};
+		enum Type
+		{
+			sword,
+			axe,
+			pickaxe
+		};
 		int dam, level;
 		TypeD typeD;
+		Type typeW;
 		Rarity rarity;
 		bool active;
 		bool isLeft;
@@ -750,7 +722,6 @@ class MyApp : public App
 
 	struct Resource
 	{
-		
 		int number;
 		TypeRes type;
 		bool full() { return number == 20; };
@@ -758,14 +729,7 @@ class MyApp : public App
 	struct Slot
 	{
 		bool empty = true;
-		enum Type
-		{
-			armors,
-			weapons,
-			resources,
-			potions
-		};
-		Type type;
+		TypeIt type;
 		union 
 		{
 			Armor armor;
@@ -775,7 +739,19 @@ class MyApp : public App
 		} data;
 		int x, y,num;
 	};
-
+	struct Item
+	{
+		string name;
+		string file;
+		TypeIt type;
+		union
+		{
+			Armor armor;
+			Weapon weapon;
+			Resource resource;
+			Potion potion;
+		} data;
+	};
 
 	/*struct A
 	{
@@ -805,7 +781,7 @@ class MyApp : public App
 		} data;
 	};*/
 
-
+	map<string, Item> DB;
 	vector <Slot> slots;
 
 
