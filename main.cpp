@@ -11,6 +11,20 @@ class MyApp : public App
 		"./obj/grass.png",
 		"./obj/stick.png"
 	};
+	vector<string>Robject = {
+		"stone_swamp",
+		"stone_forest",
+		"tree_swamp",
+		"tree_forest",
+		"grass_swamp",
+		"grass_forest"
+	};
+	vector<string>Ritem = {
+		"wood",
+		"stone",
+		"grass",
+		"stick"
+	};
 	IntVec2 ch;
 	enum TypeIt
 	{
@@ -26,6 +40,48 @@ class MyApp : public App
 		Gras,
 		Stick
 	};
+	enum TypE
+	{
+		objt,
+		fon
+	};
+	void readDBR()
+	{
+		ifstream input("data/obj/db.txt");
+		for (;;)
+		{
+			string name;
+			input >> name;
+			string a;
+			input >> a;
+			if (a == "obj")
+			{
+				DBR[name].type = objt;
+				int life;
+				input >> life;
+				DBR[name].data.obect.hp = life;
+				string b;
+				input >> b;
+				DBR[name].file = b;
+				int c;
+				input >> c;
+				DBR[name].data.obect.col = c;
+				for (int i; i < c; i++)
+				{
+					string d;
+					input >> d;
+					DBR[name].data.obect.drop.push_back(d);
+				}
+			}
+			if (a == "fon")
+			{
+				DBR[name].type = fon;
+				string b;
+				input >> b;
+				DBR[name].file = b;
+			}
+		}
+	}
 	void readDB()
 	{
 		ifstream input("data/item/db.txt");
@@ -90,6 +146,7 @@ class MyApp : public App
     void load()
     {
 		readDB();
+		readDBR();
 		Menu.hide();
 		int i = 0;
 		for (int y = 0; y < 5; y++)
@@ -752,36 +809,24 @@ class MyApp : public App
 			Potion potion;
 		} data;
 	};
-
-	/*struct A
+	struct object
 	{
-		int x, y;
+		int hp = 0;
+		int col = 0;
+		vector <string> drop;
 	};
-
-	struct B
+	struct RObj
 	{
-		float arr[10];
-	};
-
-	struct D
-	{
-		enum Type
-		{
-			TypeA,
-			TypeB,
-			TypeC
-		};
-		Type type;
-
+		string file;
+		
+		TypE type;
 		union
 		{
-			A a;
-			B b;
-			double c;
+			object obect;
 		} data;
-	};*/
-
+	};
 	map<string, Item> DB;
+	map<string, RObj>DBR;
 	vector <Slot> slots;
 
 
@@ -794,42 +839,75 @@ class MyApp : public App
 			{
 				auto& back = Back.load("back.json", (i.x * 10 + x) * w, (i.y * 10 + y) * h);
 				back.setSize(w, h);
+				string a;
 				if (chunk.Type == Forest)
-					back.skin<Texture>().setImageName("./roundWorld/grass1.png");
+				{
+					a = "grass_back_forest";
+				}
 				if (chunk.Type == Swamp)
-					back.skin<Texture>().setImageName("./roundWorld/grass2.png");
+				{
+					a = "grass_back_swamp";
+				}
+				back.skin<Texture>().setImageName(DBR[a].file);
 				if (chunk.map[x][y] == gamer)
 					continue;
 				int obt = randomInt(1, 45);
 				if (obt == 1 || obt == 2 || obt == 3 || obt ==4)
 				{
 					chunk.map[x][y] = Tree;
+					string b;
 					auto&obj = roundWorld.load("obj.json", (i.x * 10 + x) * w, (i.y * 10 + y) * h);
 					obj.setSize(w-0.001, h-0.01);
 					if (chunk.Type == Forest)
-						obj.skin<Texture>().setImageName("./roundWorld/wood1.png");
+					{
+						b = Robject[Forest+2];
+					}
 					if (chunk.Type == Swamp)
-						obj.skin<Texture>().setImageName("./roundWorld/wood2.png");
+					{
+						b = Robject[Swamp+2];
+					}
+					roundWorld.data(obj).hp = DBR[b].data.obect.hp;
+					obj.skin<Texture>().setImageName(DBR[b].file);
 					roundWorld.data(obj).thisObj = IntVec2(x, y);
 					roundWorld.data(obj).type = Tree;
 				}
 				if (obt == 5)
 				{
 					chunk.map[x][y] = Boulder;
+					string b;
 					auto&obj = roundWorld.load("obj.json", (i.x * 10 + x) * w, (i.y * 10 + y) * h);
-					roundWorld.data(obj).hp = 100;
+					
 					obj.setSize(w-0.01, h-0.01);
-					obj.skin<Texture>().setImageName("./roundWorld/boulder.png");
+					if (chunk.Type == Forest)
+					{
+						b = Robject[Forest];
+					}
+					if (chunk.Type == Swamp)
+					{
+						b = Robject[Swamp];
+					}
+					roundWorld.data(obj).hp = DBR[b].data.obect.hp;
+					obj.skin<Texture>().setImageName(DBR[b].file);
 					roundWorld.data(obj).thisObj = IntVec2(x, y);
 					roundWorld.data(obj).type = Boulder;
 				}
 				if (obt == 6 || obt == 7)
 				{
 					chunk.map[x][y] = Grass;
+					string b;
 					auto&obj = roundWorld.load("obj.json", (i.x * 10 + x) * w, (i.y * 10 + y) * h);
-					roundWorld.data(obj).hp = 20;
+					
 					obj.setSize(w - 0.01, h - 0.01);
-					obj.skin<Texture>().setImageName("./roundWorld/gras1.png");
+					if (chunk.Type == Forest)
+					{
+						b = Robject[Forest+4];
+					}
+					if (chunk.Type == Swamp)
+					{
+						b = Robject[Swamp+4];
+					}
+					roundWorld.data(obj).hp = DBR[b].data.obect.hp;
+					obj.skin<Texture>().setImageName(DBR[b].file);
 					roundWorld.data(obj).thisObj = IntVec2(x, y);
 					roundWorld.data(obj).type = Grass;
 				}
