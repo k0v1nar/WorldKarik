@@ -5,26 +5,8 @@ using namespace std;
 float w, h, w2, h2;
 class MyApp : public App
 {
-	vector<string> resnames = {
-		"./obj/wood.png",
-		"./obj/stone.png",
-		"./obj/grass.png",
-		"./obj/stick.png"
-	};
-	vector<string>Robject = {
-		"stone_swamp",
-		"stone_forest",
-		"tree_swamp",
-		"tree_forest",
-		"grass_swamp",
-		"grass_forest"
-	};
-	vector<string>Ritem = {
-		"wood",
-		"stone",
-		"grass",
-		"stick"
-	};
+	map<int,string > intToRes;
+	map< string,int> resToInt;
 	IntVec2 ch;
 	enum TypeIt
 	{
@@ -33,17 +15,88 @@ class MyApp : public App
 		resources,
 		potions
 	};
-	enum TypeRes
-	{
-		Wood,
-		Stone,
-		Gras,
-		Stick
-	};
 	enum TypE
 	{
 		objt,
 		fon
+	};
+	enum Rarity
+	{
+		Common,
+		Rare,
+		Epic,
+		Legendary
+	};
+	struct Potion
+	{
+		enum Type
+		{
+			Heal,
+			NArmUp,
+			MArmUp,
+			SpeedUp
+		};
+		int PowEffects;
+		Type type;
+		bool isLeft;
+		bool isRight;
+	};
+	struct Armor
+	{
+		enum Type
+		{
+			helmet,
+			chesplat,
+			leggs,
+			boots
+		};
+		Type type;
+		int def, level;
+		Rarity rarity;
+		bool active;
+	};
+	struct Weapon
+	{
+		enum TypeD
+		{
+			Near_natural,
+			Distant_natural,
+			Near_magic,
+			Distant_magic,
+		};
+		enum Type
+		{
+			sword,
+			axe,
+			pickaxe
+		};
+		int dam, level;
+		TypeD typeD;
+		Type typeW;
+		Rarity rarity;
+		bool active;
+		bool isLeft;
+		bool isRight;
+	};
+
+	struct Resource
+	{
+		int number;
+		int type;
+		bool full() { return number == 20; };
+	};
+	struct Slot
+	{
+		bool empty = true;
+		TypeIt type;
+		union
+		{
+			Armor armor;
+			Weapon weapon;
+			Resource resource;
+			Potion potion;
+		} data;
+		int x, y, num;
 	};
 	void readDBR()
 	{
@@ -52,40 +105,60 @@ class MyApp : public App
 		{
 			string name;
 			input >> name;
-			string a;
-			input >> a;
-			if (a == "obj")
+			if (name == "end")
 			{
-				DBR[name].type = objt;
-				int life;
-				input >> life;
-				DBR[name].data.obect.hp = life;
+				break;
+			}
+			int a;
+			input >> a;
+			for (int i = 0; i < a; i++)
+			{
+				string name2;
+				input >> name2;
+				int a2;
+				input >> a2;
+				DBR[name][name2].chance = a2;
 				string b;
 				input >> b;
-				DBR[name].file = b;
-				int c;
-				input >> c;
-				DBR[name].data.obect.col = c;
-				for (int i; i < c; i++)
+				if (b == "fon")
 				{
+					DBR[name][name2].type = fon;
+					string c;
+					input >> c;
+					DBR[name][name2].file = c;
+				}
+				if (b == "obj")
+				{
+					DBR[name][name2].type = objt;
+					int c;
+					input >> c;
+					DBR[name][name2].obect.hp = c;
 					string d;
 					input >> d;
-					DBR[name].data.obect.drop.push_back(d);
+					DBR[name][name2].file = d;
+					input >> c;
+					for (int i2 = 0; i2 < c; i2++)
+					{
+						int c2;
+						input >> c2;
+						string d2;
+						input >> d2;
+						Dropp f;
+						f.chance = c2;
+						f.name = d2;
+						DBR[name][name2].obect.drop.push_back(f);
+					}
 				}
+				
 			}
-			if (a == "fon")
-			{
-				DBR[name].type = fon;
-				string b;
-				input >> b;
-				DBR[name].file = b;
-			}
+			
 		}
+		input.close();
 	}
 	void readDB()
 	{
 		ifstream input("data/item/db.txt");
-		for (;1<2;)
+		for (int res=0;1<2;res++)
 		{
 			string name2;
 			input >> name2;
@@ -95,6 +168,8 @@ class MyApp : public App
 			input >> b;
 			if (b == "resources")
 			{
+				intToRes[res] = name2;
+				resToInt[name2] = res;
 				string name;
 				input >> name;
 				for (auto& f : name)
@@ -141,6 +216,7 @@ class MyApp : public App
 				DB[name2].file = file;
 			}
 		}
+		input.close();
 	}
 	bool nowObjInter = false;
     void load()
@@ -152,9 +228,9 @@ class MyApp : public App
 		for (int y = 0; y < 5; y++)
 			for (int x=0;x<9;x++)
 			{
-				Slot sl;
-				sl.num = i;
-				slots.push_back(sl);
+				Slot slott;
+				slott.num = i;
+				slots.push_back(slott);
 				auto& slo = slot.load("slot.json", x*w2, y*h2);
 				slo.child<Texture>("obj").hide();
 				slo.child<DrawObj>("num").hide();
@@ -192,14 +268,15 @@ class MyApp : public App
 		connect(Min, drm, 4);
 		connect(Max, drm, 5);
     }
-	int dropnum = 0;
+	int dropnum = 1;
 	void drm(int i)
 	{
+		
 		if (i == 0)
 		{
 			Menudr.hide();
 			nowSlot = -1;
-			dropnum = 0;
+			dropnum = 1;
 		}
 		if (i == 1)
 		{
@@ -212,7 +289,7 @@ class MyApp : public App
 			updateSlot(nowSlot);
 			design.update();
 			Menudr.hide();
-			dropnum = 0;
+			dropnum = 1;
 			nowSlot = -1;
 		}
 		if (i == 2)
@@ -220,7 +297,7 @@ class MyApp : public App
 			dropnum -= 1;
 			Max.show();
 			more.show();
-			if (dropnum == 0)
+			if (dropnum == 1)
 			{
 				less.hide();
 				Min.hide();
@@ -274,7 +351,7 @@ class MyApp : public App
 		if (a.type == resources)
 		{
 			b.child<Label>("col").setText(toString(a.data.resource.number));
-			b.child<Texture>("obj").setImageName(resnames[a.data.resource.type]);
+			b.child<Texture>("obj").setImageName(DB[intToRes[a.data.resource.type]].file);
 		}
 		b.child<Texture>("obj").show();
 		design.update();
@@ -336,7 +413,7 @@ class MyApp : public App
 			objs.front().anim.play("highlight");
 		}
 	}
-	void seekSlot(TypeRes type)
+	void seekSlot(string type)
 	{
 		int b=1;
 		for (auto& a : slots)
@@ -345,7 +422,7 @@ class MyApp : public App
 				continue;
 			if (a.type == resources)
 			{
-				if (!a.data.resource.full() && a.data.resource.type==type)
+				if (!a.data.resource.full() && intToRes[a.data.resource.type]== type)
 				{
 					a.data.resource.number++;
 					b--;
@@ -360,7 +437,7 @@ class MyApp : public App
 				if (a.empty)
 				{
 					a.type = resources;
-					a.data.resource.type = type;
+					a.data.resource.type = resToInt[type];
 					a.data.resource.number=1;
 					a.empty = false;
 					break;
@@ -384,6 +461,11 @@ class MyApp : public App
 		if (slots[nowSlot].type == resources || slots[nowSlot].type == potions)
 		{
 			Menudr.show();
+			if (slots[nowSlot].data.resource.number == 1)
+			{
+				Max.hide();
+				more.hide();
+			}
 		}
 		else
 		{
@@ -471,14 +553,6 @@ class MyApp : public App
 						updateSlot(nowSlot);
 						updateSlot(a);
 						design.update();
-						/*if (slots[a].type == Slot::resources)
-						b2.child<Texture>("obj").setImageName(resnames[slots[a].data.resource.type]);
-						b2.child<Label>("col").setText(toString(slots[a].num));
-						if (slots[nowSlot].type == Slot::resources)
-							a2.child<Texture>("obj").setImageName(resnames[slots[nowSlot].data.resource.type]);
-						a2.child<Label>("col").setText(toString(slots[nowSlot].num));
-						nowSlot = -1;
-						b2.child<DrawObj>("sel").hide();*/
 					}
 				}
 			}
@@ -613,22 +687,24 @@ class MyApp : public App
 					b.a = roundWorld.data(nowObj).vision;
 					nowObj.skin<Texture>().setColor(b);
 					roundWorld.data(nowObj).hp -= 10;
-					if (roundWorld.data(nowObj).type == Tree)
+					for (auto& b : DBR["forest"])
 					{
-						int i = randomInt(0, 5);
-						if (i == 0)
+						if (b.second.type == fon)
 						{
-							seekSlot(Stick);
+							continue;
 						}
-						seekSlot(Wood);
-					}
-					if (roundWorld.data(nowObj).type == Boulder)
-					{
-						seekSlot(Stone);
-					}
-					if (roundWorld.data(nowObj).type == Grass)
-					{
-						seekSlot(Gras);
+						if (roundWorld.data(nowObj).type == toObj[b.first])
+						{
+							for (auto& b2 : b.second.obect.drop)
+							{
+								int dd2 = randomInt(1, 100);
+								if (dd2 <= b2.chance)
+								{
+									seekSlot(b2.name);
+								}
+							}
+							break;
+						}
 					}
 					if (roundWorld.data(nowObj).hp <= 0)
 					{
@@ -702,6 +778,7 @@ class MyApp : public App
 		Grass,
 		gamer
 	};
+	map<string, chunkObj> toObj = { {"gras",Grass}, {"stone",Boulder},{"tree",Tree} };
 	struct Chunk
 	{
 		GameMap map;
@@ -718,84 +795,7 @@ class MyApp : public App
 	}
 
 
-	enum Rarity
-	{
-		Common,
-		Rare,
-		Epic,
-		Legendary
-	};
-	struct Potion
-	{
-		enum Type
-		{
-			Heal,
-			NArmUp,
-			MArmUp,
-			SpeedUp
-		};
-		int PowEffects;
-		Type type;
-		bool isLeft;
-		bool isRight;
-	};
-	struct Armor
-	{
-		enum Type
-		{
-			helmet,
-			chesplat,
-			leggs,
-			boots
-		};
-		Type type;
-		int def, level;
-		Rarity rarity;
-		bool active;
-	};
-	struct Weapon
-	{
-		enum TypeD
-		{
-			Near_natural,
-			Distant_natural,
-			Near_magic,
-			Distant_magic,
-		};
-		enum Type
-		{
-			sword,
-			axe,
-			pickaxe
-		};
-		int dam, level;
-		TypeD typeD;
-		Type typeW;
-		Rarity rarity;
-		bool active;
-		bool isLeft;
-		bool isRight;
-	};
 
-	struct Resource
-	{
-		int number;
-		TypeRes type;
-		bool full() { return number == 20; };
-	};
-	struct Slot
-	{
-		bool empty = true;
-		TypeIt type;
-		union 
-		{
-			Armor armor;
-			Weapon weapon;
-			Resource resource;
-			Potion potion;
-		} data;
-		int x, y,num;
-	};
 	struct Item
 	{
 		string name;
@@ -809,107 +809,84 @@ class MyApp : public App
 			Potion potion;
 		} data;
 	};
+	struct Dropp
+	{
+		string name;
+		int chance;
+	};
 	struct object
 	{
 		int hp = 0;
-		int col = 0;
-		vector <string> drop;
+		vector <Dropp> drop;
 	};
+	
 	struct RObj
 	{
 		string file;
-		
+		int chance;
 		TypE type;
-		union
-		{
-			object obect;
-		} data;
+		object obect;
 	};
+		
 	map<string, Item> DB;
-	map<string, RObj>DBR;
+	map<string, map<string, RObj>>DBR;
 	vector <Slot> slots;
 
 
 	void chunkload(Chunk& chunk)
 	{
 		auto i = chunk.pos;
+		string a;
+		if (chunk.Type == Forest)
+		{
+			a = "forest";
+		}
+		if (chunk.Type == Swamp)
+		{
+			a = "swamp";
+		}
 		for (int x = 0; x < chunk.map.w; x++)
 		{
 			for (int y = 0; y < chunk.map.h; y++)
 			{
 				auto& back = Back.load("back.json", (i.x * 10 + x) * w, (i.y * 10 + y) * h);
 				back.setSize(w, h);
-				string a;
-				if (chunk.Type == Forest)
-				{
-					a = "grass_back_forest";
-				}
-				if (chunk.Type == Swamp)
-				{
-					a = "grass_back_swamp";
-				}
-				back.skin<Texture>().setImageName(DBR[a].file);
+				back.skin<Texture>().setImageName(DBR[a]["grass"].file);
 				if (chunk.map[x][y] == gamer)
 					continue;
-				int obt = randomInt(1, 45);
-				if (obt == 1 || obt == 2 || obt == 3 || obt ==4)
+				int ddd2=randomInt(1,3);
+				if (ddd2 == 1)
 				{
-					chunk.map[x][y] = Tree;
-					string b;
-					auto&obj = roundWorld.load("obj.json", (i.x * 10 + x) * w, (i.y * 10 + y) * h);
-					obj.setSize(w-0.001, h-0.01);
-					if (chunk.Type == Forest)
-					{
-						b = Robject[Forest+2];
-					}
-					if (chunk.Type == Swamp)
-					{
-						b = Robject[Swamp+2];
-					}
-					roundWorld.data(obj).hp = DBR[b].data.obect.hp;
-					obj.skin<Texture>().setImageName(DBR[b].file);
-					roundWorld.data(obj).thisObj = IntVec2(x, y);
-					roundWorld.data(obj).type = Tree;
-				}
-				if (obt == 5)
-				{
-					chunk.map[x][y] = Boulder;
-					string b;
-					auto&obj = roundWorld.load("obj.json", (i.x * 10 + x) * w, (i.y * 10 + y) * h);
+					int dd3 = 0;
 					
-					obj.setSize(w-0.01, h-0.01);
-					if (chunk.Type == Forest)
+					for (auto& b : DBR[a])
 					{
-						b = Robject[Forest];
+						dd3 += b.second.chance;
 					}
-					if (chunk.Type == Swamp)
+					int dd2 = randomInt(1, dd3);
+					for (auto& b : DBR[a])
 					{
-						b = Robject[Swamp];
+						if (b.second.type == fon)
+						{
+							continue;
+						}
+
+						if (dd2 <= b.second.chance)
+						{
+							chunk.map[x][y] = toObj[b.first];
+							auto&obj = roundWorld.load("obj.json", (i.x * 10 + x) * w, (i.y * 10 + y) * h);
+							obj.setSize(w - 0.001, h - 0.01);
+							roundWorld.data(obj).hp = b.second.obect.hp;
+							roundWorld.data(obj).thisObj = IntVec2(x, y);
+							roundWorld.data(obj).type = toObj[b.first];
+							obj.skin<Texture>().setImageName(b.second.file);
+							break;
+						}
+						else
+						{
+							dd2 -= b.second.chance;
+						}
 					}
-					roundWorld.data(obj).hp = DBR[b].data.obect.hp;
-					obj.skin<Texture>().setImageName(DBR[b].file);
-					roundWorld.data(obj).thisObj = IntVec2(x, y);
-					roundWorld.data(obj).type = Boulder;
-				}
-				if (obt == 6 || obt == 7)
-				{
-					chunk.map[x][y] = Grass;
-					string b;
-					auto&obj = roundWorld.load("obj.json", (i.x * 10 + x) * w, (i.y * 10 + y) * h);
-					
-					obj.setSize(w - 0.01, h - 0.01);
-					if (chunk.Type == Forest)
-					{
-						b = Robject[Forest+4];
-					}
-					if (chunk.Type == Swamp)
-					{
-						b = Robject[Swamp+4];
-					}
-					roundWorld.data(obj).hp = DBR[b].data.obect.hp;
-					obj.skin<Texture>().setImageName(DBR[b].file);
-					roundWorld.data(obj).thisObj = IntVec2(x, y);
-					roundWorld.data(obj).type = Grass;
 				}
 			}
 		}

@@ -1,33 +1,49 @@
-stone_forest
-	obj
+forest
+4
+grass
 	100
-	roundWorld/boulder.png
-	1
-	stone
-grass_forest
+	fon
+	roundWorld/grass1.png
+gras
+	50
 	obj	
 	20
 	roundWorld/gras1.png
 	1
+	100
 	grass
-tree_forest
+stone
+	20
+	obj
+	100
+	roundWorld/boulder.png
+	1
+	100
+	stone
+tree
+	60
 	obj
 	50
 	roundWorld/wood1.png
 	2
+	100
 	wood
+	20
 	stick
-tree_swamp
+swamp
+2
+grass
+	100
+	fon
+	roundWorld/grass2.png
+tree
+	50
 	obj
 	50
 	roundWorld/wood2.png
 	2
+	100
 	wood
+	20
 	stick
-grass_back_forest
-	fon
-	roundWorld/grass1.png
-grass_back_swamp
-	fon
-	roundWorld/grass2.png
 end
