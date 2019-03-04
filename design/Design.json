@@ -1684,6 +1684,7 @@
                                                             }
                                                          },
                                                          {
+                                                            "_name" : "slot2",
                                                             "_typeName" : "StaticTextureRect",
                                                             "box" : {
                                                                "_typeName" : "RelativeBox",
@@ -1703,6 +1704,44 @@
                                                             },
                                                             "color" : [ 1, 1, 1, 0.5058823823928833 ],
                                                             "imageName" : "icon\\icon_helmet.png",
+                                                            "position" : {
+                                                               "_typeName" : "AligningOffset",
+                                                               "horAlign" : 1,
+                                                               "horOffset" : {
+                                                                  "_typeName" : "RelativeValue",
+                                                                  "type" : 1,
+                                                                  "value" : 0
+                                                               },
+                                                               "vertAlign" : 1,
+                                                               "vertOffset" : {
+                                                                  "_typeName" : "RelativeValue",
+                                                                  "type" : 1,
+                                                                  "value" : 0
+                                                               }
+                                                            }
+                                                         },
+                                                         {
+                                                            "_name" : "slot",
+                                                            "_typeName" : "StaticTextureRect",
+                                                            "_visible" : false,
+                                                            "box" : {
+                                                               "_typeName" : "RelativeBox",
+                                                               "height" : {
+                                                                  "_typeName" : "RelativeValue",
+                                                                  "type" : 2,
+                                                                  "value" : 0.949999988079071
+                                                               },
+                                                               "offset" : {
+                                                                  "_empty" : true
+                                                               },
+                                                               "width" : {
+                                                                  "_typeName" : "RelativeValue",
+                                                                  "type" : 2,
+                                                                  "value" : 0.949999988079071
+                                                               }
+                                                            },
+                                                            "color" : [ 1, 1, 1, 1 ],
+                                                            "imageName" : "",
                                                             "position" : {
                                                                "_typeName" : "AligningOffset",
                                                                "horAlign" : 1,
@@ -1817,6 +1856,7 @@
                                                             }
                                                          },
                                                          {
+                                                            "_name" : "slot2",
                                                             "_typeName" : "StaticTextureRect",
                                                             "box" : {
                                                                "_typeName" : "RelativeBox",
@@ -1836,6 +1876,44 @@
                                                             },
                                                             "color" : [ 1, 1, 1, 0.5058823823928833 ],
                                                             "imageName" : "icon\\icon_chain_armor.png",
+                                                            "position" : {
+                                                               "_typeName" : "AligningOffset",
+                                                               "horAlign" : 1,
+                                                               "horOffset" : {
+                                                                  "_typeName" : "RelativeValue",
+                                                                  "type" : 1,
+                                                                  "value" : 0
+                                                               },
+                                                               "vertAlign" : 1,
+                                                               "vertOffset" : {
+                                                                  "_typeName" : "RelativeValue",
+                                                                  "type" : 1,
+                                                                  "value" : 0
+                                                               }
+                                                            }
+                                                         },
+                                                         {
+                                                            "_name" : "slot",
+                                                            "_typeName" : "StaticTextureRect",
+                                                            "_visible" : false,
+                                                            "box" : {
+                                                               "_typeName" : "RelativeBox",
+                                                               "height" : {
+                                                                  "_typeName" : "RelativeValue",
+                                                                  "type" : 2,
+                                                                  "value" : 0.949999988079071
+                                                               },
+                                                               "offset" : {
+                                                                  "_empty" : true
+                                                               },
+                                                               "width" : {
+                                                                  "_typeName" : "RelativeValue",
+                                                                  "type" : 2,
+                                                                  "value" : 0.949999988079071
+                                                               }
+                                                            },
+                                                            "color" : [ 1, 1, 1, 1 ],
+                                                            "imageName" : "",
                                                             "position" : {
                                                                "_typeName" : "AligningOffset",
                                                                "horAlign" : 1,
@@ -1950,6 +2028,7 @@
                                                             }
                                                          },
                                                          {
+                                                            "_name" : "slot2",
                                                             "_typeName" : "StaticTextureRect",
                                                             "box" : {
                                                                "_typeName" : "RelativeBox",
@@ -1969,6 +2048,44 @@
                                                             },
                                                             "color" : [ 1, 1, 1, 0.5058823823928833 ],
                                                             "imageName" : "icon\\icon_leggs.png",
+                                                            "position" : {
+                                                               "_typeName" : "AligningOffset",
+                                                               "horAlign" : 1,
+                                                               "horOffset" : {
+                                                                  "_typeName" : "RelativeValue",
+                                                                  "type" : 1,
+                                                                  "value" : 0
+                                                               },
+                                                               "vertAlign" : 1,
+                                                               "vertOffset" : {
+                                                                  "_typeName" : "RelativeValue",
+                                                                  "type" : 1,
+                                                                  "value" : 0
+                                                               }
+                                                            }
+                                                         },
+                                                         {
+                                                            "_name" : "slot",
+                                                            "_typeName" : "StaticTextureRect",
+                                                            "_visible" : false,
+                                                            "box" : {
+                                                               "_typeName" : "RelativeBox",
+                                                               "height" : {
+                                                                  "_typeName" : "RelativeValue",
+                                                                  "type" : 2,
+                                                                  "value" : 0.949999988079071
+                                                               },
+                                                               "offset" : {
+                                                                  "_empty" : true
+                                                               },
+                                                               "width" : {
+                                                                  "_typeName" : "RelativeValue",
+                                                                  "type" : 2,
+                                                                  "value" : 0.949999988079071
+                                                               }
+                                                            },
+                                                            "color" : [ 1, 1, 1, 1 ],
+                                                            "imageName" : "",
                                                             "position" : {
                                                                "_typeName" : "AligningOffset",
                                                                "horAlign" : 1,
@@ -2083,6 +2200,7 @@
                                                             }
                                                          },
                                                          {
+                                                            "_name" : "slot2",
                                                             "_typeName" : "StaticTextureRect",
                                                             "box" : {
                                                                "_typeName" : "RelativeBox",
@@ -2102,6 +2220,44 @@
                                                             },
                                                             "color" : [ 1, 1, 1, 0.5058823823928833 ],
                                                             "imageName" : "icon\\icon_boots.png",
+                                                            "position" : {
+                                                               "_typeName" : "AligningOffset",
+                                                               "horAlign" : 1,
+                                                               "horOffset" : {
+                                                                  "_typeName" : "RelativeValue",
+                                                                  "type" : 1,
+                                                                  "value" : 0
+                                                               },
+                                                               "vertAlign" : 1,
+                                                               "vertOffset" : {
+                                                                  "_typeName" : "RelativeValue",
+                                                                  "type" : 1,
+                                                                  "value" : 0
+                                                               }
+                                                            }
+                                                         },
+                                                         {
+                                                            "_name" : "slot",
+                                                            "_typeName" : "StaticTextureRect",
+                                                            "_visible" : false,
+                                                            "box" : {
+                                                               "_typeName" : "RelativeBox",
+                                                               "height" : {
+                                                                  "_typeName" : "RelativeValue",
+                                                                  "type" : 2,
+                                                                  "value" : 0.949999988079071
+                                                               },
+                                                               "offset" : {
+                                                                  "_empty" : true
+                                                               },
+                                                               "width" : {
+                                                                  "_typeName" : "RelativeValue",
+                                                                  "type" : 2,
+                                                                  "value" : 0.949999988079071
+                                                               }
+                                                            },
+                                                            "color" : [ 1, 1, 1, 1 ],
+                                                            "imageName" : "",
                                                             "position" : {
                                                                "_typeName" : "AligningOffset",
                                                                "horAlign" : 1,
@@ -2216,6 +2372,7 @@
                                                             }
                                                          },
                                                          {
+                                                            "_name" : "slot2",
                                                             "_typeName" : "StaticTextureRect",
                                                             "box" : {
                                                                "_typeName" : "RelativeBox",
@@ -2235,6 +2392,44 @@
                                                             },
                                                             "color" : [ 1, 1, 1, 0.5058823823928833 ],
                                                             "imageName" : "icon\\icon_weapon.png",
+                                                            "position" : {
+                                                               "_typeName" : "AligningOffset",
+                                                               "horAlign" : 1,
+                                                               "horOffset" : {
+                                                                  "_typeName" : "RelativeValue",
+                                                                  "type" : 1,
+                                                                  "value" : 0
+                                                               },
+                                                               "vertAlign" : 1,
+                                                               "vertOffset" : {
+                                                                  "_typeName" : "RelativeValue",
+                                                                  "type" : 1,
+                                                                  "value" : 0
+                                                               }
+                                                            }
+                                                         },
+                                                         {
+                                                            "_name" : "slot",
+                                                            "_typeName" : "StaticTextureRect",
+                                                            "_visible" : false,
+                                                            "box" : {
+                                                               "_typeName" : "RelativeBox",
+                                                               "height" : {
+                                                                  "_typeName" : "RelativeValue",
+                                                                  "type" : 2,
+                                                                  "value" : 0.949999988079071
+                                                               },
+                                                               "offset" : {
+                                                                  "_empty" : true
+                                                               },
+                                                               "width" : {
+                                                                  "_typeName" : "RelativeValue",
+                                                                  "type" : 2,
+                                                                  "value" : 0.949999988079071
+                                                               }
+                                                            },
+                                                            "color" : [ 1, 1, 1, 1 ],
+                                                            "imageName" : "",
                                                             "position" : {
                                                                "_typeName" : "AligningOffset",
                                                                "horAlign" : 1,
@@ -2349,6 +2544,7 @@
                                                             }
                                                          },
                                                          {
+                                                            "_name" : "slot2",
                                                             "_typeName" : "StaticTextureRect",
                                                             "box" : {
                                                                "_typeName" : "RelativeBox",
@@ -2368,6 +2564,44 @@
                                                             },
                                                             "color" : [ 1, 1, 1, 0.5058823823928833 ],
                                                             "imageName" : "icon\\icon_weapon.png",
+                                                            "position" : {
+                                                               "_typeName" : "AligningOffset",
+                                                               "horAlign" : 1,
+                                                               "horOffset" : {
+                                                                  "_typeName" : "RelativeValue",
+                                                                  "type" : 1,
+                                                                  "value" : 0
+                                                               },
+                                                               "vertAlign" : 1,
+                                                               "vertOffset" : {
+                                                                  "_typeName" : "RelativeValue",
+                                                                  "type" : 1,
+                                                                  "value" : 0
+                                                               }
+                                                            }
+                                                         },
+                                                         {
+                                                            "_name" : "slot",
+                                                            "_typeName" : "StaticTextureRect",
+                                                            "_visible" : false,
+                                                            "box" : {
+                                                               "_typeName" : "RelativeBox",
+                                                               "height" : {
+                                                                  "_typeName" : "RelativeValue",
+                                                                  "type" : 2,
+                                                                  "value" : 0.949999988079071
+                                                               },
+                                                               "offset" : {
+                                                                  "_empty" : true
+                                                               },
+                                                               "width" : {
+                                                                  "_typeName" : "RelativeValue",
+                                                                  "type" : 2,
+                                                                  "value" : 0.949999988079071
+                                                               }
+                                                            },
+                                                            "color" : [ 1, 1, 1, 1 ],
+                                                            "imageName" : "",
                                                             "position" : {
                                                                "_typeName" : "AligningOffset",
                                                                "horAlign" : 1,
@@ -2482,6 +2716,7 @@
                                                             }
                                                          },
                                                          {
+                                                            "_name" : "slot2",
                                                             "_typeName" : "StaticTextureRect",
                                                             "box" : {
                                                                "_typeName" : "RelativeBox",
@@ -2501,6 +2736,44 @@
                                                             },
                                                             "color" : [ 1, 1, 1, 0.5058823823928833 ],
                                                             "imageName" : "icon\\icon_potion.png",
+                                                            "position" : {
+                                                               "_typeName" : "AligningOffset",
+                                                               "horAlign" : 1,
+                                                               "horOffset" : {
+                                                                  "_typeName" : "RelativeValue",
+                                                                  "type" : 1,
+                                                                  "value" : 0
+                                                               },
+                                                               "vertAlign" : 1,
+                                                               "vertOffset" : {
+                                                                  "_typeName" : "RelativeValue",
+                                                                  "type" : 1,
+                                                                  "value" : 0
+                                                               }
+                                                            }
+                                                         },
+                                                         {
+                                                            "_name" : "slot",
+                                                            "_typeName" : "StaticTextureRect",
+                                                            "_visible" : false,
+                                                            "box" : {
+                                                               "_typeName" : "RelativeBox",
+                                                               "height" : {
+                                                                  "_typeName" : "RelativeValue",
+                                                                  "type" : 2,
+                                                                  "value" : 0.949999988079071
+                                                               },
+                                                               "offset" : {
+                                                                  "_empty" : true
+                                                               },
+                                                               "width" : {
+                                                                  "_typeName" : "RelativeValue",
+                                                                  "type" : 2,
+                                                                  "value" : 0.949999988079071
+                                                               }
+                                                            },
+                                                            "color" : [ 1, 1, 1, 1 ],
+                                                            "imageName" : "",
                                                             "position" : {
                                                                "_typeName" : "AligningOffset",
                                                                "horAlign" : 1,
@@ -2615,6 +2888,7 @@
                                                             }
                                                          },
                                                          {
+                                                            "_name" : "slot2",
                                                             "_typeName" : "StaticTextureRect",
                                                             "box" : {
                                                                "_typeName" : "RelativeBox",
@@ -2634,6 +2908,44 @@
                                                             },
                                                             "color" : [ 1, 1, 1, 0.5058823823928833 ],
                                                             "imageName" : "icon\\icon_potion.png",
+                                                            "position" : {
+                                                               "_typeName" : "AligningOffset",
+                                                               "horAlign" : 1,
+                                                               "horOffset" : {
+                                                                  "_typeName" : "RelativeValue",
+                                                                  "type" : 1,
+                                                                  "value" : 0
+                                                               },
+                                                               "vertAlign" : 1,
+                                                               "vertOffset" : {
+                                                                  "_typeName" : "RelativeValue",
+                                                                  "type" : 1,
+                                                                  "value" : 0
+                                                               }
+                                                            }
+                                                         },
+                                                         {
+                                                            "_name" : "slot",
+                                                            "_typeName" : "StaticTextureRect",
+                                                            "_visible" : false,
+                                                            "box" : {
+                                                               "_typeName" : "RelativeBox",
+                                                               "height" : {
+                                                                  "_typeName" : "RelativeValue",
+                                                                  "type" : 2,
+                                                                  "value" : 0.949999988079071
+                                                               },
+                                                               "offset" : {
+                                                                  "_empty" : true
+                                                               },
+                                                               "width" : {
+                                                                  "_typeName" : "RelativeValue",
+                                                                  "type" : 2,
+                                                                  "value" : 0.949999988079071
+                                                               }
+                                                            },
+                                                            "color" : [ 1, 1, 1, 1 ],
+                                                            "imageName" : "",
                                                             "position" : {
                                                                "_typeName" : "AligningOffset",
                                                                "horAlign" : 1,
@@ -2748,6 +3060,7 @@
                                                             }
                                                          },
                                                          {
+                                                            "_name" : "slot2",
                                                             "_typeName" : "StaticTextureRect",
                                                             "box" : {
                                                                "_typeName" : "RelativeBox",
@@ -2767,6 +3080,44 @@
                                                             },
                                                             "color" : [ 1, 1, 1, 0.5058823823928833 ],
                                                             "imageName" : "icon\\icon_amulet.png",
+                                                            "position" : {
+                                                               "_typeName" : "AligningOffset",
+                                                               "horAlign" : 1,
+                                                               "horOffset" : {
+                                                                  "_typeName" : "RelativeValue",
+                                                                  "type" : 1,
+                                                                  "value" : 0
+                                                               },
+                                                               "vertAlign" : 1,
+                                                               "vertOffset" : {
+                                                                  "_typeName" : "RelativeValue",
+                                                                  "type" : 1,
+                                                                  "value" : 0
+                                                               }
+                                                            }
+                                                         },
+                                                         {
+                                                            "_name" : "slot",
+                                                            "_typeName" : "StaticTextureRect",
+                                                            "_visible" : false,
+                                                            "box" : {
+                                                               "_typeName" : "RelativeBox",
+                                                               "height" : {
+                                                                  "_typeName" : "RelativeValue",
+                                                                  "type" : 2,
+                                                                  "value" : 0.949999988079071
+                                                               },
+                                                               "offset" : {
+                                                                  "_empty" : true
+                                                               },
+                                                               "width" : {
+                                                                  "_typeName" : "RelativeValue",
+                                                                  "type" : 2,
+                                                                  "value" : 0.949999988079071
+                                                               }
+                                                            },
+                                                            "color" : [ 1, 1, 1, 1 ],
+                                                            "imageName" : "",
                                                             "position" : {
                                                                "_typeName" : "AligningOffset",
                                                                "horAlign" : 1,
@@ -2881,6 +3232,7 @@
                                                             }
                                                          },
                                                          {
+                                                            "_name" : "slot2",
                                                             "_typeName" : "StaticTextureRect",
                                                             "box" : {
                                                                "_typeName" : "RelativeBox",
@@ -2900,6 +3252,44 @@
                                                             },
                                                             "color" : [ 1, 1, 1, 0.5058823823928833 ],
                                                             "imageName" : "icon\\icon_amulet.png",
+                                                            "position" : {
+                                                               "_typeName" : "AligningOffset",
+                                                               "horAlign" : 1,
+                                                               "horOffset" : {
+                                                                  "_typeName" : "RelativeValue",
+                                                                  "type" : 1,
+                                                                  "value" : 0
+                                                               },
+                                                               "vertAlign" : 1,
+                                                               "vertOffset" : {
+                                                                  "_typeName" : "RelativeValue",
+                                                                  "type" : 1,
+                                                                  "value" : 0
+                                                               }
+                                                            }
+                                                         },
+                                                         {
+                                                            "_name" : "slot",
+                                                            "_typeName" : "StaticTextureRect",
+                                                            "_visible" : false,
+                                                            "box" : {
+                                                               "_typeName" : "RelativeBox",
+                                                               "height" : {
+                                                                  "_typeName" : "RelativeValue",
+                                                                  "type" : 2,
+                                                                  "value" : 0.949999988079071
+                                                               },
+                                                               "offset" : {
+                                                                  "_empty" : true
+                                                               },
+                                                               "width" : {
+                                                                  "_typeName" : "RelativeValue",
+                                                                  "type" : 2,
+                                                                  "value" : 0.949999988079071
+                                                               }
+                                                            },
+                                                            "color" : [ 1, 1, 1, 1 ],
+                                                            "imageName" : "",
                                                             "position" : {
                                                                "_typeName" : "AligningOffset",
                                                                "horAlign" : 1,
@@ -3014,6 +3404,7 @@
                                                             }
                                                          },
                                                          {
+                                                            "_name" : "slot2",
                                                             "_typeName" : "StaticTextureRect",
                                                             "box" : {
                                                                "_typeName" : "RelativeBox",
@@ -3033,6 +3424,44 @@
                                                             },
                                                             "color" : [ 1, 1, 1, 0.5058823823928833 ],
                                                             "imageName" : "icon\\icon_amulet.png",
+                                                            "position" : {
+                                                               "_typeName" : "AligningOffset",
+                                                               "horAlign" : 1,
+                                                               "horOffset" : {
+                                                                  "_typeName" : "RelativeValue",
+                                                                  "type" : 1,
+                                                                  "value" : 0
+                                                               },
+                                                               "vertAlign" : 1,
+                                                               "vertOffset" : {
+                                                                  "_typeName" : "RelativeValue",
+                                                                  "type" : 1,
+                                                                  "value" : 0
+                                                               }
+                                                            }
+                                                         },
+                                                         {
+                                                            "_name" : "slot",
+                                                            "_typeName" : "StaticTextureRect",
+                                                            "_visible" : false,
+                                                            "box" : {
+                                                               "_typeName" : "RelativeBox",
+                                                               "height" : {
+                                                                  "_typeName" : "RelativeValue",
+                                                                  "type" : 2,
+                                                                  "value" : 0.949999988079071
+                                                               },
+                                                               "offset" : {
+                                                                  "_empty" : true
+                                                               },
+                                                               "width" : {
+                                                                  "_typeName" : "RelativeValue",
+                                                                  "type" : 2,
+                                                                  "value" : 0.949999988079071
+                                                               }
+                                                            },
+                                                            "color" : [ 1, 1, 1, 1 ],
+                                                            "imageName" : "",
                                                             "position" : {
                                                                "_typeName" : "AligningOffset",
                                                                "horAlign" : 1,
@@ -3147,6 +3576,7 @@
                                                             }
                                                          },
                                                          {
+                                                            "_name" : "slot2",
                                                             "_typeName" : "StaticTextureRect",
                                                             "box" : {
                                                                "_typeName" : "RelativeBox",
@@ -3166,6 +3596,44 @@
                                                             },
                                                             "color" : [ 1, 1, 1, 0.5058823823928833 ],
                                                             "imageName" : "icon\\icon_amulet.png",
+                                                            "position" : {
+                                                               "_typeName" : "AligningOffset",
+                                                               "horAlign" : 1,
+                                                               "horOffset" : {
+                                                                  "_typeName" : "RelativeValue",
+                                                                  "type" : 1,
+                                                                  "value" : 0
+                                                               },
+                                                               "vertAlign" : 1,
+                                                               "vertOffset" : {
+                                                                  "_typeName" : "RelativeValue",
+                                                                  "type" : 1,
+                                                                  "value" : 0
+                                                               }
+                                                            }
+                                                         },
+                                                         {
+                                                            "_name" : "slot",
+                                                            "_typeName" : "StaticTextureRect",
+                                                            "_visible" : false,
+                                                            "box" : {
+                                                               "_typeName" : "RelativeBox",
+                                                               "height" : {
+                                                                  "_typeName" : "RelativeValue",
+                                                                  "type" : 2,
+                                                                  "value" : 0.949999988079071
+                                                               },
+                                                               "offset" : {
+                                                                  "_empty" : true
+                                                               },
+                                                               "width" : {
+                                                                  "_typeName" : "RelativeValue",
+                                                                  "type" : 2,
+                                                                  "value" : 0.949999988079071
+                                                               }
+                                                            },
+                                                            "color" : [ 1, 1, 1, 1 ],
+                                                            "imageName" : "",
                                                             "position" : {
                                                                "_typeName" : "AligningOffset",
                                                                "horAlign" : 1,

@@ -1,0 +1,14 @@
+{
+   "_typeName" : "TextBank",
+   "_version" : "VER3",
+   "database" : [
+      {
+         "_key" : "drop",
+         "_value" : "Снять"
+      },
+      {
+         "_key" : "use",
+         "_value" : "Надеть"
+      }
+   ]
+}

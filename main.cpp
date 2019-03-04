@@ -5,10 +5,6 @@ using namespace std;
 float w, h, w3, h2;
 class MyApp : public App
 {
-	map<int,string > intToRes;
-	map<int, string> intToWeap;
-	map< string,int> resToInt;
-	map< string, int> weapToInt;
 	IntVec2 ch;
 	enum TypeIt
 	{
@@ -19,7 +15,7 @@ class MyApp : public App
 	};
 	enum TypE
 	{
-		objt,
+		obj,
 		fon
 	};
 	enum Rarity
@@ -41,7 +37,7 @@ class MyApp : public App
 		int PowEffects;
 		Type type;
 		bool isLeft;
-		bool isRight;
+		bool active;
 	};
 	struct Armor
 	{
@@ -78,20 +74,19 @@ class MyApp : public App
 		Rarity rarity;
 		bool active;
 		bool isLeft;
-		bool isRight;
-		int type;
+		
 	};
 
 	struct Resource
 	{
 		int number;
-		int type;
 		bool full() { return number == 20; };
 	};
 	struct Slot
 	{
 		bool empty = true;
 		TypeIt type;
+		string name;
 		union
 		{
 			Armor armor;
@@ -110,7 +105,7 @@ class MyApp : public App
 			{
 				if (a.type == resources)
 				{
-					if (a.data.resource.type == resToInt[i])
+					if (a.name == i)
 					{
 						b += a.data.resource.number;
 					}
@@ -127,7 +122,7 @@ class MyApp : public App
 			{
 				if (b.type == resources)
 				{
-					if (b.data.resource.type == resToInt[i])
+					if (b.name == i)
 					{
 						if (a > b.data.resource.number)
 						{
@@ -331,7 +326,7 @@ class MyApp : public App
 				}
 				if (b == "obj")
 				{
-					DBR[name][name2].type = objt;
+					DBR[name][name2].type = obj;
 					int c;
 					input >> c;
 					DBR[name][name2].obect.hp = c;
@@ -370,8 +365,7 @@ class MyApp : public App
 			input >> b;
 			if (b == "resources")
 			{
-				intToRes[res] = name2;
-				resToInt[name2] = res;
+	
 				string name;
 				input >> name;
 				for (auto& f : name)
@@ -389,8 +383,7 @@ class MyApp : public App
 			}
 			else if (b=="weapon")
 			{
-				intToWeap[res] = name2;
-				weapToInt[name2] = res;
+				
 				string name;
 				string file;
 				string typ;
@@ -425,6 +418,7 @@ class MyApp : public App
 	bool nowObjInter = false;
     void load()
     {
+		loadTextBank("textbank.json");
 		readDB();
 		readDBR();
 		readRDB();
@@ -473,36 +467,165 @@ class MyApp : public App
 		connect(Min, drm, 4);
 		connect(Max, drm, 5);
 		connect(use, drawQieup);
+		connect(w1, handuse, true);
+		connect(w2, handuse, false);
+		connect(p1, potionuse, true);
+		connect(p2, potionuse, false);
     }
-	void drawQieup()
+	void handdrop(bool i)
 	{
+		if (slots[nowSlot].data.weapon.active)
+		{
+			if (i)
+			{
+				icon_del("weapon1");
+				MenuW.hide();
+				slots[nowSlot].data.weapon.active = false;
+				slots[nowSlot].data.weapon.isLeft = false;
+				nowSlot = -1;
+			}
+			else
+			{
+				icon_del("weapon2");
+				MenuW.hide();
+				slots[nowSlot].data.weapon.active = false;
+				slots[nowSlot].data.weapon.isLeft = false;
+				nowSlot = -1;
+			}
+		}
+	}
+	void potiondrop(bool i)
+	{
+
+	}
+	void icon_del(string i)
+	{
+		fieldEquiped.child<GameObj>(i).child<Texture>("slot2").show();
+		fieldEquiped.child<GameObj>(i).child<Texture>("slot").hide();
+	}
+	void clearQieup()
+	{
+
 		if (slots[nowSlot].type == weapons)
 		{
+			connect(w1, handdrop, true);
+			connect(w2, handdrop, false);
 			MenuW.show();
 		}
 		if (slots[nowSlot].type == potions)
 		{
+			connect(p1, potiondrop, true);
+			connect(p2, potiondrop, false);
 			MenuP.show();
 		}
+		if (slots[nowSlot].data.armor.active)
+			if (slots[nowSlot].type == armors)
+			{
+				if (slots[nowSlot].data.armor.type == slots[nowSlot].data.armor.boots)
+				{
+					icon_del("boots");
+				}
+				if (slots[nowSlot].data.armor.type == slots[nowSlot].data.armor.chesplat)
+				{
+					icon_del("chair_armor");
+				}
+				if (slots[nowSlot].data.armor.type == slots[nowSlot].data.armor.helmet)
+				{
+					icon_del("helmet");
+				}
+				if (slots[nowSlot].data.armor.type == slots[nowSlot].data.armor.leggs)
+				{
+					icon_del("legss");
+				}
+				slots[nowSlot].data.armor.active = false;
+				nowSlot = -1;
+			}
+		Menu.hide();
+	}
+	void handuse(bool i)
+	{
+		if (!slots[nowSlot].data.weapon.active)
+		{
+			if (i)
+			{
+				icon_use("weapon1");
+				MenuW.hide();
+				slots[nowSlot].data.weapon.active = true;
+				slots[nowSlot].data.weapon.isLeft = true;
+				nowSlot = -1;
+			}
+			else
+			{
+				icon_use("weapon2");
+				MenuW.hide();
+				slots[nowSlot].data.weapon.active = true;
+				slots[nowSlot].data.weapon.isLeft = false;
+				nowSlot = -1;
+			}
+		}
+	}
+	void potionuse(bool i)
+	{
+		if (i)
+		{
+			icon_use("poiton1");
+			MenuP.hide();
+			slots[nowSlot].data.potion.active = true;
+			slots[nowSlot].data.potion.isLeft = true;
+			nowSlot = -1;
+		}
+		else
+		{
+			icon_use("poiton2");
+			MenuP.hide();
+			slots[nowSlot].data.potion.active = true;
+			slots[nowSlot].data.potion.isLeft = true;
+			nowSlot = -1;
+		}
+	}
+	void icon_use(string i)
+	{
+		fieldEquiped.child<GameObj>(i).child<Texture>("slot2").hide();
+		fieldEquiped.child<GameObj>(i).child<Texture>("slot").show();
+		fieldEquiped.child<GameObj>(i).child<Texture>("slot").setImageName(DB[slots[nowSlot].name].file);
+	}
+	void drawQieup()
+	{
+		if (slots[nowSlot].type == weapons)
+		{
+			connect(w1, handuse, true);
+			connect(w2, handuse, false);
+			MenuW.show();
+		}
+		if (slots[nowSlot].type == potions)
+		{
+			connect(p1, potionuse, true);
+			connect(p2, potionuse, false);
+			MenuP.show();
+		}
+		if (!slots[nowSlot].data.armor.active)
 		if (slots[nowSlot].type == armors)
 		{
 			if (slots[nowSlot].data.armor.type == slots[nowSlot].data.armor.boots)
 			{
-
+				icon_use("boots");
 			}
 			if (slots[nowSlot].data.armor.type == slots[nowSlot].data.armor.chesplat)
 			{
-
+				icon_use("chair_armor");
 			}
 			if (slots[nowSlot].data.armor.type == slots[nowSlot].data.armor.helmet)
 			{
-
+				icon_use("helmet");
 			}
 			if (slots[nowSlot].data.armor.type == slots[nowSlot].data.armor.leggs)
 			{
-
+				icon_use("legss");
 			}
+			slots[nowSlot].data.armor.active = true;
+			nowSlot = -1;
 		}
+		Menu.hide();
 	}
 	void conmenu()
 	{
@@ -602,12 +725,12 @@ class MyApp : public App
 		{
 			b.child<DrawObj>("num").show();
 			b.child<Label>("col").setText(toString(a.data.resource.number));
-			b.child<Texture>("obj").setImageName(DB[intToRes[a.data.resource.type]].file);
+			b.child<Texture>("obj").setImageName(DB[a.name].file);
 		}
 		if (a.type == weapons)
 		{
 			b.child<DrawObj>("num").hide();
-			b.child<Texture>("obj").setImageName(DB[intToWeap[a.data.weapon.type]].file);
+			b.child<Texture>("obj").setImageName(DB[a.name].file);
 		}
 		b.child<Texture>("obj").show();
 		design.update();
@@ -650,7 +773,7 @@ class MyApp : public App
 				continue;
 			if (a.type == resources)
 			{
-				if (!a.data.resource.full() && intToRes[a.data.resource.type]== type)
+				if (!a.data.resource.full() && a.name == type)
 				{
 					if (a.data.resource.number + c <= 20)
 					{
@@ -678,7 +801,7 @@ class MyApp : public App
 					if (i == resources)
 					{
 						a.type = resources;
-						a.data.resource.type = resToInt[type];
+						a.name = type;
 						if (c <= 20)
 						{
 							a.data.resource.number = c;
@@ -690,7 +813,7 @@ class MyApp : public App
 					if (i == weapons)
 					{
 						a.type = weapons;
-						a.data.weapon.type = weapToInt[type];
+						a.name = type;
 						break;
 					}
 					
@@ -776,6 +899,16 @@ class MyApp : public App
 							Menu.child<Button>("use").show();
 							if (slots[nowSlot].type == resources)
 								Menu.child<Button>("use").hide();
+							if (slots[nowSlot].data.armor.active || slots[nowSlot].data.weapon.active || slots[nowSlot].data.potion.active)
+							{
+								Menu.child<Button>("use").child<Label>("label").setText(tr("drop"));
+								connect(use, clearQieup);
+							}
+							if (!slots[nowSlot].data.armor.active || !slots[nowSlot].data.weapon.active || !slots[nowSlot].data.potion.active)
+							{
+								Menu.child<Button>("use").child<Label>("label").setText(tr("use"));
+								connect(use, drawQieup);
+							}
 							connect(drop, Drop, nowSlot);
 						}
 						isMouse = 2;
@@ -915,32 +1048,23 @@ class MyApp : public App
 				conmenu();
 				showCursor();
 			}
+			//..................................................................eee
 			if (input.justPressed(E))
 			{
 				if (nowObjInter == true)
 				{
 					roundWorld.data(nowObj).vision -= 25.5;
-					auto b = nowObj.skin<Texture>().color();
-					b.a = roundWorld.data(nowObj).vision;
-					nowObj.skin<Texture>().setColor(b);
+					auto color = nowObj.skin<Texture>().color();
+					color.a = roundWorld.data(nowObj).vision;
+					nowObj.skin<Texture>().setColor(color);
 					roundWorld.data(nowObj).hp -= 10;
-					for (auto& b : DBR["forest"])
+					auto& b = DBR["forest"][roundWorld.data(nowObj).type];
+					for (auto& b2 : b.obect.drop)
 					{
-						if (b.second.type == fon)
+						int dd2 = randomInt(1, 100);
+						if (dd2 <= b2.chance)
 						{
-							continue;
-						}
-						if (roundWorld.data(nowObj).type == toObj[b.first])
-						{
-							for (auto& b2 : b.second.obect.drop)
-							{
-								int dd2 = randomInt(1, 100);
-								if (dd2 <= b2.chance)
-								{
-									seekSlot(b2.name, resources,1);
-								}
-							}
-							break;
+							seekSlot(b2.name, resources,1);
 						}
 					}
 					if (roundWorld.data(nowObj).hp <= 0)
@@ -999,7 +1123,6 @@ class MyApp : public App
 		}
     }
 
-
 	enum chunkType {
 		Swamp,
 		Forest,
@@ -1010,12 +1133,9 @@ class MyApp : public App
 	};
 	enum chunkObj {
 		None,
-		Boulder,
-		Tree,
-		Grass,
+		Obj,
 		gamer
 	};
-	map<string, chunkObj> toObj = { {"gras",Grass}, {"stone",Boulder},{"tree",Tree} };
 	struct Chunk
 	{
 		GameMap map;
@@ -1116,13 +1236,13 @@ class MyApp : public App
 
 						if (dd2 <= b.second.chance)
 						{
-							chunk.map[x][y] = toObj[b.first];
-							auto&obj = roundWorld.load("obj.json", (i.x * 10 + x) * w, (i.y * 10 + y) * h);
-							obj.setSize(w - 0.001, h - 0.01);
-							roundWorld.data(obj).hp = b.second.obect.hp;
-							roundWorld.data(obj).thisObj = IntVec2(x, y);
-							roundWorld.data(obj).type = toObj[b.first];
-							obj.skin<Texture>().setImageName(b.second.file);
+							chunk.map[x][y] = Obj;
+							auto&object = roundWorld.load("obj.json", (i.x * 10 + x) * w, (i.y * 10 + y) * h);
+							object.setSize(w - 0.001, h - 0.01);
+							roundWorld.data(object).hp = b.second.obect.hp;
+							roundWorld.data(object).thisObj = IntVec2(x, y);
+							roundWorld.data(object).type = b.first;
+							object.skin<Texture>().setImageName(b.second.file);
 							break;
 						}
 						else
@@ -1155,7 +1275,7 @@ class MyApp : public App
 	{
 		int hp=50;
 		IntVec2 thisObj;
-		chunkObj type;
+		string type;
 		float vision=255;
 	};
 
