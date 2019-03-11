@@ -326,6 +326,33 @@
                   "value" : 0
                }
             }
+         },
+         {
+            "_name" : "active",
+            "_typeName" : "StaticTextureRect",
+            "_visible" : false,
+            "box" : {
+               "_typeName" : "PixelBox",
+               "height" : 40,
+               "width" : 40
+            },
+            "color" : [ 1, 1, 1, 1 ],
+            "imageName" : "icon\\icon_active.png",
+            "position" : {
+               "_typeName" : "AligningOffset",
+               "horAlign" : 0,
+               "horOffset" : {
+                  "_typeName" : "RelativeValue",
+                  "type" : 2,
+                  "value" : 0.05000000074505806
+               },
+               "vertAlign" : 2,
+               "vertOffset" : {
+                  "_typeName" : "RelativeValue",
+                  "type" : 2,
+                  "value" : 0.05000000074505806
+               }
+            }
          }
       ],
       "position" : {

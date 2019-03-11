@@ -418,6 +418,7 @@ class MyApp : public App
 	bool nowObjInter = false;
     void load()
     {
+		
 		loadTextBank("textbank.json");
 		readDB();
 		readDBR();
@@ -471,33 +472,12 @@ class MyApp : public App
 		connect(w2, handuse, false);
 		connect(p1, potionuse, true);
 		connect(p2, potionuse, false);
+		seekSlot("wooden_axe", weapons, 1);
+		/*
+		seekSlot("grass", resources, 100);
+		seekSlot("wood", resources, 100);
+		seekSlot("stick", resources, 100);*/
     }
-	void handdrop(bool i)
-	{
-		if (slots[nowSlot].data.weapon.active)
-		{
-			if (i)
-			{
-				icon_del("weapon1");
-				MenuW.hide();
-				slots[nowSlot].data.weapon.active = false;
-				slots[nowSlot].data.weapon.isLeft = false;
-				nowSlot = -1;
-			}
-			else
-			{
-				icon_del("weapon2");
-				MenuW.hide();
-				slots[nowSlot].data.weapon.active = false;
-				slots[nowSlot].data.weapon.isLeft = false;
-				nowSlot = -1;
-			}
-		}
-	}
-	void potiondrop(bool i)
-	{
-
-	}
 	void icon_del(string i)
 	{
 		fieldEquiped.child<GameObj>(i).child<Texture>("slot2").show();
@@ -505,18 +485,32 @@ class MyApp : public App
 	}
 	void clearQieup()
 	{
-
+		slot.get(nowSlot).child<Texture>("active").hide();
 		if (slots[nowSlot].type == weapons)
 		{
-			connect(w1, handdrop, true);
-			connect(w2, handdrop, false);
-			MenuW.show();
+			if (slots[nowSlot].data.weapon.active)
+			{
+				if (slots[nowSlot].data.weapon.isLeft)
+				{
+					icon_del("weapon1");
+					MenuW.hide();
+					slots[nowSlot].data.weapon.active = false;
+					slots[nowSlot].data.weapon.isLeft = false;
+					nowSlot = -1;
+				}
+				else
+				{
+					icon_del("weapon2");
+					MenuW.hide();
+					slots[nowSlot].data.weapon.active = false;
+					slots[nowSlot].data.weapon.isLeft = false;
+					nowSlot = -1;
+				}
+			}
 		}
 		if (slots[nowSlot].type == potions)
 		{
-			connect(p1, potiondrop, true);
-			connect(p2, potiondrop, false);
-			MenuP.show();
+
 		}
 		if (slots[nowSlot].data.armor.active)
 			if (slots[nowSlot].type == armors)
@@ -544,11 +538,12 @@ class MyApp : public App
 	}
 	void handuse(bool i)
 	{
+		
 		if (!slots[nowSlot].data.weapon.active)
 		{
 			if (i)
 			{
-				icon_use("weapon1");
+				icon_use("weapon1",nowSlot);
 				MenuW.hide();
 				slots[nowSlot].data.weapon.active = true;
 				slots[nowSlot].data.weapon.isLeft = true;
@@ -556,7 +551,7 @@ class MyApp : public App
 			}
 			else
 			{
-				icon_use("weapon2");
+				icon_use("weapon2", nowSlot);
 				MenuW.hide();
 				slots[nowSlot].data.weapon.active = true;
 				slots[nowSlot].data.weapon.isLeft = false;
@@ -568,7 +563,7 @@ class MyApp : public App
 	{
 		if (i)
 		{
-			icon_use("poiton1");
+			icon_use("poiton1", nowSlot);
 			MenuP.hide();
 			slots[nowSlot].data.potion.active = true;
 			slots[nowSlot].data.potion.isLeft = true;
@@ -576,21 +571,22 @@ class MyApp : public App
 		}
 		else
 		{
-			icon_use("poiton2");
+			icon_use("poiton2", nowSlot);
 			MenuP.hide();
 			slots[nowSlot].data.potion.active = true;
 			slots[nowSlot].data.potion.isLeft = true;
 			nowSlot = -1;
 		}
 	}
-	void icon_use(string i)
+	void icon_use(string i,int i2)
 	{
 		fieldEquiped.child<GameObj>(i).child<Texture>("slot2").hide();
 		fieldEquiped.child<GameObj>(i).child<Texture>("slot").show();
-		fieldEquiped.child<GameObj>(i).child<Texture>("slot").setImageName(DB[slots[nowSlot].name].file);
+		fieldEquiped.child<GameObj>(i).child<Texture>("slot").setImageName(DB[slots[i2].name].file);
 	}
 	void drawQieup()
 	{
+		slot.get(nowSlot).child<Texture>("active").show();
 		if (slots[nowSlot].type == weapons)
 		{
 			connect(w1, handuse, true);
@@ -608,19 +604,19 @@ class MyApp : public App
 		{
 			if (slots[nowSlot].data.armor.type == slots[nowSlot].data.armor.boots)
 			{
-				icon_use("boots");
+				icon_use("boots", nowSlot);
 			}
 			if (slots[nowSlot].data.armor.type == slots[nowSlot].data.armor.chesplat)
 			{
-				icon_use("chair_armor");
+				icon_use("chair_armor", nowSlot);
 			}
 			if (slots[nowSlot].data.armor.type == slots[nowSlot].data.armor.helmet)
 			{
-				icon_use("helmet");
+				icon_use("helmet", nowSlot);
 			}
 			if (slots[nowSlot].data.armor.type == slots[nowSlot].data.armor.leggs)
 			{
-				icon_use("legss");
+				icon_use("legss", nowSlot);
 			}
 			slots[nowSlot].data.armor.active = true;
 			nowSlot = -1;
@@ -718,6 +714,7 @@ class MyApp : public App
 		{
 			b.child<Texture>("obj").hide();
 			b.child<DrawObj>("num").hide();
+			b.child<Texture>("active").hide();
 			return;
 		}
 		b.child<DrawObj>("num").show();
@@ -814,7 +811,11 @@ class MyApp : public App
 					{
 						a.type = weapons;
 						a.name = type;
-						break;
+						c--;
+						if (c == 0)
+						{
+							break;
+						}
 					}
 					
 					
@@ -832,7 +833,60 @@ class MyApp : public App
 		int b = a.y * 9 + a.x;
 		return b;
 	}
-
+	void updateQuiep()
+	{
+		int i = 0;
+		icon_del("weapon1");
+		icon_del("weapon2");
+		icon_del("potion1");
+		icon_del("potion2");
+		icon_del("legss");
+		icon_del("chair_armor");
+		icon_del("boots");
+		icon_del("helmet");
+		for (auto a : slot.all())
+		{
+			if ((slots[i].data.armor.active && slots[i].type == armors) || (slots[i].data.weapon.active && slots[i].type == weapons) || (slots[i].data.potion.active && slots[i].type == potions))
+			{
+				if (slots[i].type == weapons && slots[i].data.weapon.isLeft)
+				{
+					icon_use("weapon1",i);
+				}
+				if (slots[i].type == weapons && !slots[i].data.weapon.isLeft)
+				{
+					icon_use("weapon2",i);
+				}
+				if (slots[i].type == potions && slots[i].data.potion.isLeft)
+				{
+					icon_use("potion1",i);
+				}
+				if (slots[i].type == potions && !slots[i].data.potion.isLeft)
+				{
+					icon_use("potion2",i);
+				}
+				if (slots[i].type == armors)
+				{
+					if (slots[i].data.armor.type == slots[i].data.armor.boots)
+					{
+						icon_use("boots",i);
+					}
+					if (slots[i].data.armor.type == slots[i].data.armor.chesplat)
+					{
+						icon_use("chair_armor",i);
+					}
+					if (slots[i].data.armor.type == slots[i].data.armor.helmet)
+					{
+						icon_use("helmet",i);
+					}
+					if (slots[i].data.armor.type == slots[i].data.armor.leggs)
+					{
+						icon_use("legss",i);
+					}
+				}
+			}
+			i++;
+		}
+	}
 	void Drop(int i)
 	{
 		if (slots[nowSlot].type == resources || slots[nowSlot].type == potions)
@@ -848,6 +902,7 @@ class MyApp : public App
 		{
 			slots[nowSlot].empty = true;
 			updateSlot(nowSlot);
+			updateQuiep();
 		}
 		Menu.hide();
 		Min.hide();
@@ -857,7 +912,6 @@ class MyApp : public App
 			Max.show();
 			more.show();
 		}
-		
 	}
 	int isMouse=0;
     void process(Input input)
@@ -894,17 +948,20 @@ class MyApp : public App
 						if (!slots[nowSlot].empty)
 						{
 							auto b = slot.get(nowSlot);
-							Menu.setPos(b.pos().x + w3, b.pos().y);
+							if (nowSlot==8||nowSlot==17||nowSlot==26||nowSlot==35||nowSlot==44)
+							Menu.setPos(b.pos().x - w3, b.pos().y);
+							else
+								Menu.setPos(b.pos().x + w3, b.pos().y);
 							Menu.show();
 							Menu.child<Button>("use").show();
 							if (slots[nowSlot].type == resources)
 								Menu.child<Button>("use").hide();
-							if (slots[nowSlot].data.armor.active || slots[nowSlot].data.weapon.active || slots[nowSlot].data.potion.active)
+							if ((slots[nowSlot].data.armor.active && slots[nowSlot].type==armors) || (slots[nowSlot].data.weapon.active && slots[nowSlot].type == weapons) || (slots[nowSlot].data.potion.active && slots[nowSlot].type == potions))
 							{
 								Menu.child<Button>("use").child<Label>("label").setText(tr("drop"));
 								connect(use, clearQieup);
 							}
-							if (!slots[nowSlot].data.armor.active || !slots[nowSlot].data.weapon.active || !slots[nowSlot].data.potion.active)
+							if ((!slots[nowSlot].data.armor.active && slots[nowSlot].type == armors) || (!slots[nowSlot].data.weapon.active && slots[nowSlot].type == weapons) || (!slots[nowSlot].data.potion.active && slots[nowSlot].type == potions))
 							{
 								Menu.child<Button>("use").child<Label>("label").setText(tr("use"));
 								connect(use, drawQieup);
