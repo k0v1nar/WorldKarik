@@ -3,6 +3,7 @@
 using namespace gamebase;
 using namespace std;
 float w, h, w3, h2;
+bool save = false; 
 class MyApp : public App
 {
 	IntVec2 ch;
@@ -16,7 +17,8 @@ class MyApp : public App
 	enum TypE
 	{
 		obj,
-		fon
+		fon,
+		enemy
 	};
 	enum Rarity
 	{
@@ -269,11 +271,44 @@ class MyApp : public App
 		}
 		design.update();
 	}
+	void readPerson()
+	{
+		ifstream input;
+		if(save)
+			input.open("data/save/progress/person/stats.txt");
+		else
+		{
+			input.open("data/load/person/stats.txt");
+		}	
+		string b;
+		input >> b;
+		auto& name = stats.load<Label>("stat.json");	
+		name.setText(tr("name") + b);
+		input >> b;
+		auto& clas = stats.load<Label>("stat.json");
+		clas.setText(tr("class") + tr(b));
+		int b2;
+		input >> b2;
+		auto& lev = stats.load<Label>("stat.json");
+		lev.setText(tr("level") + toString(b2));
+		input >> b2;
+		auto& life = stats.load<Label>("stat.json");
+		life.setText(tr("life") + toString(b2));
+		input >> b2;
+		auto& armor = stats.load<Label>("stat.json");
+		armor.setText(tr("arm") + toString(b2));
+		input >> b2;
+		auto& armorM = stats.load<Label>("stat.json");
+		armorM.setText(tr("armM") + toString(b2));
+		input >> b2;
+		auto& manna = stats.load<Label>("stat.json");
+		manna.setText(tr("manna") + toString(b2));
+	}
 	void readRDB()
 	{
 		for (auto b = 1; b <= 5; b++)
 		{
-			ifstream input("data/recipe/recipe"+toString(b)+".txt");
+			ifstream input("data/load/recipe/recipe"+toString(b)+".txt");
 			int a = 0;
 				input >> a;
 			for (auto i = 0; i < a; i++)
@@ -297,7 +332,7 @@ class MyApp : public App
 	}
 	void readDBR()
 	{
-		ifstream input("data/obj/db.txt");
+		ifstream input("data/load/obj/db.txt");
 		for (;;)
 		{
 			string name;
@@ -346,7 +381,13 @@ class MyApp : public App
 						DBR[name][name2].obect.drop.push_back(f);
 					}
 				}
-				
+				if (b == "enemy")
+				{
+					DBR[name][name2].type = enemy;
+					string c;
+					input >> c;
+					DBR[name][name2].file = c;
+				}
 			}
 			
 		}
@@ -354,7 +395,7 @@ class MyApp : public App
 	}
 	void readDB()
 	{
-		ifstream input("data/item/db.txt");
+		ifstream input("data/load/item/db.txt");
 		for (int res=0;1<2;res++)
 		{
 			string name2;
@@ -418,7 +459,9 @@ class MyApp : public App
 	bool nowObjInter = false;
     void load()
     {
-		
+		ifstream input("data/save.txt");
+		bool s;
+		input >> save;
 		loadTextBank("textbank.json");
 		readDB();
 		readDBR();
@@ -473,6 +516,7 @@ class MyApp : public App
 		connect(p1, potionuse, true);
 		connect(p2, potionuse, false);
 		seekSlot("wooden_axe", weapons, 1);
+		readPerson();
 		/*
 		seekSlot("grass", resources, 100);
 		seekSlot("wood", resources, 100);
@@ -1105,32 +1149,43 @@ class MyApp : public App
 				conmenu();
 				showCursor();
 			}
-			//..................................................................eee
 			if (input.justPressed(E))
 			{
+
 				if (nowObjInter == true)
 				{
-					roundWorld.data(nowObj).vision -= 25.5;
-					auto color = nowObj.skin<Texture>().color();
-					color.a = roundWorld.data(nowObj).vision;
-					nowObj.skin<Texture>().setColor(color);
-					roundWorld.data(nowObj).hp -= 10;
-					auto& b = DBR["forest"][roundWorld.data(nowObj).type];
-					for (auto& b2 : b.obect.drop)
+					if (roundWorld.data(nowObj).typ == Obj)
 					{
-						int dd2 = randomInt(1, 100);
-						if (dd2 <= b2.chance)
+						roundWorld.data(nowObj).vision -= 25.5;
+						auto color = nowObj.skin<Texture>().color();
+						color.a = roundWorld.data(nowObj).vision;
+						nowObj.skin<Texture>().setColor(color);
+						roundWorld.data(nowObj).hp -= 10;
+						auto& b = DBR["forest"][roundWorld.data(nowObj).type];
+						for (auto& b2 : b.obect.drop)
 						{
-							seekSlot(b2.name, resources,1);
+							int dd2 = randomInt(1, 100);
+							if (dd2 <= b2.chance)
+							{
+								seekSlot(b2.name, resources, 1);
+							}
+						}
+						if (roundWorld.data(nowObj).hp <= 0)
+						{
+							auto obj = roundWorld.find(nowObj).front();
+							GameObj i;
+							nowObj = i;
+							chunks[Vec2ToIntVec2(obj.pos())].map[roundWorld.data(obj).thisObj] = None;
+							obj.kill();
+							nowObjInter = false;
 						}
 					}
-					if (roundWorld.data(nowObj).hp <= 0)
+					if (roundWorld.data(nowObj).typ == Enemy)
 					{
 						auto obj = roundWorld.find(nowObj).front();
-						GameObj i;
-						nowObj = i;
-						chunks[Vec2ToIntVec2(obj.pos())].map[roundWorld.data(obj).thisObj] = None;
+						selector.select(3);
 						obj.kill();
+						showCursor();
 						nowObjInter = false;
 					}
 				}
@@ -1191,7 +1246,8 @@ class MyApp : public App
 	enum chunkObj {
 		None,
 		Obj,
-		gamer
+		gamer,
+		Enemy
 	};
 	struct Chunk
 	{
@@ -1290,17 +1346,31 @@ class MyApp : public App
 						{
 							continue;
 						}
-
 						if (dd2 <= b.second.chance)
 						{
-							chunk.map[x][y] = Obj;
-							auto&object = roundWorld.load("obj.json", (i.x * 10 + x) * w, (i.y * 10 + y) * h);
-							object.setSize(w - 0.001, h - 0.01);
-							roundWorld.data(object).hp = b.second.obect.hp;
-							roundWorld.data(object).thisObj = IntVec2(x, y);
-							roundWorld.data(object).type = b.first;
-							object.skin<Texture>().setImageName(b.second.file);
-							break;
+							if (b.second.type == obj)
+							{
+								chunk.map[x][y] = Obj;
+								auto&object = roundWorld.load("obj.json", (i.x * 10 + x) * w, (i.y * 10 + y) * h);
+								object.setSize(w - 0.001, h - 0.01);
+								roundWorld.data(object).hp = b.second.obect.hp;
+								roundWorld.data(object).thisObj = IntVec2(x, y);
+								roundWorld.data(object).type = b.first;
+								roundWorld.data(object).type = Obj;
+								object.skin<Texture>().setImageName(b.second.file);
+								break;
+							}
+							if (b.second.type == enemy)
+							{
+								chunk.map[x][y] = Enemy;
+								auto&object = roundWorld.load("obj.json", (i.x * 10 + x) * w, (i.y * 10 + y) * h);
+								object.setSize(w - 0.001, h - 0.01);
+								roundWorld.data(object).thisObj = IntVec2(x, y);
+								roundWorld.data(object).type = b.first;
+								roundWorld.data(object).typ = Enemy;
+								object.skin<Texture>().setImageName(b.second.file);
+								break;
+							}
 						}
 						else
 						{
@@ -1333,6 +1403,7 @@ class MyApp : public App
 		int hp=50;
 		IntVec2 thisObj;
 		string type;
+		chunkObj typ;
 		float vision=255;
 	};
 
@@ -1384,6 +1455,7 @@ class MyApp : public App
 	FromDesign(Layout, Menudr);
 	FromDesign(Layout, MenuW);
 	FromDesign(Layout, MenuP);
+	FromDesign(Layout, stats);
 	FromDesign(Label, coldrop);
 	GameObj nowObj;
 	IntVec2 p;

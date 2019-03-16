@@ -3,12 +3,48 @@
    "_version" : "VER3",
    "database" : [
       {
+         "_key" : "arm",
+         "_value" : "Защита: "
+      },
+      {
+         "_key" : "armM",
+         "_value" : "Магическая защита: "
+      },
+      {
+         "_key" : "class",
+         "_value" : "Класс: "
+      },
+      {
          "_key" : "drop",
          "_value" : "Снять"
       },
       {
+         "_key" : "level",
+         "_value" : "Уровень: "
+      },
+      {
+         "_key" : "life",
+         "_value" : "Жизни: "
+      },
+      {
+         "_key" : "mag",
+         "_value" : "Маг"
+      },
+      {
+         "_key" : "manna",
+         "_value" : "Манна: "
+      },
+      {
+         "_key" : "name",
+         "_value" : "Имя:"
+      },
+      {
          "_key" : "use",
          "_value" : "Надеть"
+      },
+      {
+         "_key" : "warrior",
+         "_value" : "Воин"
       }
    ]
 }
