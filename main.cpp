@@ -1,24 +1,20 @@
 #include <gamebase/Gamebase.h>
-#include<SFML/Window/VideoMode.hpp>
+#include <SFML/Window/VideoMode.hpp>
+#include "world.h"
+
 using namespace gamebase;
 using namespace std;
 float w, h, w3, h2;
 bool save = false; 
 class MyApp : public App
 {
-	IntVec2 ch;
+	
 	enum TypeIt
 	{
 		armors,
 		weapons,
 		resources,
 		potions
-	};
-	enum TypE
-	{
-		obj,
-		fon,
-		enemy
 	};
 	enum Rarity
 	{
@@ -248,6 +244,10 @@ class MyApp : public App
 		connect(Min, menucraft, 4,i);
 		connect(Max, menucraft, 5,i);
 	}
+	void loadFight()
+	{
+		
+	}
 	void recipeLoad()
 	{
 		for (auto b = 1; b <= 5; b++)
@@ -330,69 +330,7 @@ class MyApp : public App
 			}
 		}
 	}
-	void readDBR()
-	{
-		ifstream input("data/load/obj/db.txt");
-		for (;;)
-		{
-			string name;
-			input >> name;
-			if (name == "end")
-			{
-				break;
-			}
-			int a;
-			input >> a;
-			for (int i = 0; i < a; i++)
-			{
-				string name2;
-				input >> name2;
-				int a2;
-				input >> a2;
-				DBR[name][name2].chance = a2;
-				string b;
-				input >> b;
-				if (b == "fon")
-				{
-					DBR[name][name2].type = fon;
-					string c;
-					input >> c;
-					DBR[name][name2].file = c;
-				}
-				if (b == "obj")
-				{
-					DBR[name][name2].type = obj;
-					int c;
-					input >> c;
-					DBR[name][name2].obect.hp = c;
-					string d;
-					input >> d;
-					DBR[name][name2].file = d;
-					input >> c;
-					for (int i2 = 0; i2 < c; i2++)
-					{
-						int c2;
-						input >> c2;
-						string d2;
-						input >> d2;
-						Dropp f;
-						f.chance = c2;
-						f.name = d2;
-						DBR[name][name2].obect.drop.push_back(f);
-					}
-				}
-				if (b == "enemy")
-				{
-					DBR[name][name2].type = enemy;
-					string c;
-					input >> c;
-					DBR[name][name2].file = c;
-				}
-			}
-			
-		}
-		input.close();
-	}
+	
 	void readDB()
 	{
 		ifstream input("data/load/item/db.txt");
@@ -456,7 +394,7 @@ class MyApp : public App
 		}
 		input.close();
 	}
-	bool nowObjInter = false;
+	
     void load()
     {
 		ifstream input("data/save.txt");
@@ -464,7 +402,9 @@ class MyApp : public App
 		input >> save;
 		loadTextBank("textbank.json");
 		readDB();
-		readDBR();
+		world.w = w;
+		world.h = h;
+		world.load(design);
 		readRDB();
 		Menu.hide();
 		int i = 0;
@@ -480,20 +420,7 @@ class MyApp : public App
 				i++;
 			}
 		hideCursor();
-		auto& nowChunk=createchunk(IntVec2(0, 0));
-		nowChunk.map[5][5] = gamer;
-		chunkload(nowChunk);
-		ch = nowChunk.pos;
-		p.x = 5;
-		p.y = 5;
-		player.setPos((nowChunk.pos.x*10+p.x) * w, (nowChunk.pos.y * 10 + p.y) * h);
-		player.setSize(w - 10, h - 10);
-		field.setView(player.pos());
-		
-		genchunk(IntVec2(-1, 0));
-		genchunk(IntVec2(1, 0));
-		genchunk(IntVec2(0, 1));
-		genchunk(IntVec2(0, -1));
+		field.setView(world.player.pos());
 		connect(equiped, nexti, 1);
 		connect(map, nexti, 2);
 		connect(crafts, nexti, 4);
@@ -795,17 +722,7 @@ class MyApp : public App
 			recipeLoad();
 		}
 	}
-	void updateNO(vector<GameObj> objs)
-	{
-		if (!nowObj || nowObj.pos() != objs.front().pos());
-		{
-			if (nowObj)
-				nowObj.anim.play("lowlight");
-			nowObj = objs.front();
-			nowObjInter = true;
-			objs.front().anim.play("highlight");
-		}
-	}
+
 	void seekSlot(string type, TypeIt i, int c)
 	{
 		for (auto& a : slots)
@@ -1091,56 +1008,56 @@ class MyApp : public App
 			}
 			if (input.pressed(A))
 			{
-				player.move(Vec2(-300, 0) * timeDelta());
-				auto&objs = roundWorld.find(player);
+				world.player.move(Vec2(-300, 0) * timeDelta());
+				auto&objs = world.Front.find(world.player);
 				if (!objs.empty())
 				{
-					updateNO(objs);
-					player.move(Vec2(300, 0) * timeDelta());
+					world.updateNO(objs);
+					world.player.move(Vec2(300, 0) * timeDelta());
 					b++;
 				}
 				a++;
 			}
 			if (input.pressed(W))
 			{
-				player.move(Vec2(0, 300) * timeDelta());
-				auto&objs = roundWorld.find(player);
+				world.player.move(Vec2(0, 300) * timeDelta());
+				auto&objs = world.Front.find(world.player);
 				if (!objs.empty())
 				{
-					updateNO(objs);
-					player.move(Vec2(0, -300) * timeDelta());
+					world.updateNO(objs);
+					world.player.move(Vec2(0, -300) * timeDelta());
 					b++;
 				}
 				a++;
 			}
 			if (input.pressed(S))
 			{
-				player.move(Vec2(0, -300) * timeDelta());
-				auto&objs = roundWorld.find(player);
+				world.player.move(Vec2(0, -300) * timeDelta());
+				auto&objs = world.Front.find(world.player);
 				if (!objs.empty())
 				{
-					updateNO(objs);
-					player.move(Vec2(0, 300) * timeDelta());
+					world.updateNO(objs);
+					world.player.move(Vec2(0, 300) * timeDelta());
 					b++;
 				}
 				a++;
 			}
 			if (input.pressed(D))
 			{
-				player.move(Vec2(300, 0) * timeDelta());
-				auto&objs = roundWorld.find(player);
+				world.player.move(Vec2(300, 0) * timeDelta());
+				auto&objs = world.Front.find(world.player);
 				if (!objs.empty())
 				{
-					updateNO(objs);
-					player.move(Vec2(-300, 0) * timeDelta());
+					world.updateNO(objs);
+					world.player.move(Vec2(-300, 0) * timeDelta());
 					b++;
 				}
 				a++;
 			}
-			if (a != b && nowObj)
+			if (a != b && world.nowObj)
 			{
-				nowObjInter = false;
-				nowObj.anim.play("lowlight");
+				world.nowObjInter = false;
+				world.nowObj.anim.play("lowlight");
 			}
 			if (input.pressed(Tab))
 			{
@@ -1152,16 +1069,16 @@ class MyApp : public App
 			if (input.justPressed(E))
 			{
 
-				if (nowObjInter == true)
+				if (world.nowObjInter == true)
 				{
-					if (roundWorld.data(nowObj).typ == Obj)
+					if (world.Front.data(world.nowObj).typ == Obj)
 					{
-						roundWorld.data(nowObj).vision -= 25.5;
-						auto color = nowObj.skin<Texture>().color();
-						color.a = roundWorld.data(nowObj).vision;
-						nowObj.skin<Texture>().setColor(color);
-						roundWorld.data(nowObj).hp -= 10;
-						auto& b = DBR["forest"][roundWorld.data(nowObj).type];
+						world.Front.data(world.nowObj).vision -= 25.5;
+						auto color = world.nowObj.skin<Texture>().color();
+						color.a = world.Front.data(world.nowObj).vision;
+						world.nowObj.skin<Texture>().setColor(color);
+						world.Front.data(world.nowObj).hp -= 10;
+						auto& b = world.DB["forest"][world.Front.data(world.nowObj).type];
 						for (auto& b2 : b.obect.drop)
 						{
 							int dd2 = randomInt(1, 100);
@@ -1170,23 +1087,23 @@ class MyApp : public App
 								seekSlot(b2.name, resources, 1);
 							}
 						}
-						if (roundWorld.data(nowObj).hp <= 0)
+						if (world.Front.data(world.nowObj).hp <= 0)
 						{
-							auto obj = roundWorld.find(nowObj).front();
+							auto obj = world.Front.find(world.nowObj).front();
 							GameObj i;
-							nowObj = i;
-							chunks[Vec2ToIntVec2(obj.pos())].map[roundWorld.data(obj).thisObj] = None;
+							world.nowObj = i;
+							world.chunks[Vec2ToIntVec2(obj.pos())].map[world.Front.data(obj).thisObj] = None;
 							obj.kill();
-							nowObjInter = false;
+							world.nowObjInter = false;
 						}
 					}
-					if (roundWorld.data(nowObj).typ == Enemy)
+					else if (world.Front.data(world.nowObj).typ == Enemy)
 					{
-						auto obj = roundWorld.find(nowObj).front();
+						auto obj = world.Front.find(world.nowObj).front();
 						selector.select(3);
 						obj.kill();
 						showCursor();
-						nowObjInter = false;
+						world.nowObjInter = false;
 					}
 				}
 			}
@@ -1220,7 +1137,7 @@ class MyApp : public App
     void move()
     {
 		
-		field.setView(player.pos());
+		field.setView(world.player.pos());
 		auto viewBox = field.viewBox();
 		viewBox.extend(w, h);
 		IntVec2 iv2_min,iv2_max;
@@ -1230,41 +1147,10 @@ class MyApp : public App
 		{
 			for (int y = iv2_min.y; y <= iv2_max.y; y++)
 			{
-				genchunk(IntVec2(x, y));
+				world.genchunk(IntVec2(x, y));
 			}
 		}
     }
-
-	enum chunkType {
-		Swamp,
-		Forest,
-		Road,
-		SwampRoad,
-		ForestRoad,
-		SwampForest
-	};
-	enum chunkObj {
-		None,
-		Obj,
-		gamer,
-		Enemy
-	};
-	struct Chunk
-	{
-		GameMap map;
-		IntVec2 pos;
-		chunkType Type;
-	};
-	Chunk& createchunk(IntVec2 i)
-	{
-		Chunk& chunk = chunks[i];
-		chunk.Type = Forest;
-		chunk.map = createMap(10, 10);
-		chunk.pos = i;
-		return chunk;
-	}
-
-
 
 	struct Item
 	{
@@ -1279,24 +1165,7 @@ class MyApp : public App
 			Potion potion;
 		} data;
 	};
-	struct Dropp
-	{
-		string name;
-		int chance;
-	};
-	struct object
-	{
-		int hp = 0;
-		vector <Dropp> drop;
-	};
 	
-	struct RObj
-	{
-		string file;
-		int chance;
-		TypE type;
-		object obect;
-	};
 	struct Recipe
 	{
 		int col;
@@ -1305,114 +1174,18 @@ class MyApp : public App
 	};
 	map<string, Recipe> RDB;
 	map<string, Item> DB;
-	map<string, map<string, RObj>>DBR;
 	vector <Slot> slots;
 
-
-	void chunkload(Chunk& chunk)
+	struct enemy_data
 	{
-		auto i = chunk.pos;
-		string a;
-		if (chunk.Type == Forest)
-		{
-			a = "forest";
-		}
-		if (chunk.Type == Swamp)
-		{
-			a = "swamp";
-		}
-		for (int x = 0; x < chunk.map.w; x++)
-		{
-			for (int y = 0; y < chunk.map.h; y++)
-			{
-				auto& back = Back.load("back.json", (i.x * 10 + x) * w, (i.y * 10 + y) * h);
-				back.setSize(w, h);
-				back.skin<Texture>().setImageName(DBR[a]["grass"].file);
-				if (chunk.map[x][y] == gamer)
-					continue;
-				int ddd2=randomInt(1,3);
-				if (ddd2 == 1)
-				{
-					int dd3 = 0;
-					
-					for (auto& b : DBR[a])
-					{
-						dd3 += b.second.chance;
-					}
-					int dd2 = randomInt(1, dd3);
-					for (auto& b : DBR[a])
-					{
-						if (b.second.type == fon)
-						{
-							continue;
-						}
-						if (dd2 <= b.second.chance)
-						{
-							if (b.second.type == obj)
-							{
-								chunk.map[x][y] = Obj;
-								auto&object = roundWorld.load("obj.json", (i.x * 10 + x) * w, (i.y * 10 + y) * h);
-								object.setSize(w - 0.001, h - 0.01);
-								roundWorld.data(object).hp = b.second.obect.hp;
-								roundWorld.data(object).thisObj = IntVec2(x, y);
-								roundWorld.data(object).type = b.first;
-								roundWorld.data(object).type = Obj;
-								object.skin<Texture>().setImageName(b.second.file);
-								break;
-							}
-							if (b.second.type == enemy)
-							{
-								chunk.map[x][y] = Enemy;
-								auto&object = roundWorld.load("obj.json", (i.x * 10 + x) * w, (i.y * 10 + y) * h);
-								object.setSize(w - 0.001, h - 0.01);
-								roundWorld.data(object).thisObj = IntVec2(x, y);
-								roundWorld.data(object).type = b.first;
-								roundWorld.data(object).typ = Enemy;
-								object.skin<Texture>().setImageName(b.second.file);
-								break;
-							}
-						}
-						else
-						{
-							dd2 -= b.second.chance;
-						}
-					}
-				}
-			}
-		}
-	}
 
-
-	Chunk& genchunk(IntVec2 i)
-	{
-		if (chunks.count(i)==0)
-		{
-			Chunk& chunk = createchunk(i);
-			chunkload(chunk);
-			return chunk;
-		}
-		else
-		{
-			return chunks[i];
-		}
-	}
-
-
-	struct objset
-	{
-		int hp=50;
-		IntVec2 thisObj;
-		string type;
-		chunkObj typ;
-		float vision=255;
 	};
 
-
-	map<IntVec2, Chunk> chunks;
-	LayerFromDesign(void, Back);
+	World world;
+	LayerFromDesign(void, you);
+	LayerFromDesign(void, enemys);
 	LayerFromDesign(void, slot);
 	LayerFromDesign(void, slot2);
-	LayerFromDesign(objset, roundWorld);
 	LayerFromDesign(void, Player);
 	FromDesign(Button, inventor);
 	FromDesign(Button, crafts);
@@ -1437,7 +1210,6 @@ class MyApp : public App
 	FromDesign(Button, p1);
 	FromDesign(Button, p2);
 	FromDesign(GameView, field);
-	FromDesign(GameObj, player);
 	FromDesign(Selector, selector);
 	FromDesign(Selector, changer);
 	FromDesign(Selector, changerCr);
@@ -1457,8 +1229,7 @@ class MyApp : public App
 	FromDesign(Layout, MenuP);
 	FromDesign(Layout, stats);
 	FromDesign(Label, coldrop);
-	GameObj nowObj;
-	IntVec2 p;
+	
 	int nowSlot;
 };
 
