@@ -367,7 +367,7 @@
                         }
                      },
                      {
-                        "_name" : "inventor",
+                        "_name" : "inventors",
                         "_typeName" : "Button",
                         "position" : {
                            "_typeName" : "AligningOffset",

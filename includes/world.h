@@ -153,6 +153,10 @@ public:
 	{
 		if (!nowObjInter || nowObj.pos() != objs.front().pos());
 		{
+			if (nowObjInter)
+			{
+				objs.front().anim.play("lowlight");
+			}
 			nowObj = objs.front();
 			nowObjInter = true;
 			objs.front().anim.play("highlight");
