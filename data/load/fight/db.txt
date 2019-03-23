@@ -1,0 +1,14 @@
+Normal
+1
+spider
+1
+1
+0
+1
+meeleN
+20
+15
+enemy/spider.png
+1
+100
+string

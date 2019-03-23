@@ -6,5 +6,6 @@
   <ItemGroup>
     <ClInclude Include="includes\world.h" />
     <ClInclude Include="includes\inventor.h" />
+    <ClInclude Include="fight.h" />
   </ItemGroup>
 </Project>

@@ -1,6 +1,9 @@
-1
+﻿2
 rope
-1
-grass
-4
-
+	1
+	string
+	8
+string
+	1
+	grass
+	1

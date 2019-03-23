@@ -32,6 +32,7 @@ struct Potion
 	Type type;
 	bool isLeft;
 	bool active;
+	int num;
 };
 struct Armor
 {

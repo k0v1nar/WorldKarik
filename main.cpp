@@ -2,14 +2,19 @@
 #include <SFML/Window/VideoMode.hpp>
 #include "world.h"
 #include "inventor.h"
+#include "fight.h"
 
 using namespace gamebase;
 using namespace std;
-float w, h, w3, h2;
+float w, h, w3, h2,hf;
 bool save = false; 
 class MyApp : public App
 {
 	int dropnumcr=1;
+
+	int isMouse = 0;
+
+	int dropnum = 1;
 
 	void icon_del(string i)
 	{
@@ -373,11 +378,6 @@ class MyApp : public App
 			more.show();
 		}
 	}
-
-	void loadFight()
-	{
-		
-	}
 	
 	void readPerson()
 	{
@@ -412,48 +412,6 @@ class MyApp : public App
 		auto& manna = stats.load<Label>("stat.json");
 		manna.setText(tr("manna") + toString(b2));
 	}
-
-    void load()
-    {
-		ifstream input("data/save.txt");
-		bool s;
-		input >> save;
-		loadTextBank("textbank.json");
-		world.w = w;
-		world.h = h;
-		world.load(design);
-		inventor.load(design, w3, h2);
-		Menu.hide();
-		
-		hideCursor();
-		field.setView(world.player.pos());
-		connect(equiped, nexti, 1);
-		connect(map, nexti, 2);
-		connect(crafts, nexti, 4);
-		connect(skill, nexti, 3);
-		connect(inventors, nexti, 0);
-		connect(outfit, nextCr, 0);
-		connect(tools, nextCr, 1);
-		connect(items, nextCr, 2);
-		connect(furniture, nextCr, 3);
-		connect(material, nextCr, 4);
-		connect(back, drm, 0);
-		connect(cont, drm, 1);
-		connect(less, drm, 2);
-		connect(more, drm, 3);
-		connect(Min, drm, 4);
-		connect(Max, drm, 5);
-		connect(use, drawQieup);
-		connect(w1, handuse, true);
-		connect(w2, handuse, false);
-		connect(p1, potionuse, true);
-		connect(p2, potionuse, false);
-		readPerson();
-		/*
-		seekSlot("grass", resources, 100);
-		seekSlot("wood", resources, 100);
-		seekSlot("stick", resources, 100);*/
-    }
 	
 	void conmenu()
 	{
@@ -465,8 +423,6 @@ class MyApp : public App
 			connect(Max, drm, 5);
 	}
 	
-	int dropnum = 1;
-
 	void drm(int i)
 	{
 		if (i == 0)
@@ -569,12 +525,108 @@ class MyApp : public App
 		return b;
 	}
 
-	int isMouse=0;
-   
+	IntVec2 Vec2ToIntVec2(Vec2 v)
+	{
+		IntVec2 iv;
+		if (v.x + w / 2 >= 0)
+		{
+			iv.x = (v.x + w / 2) / w / 10;
+		}
+		else
+		{
+			iv.x = (v.x + w / 2) / w / 10 - 1;
+		}
+		if (v.y + h / 2 >= 0)
+		{
+			iv.y = (v.y + h / 2) / h / 10;
+		}
+		else
+		{
+			iv.y = (v.y + h / 2) / h / 10 - 1;
+		}
+		return iv;
+	}
+
+	void load()
+	{
+		ifstream input("data/save.txt");
+		bool s;
+		input >> save;
+		loadTextBank("textbank.json");
+		world.w = w;
+		world.h = h;
+		world.load(design);
+		inventor.load(design, w3, h2);
+		fight.load(design, hf);
+		Menu.hide();
+		
+		hideCursor();
+		field.setView(world.player.pos());
+		connect(equiped, nexti, 1);
+		connect(map, nexti, 2);
+		connect(crafts, nexti, 4);
+		connect(skill, nexti, 3);
+		connect(inventors, nexti, 0);
+		connect(outfit, nextCr, 0);
+		connect(tools, nextCr, 1);
+		connect(items, nextCr, 2);
+		connect(furniture, nextCr, 3);
+		connect(material, nextCr, 4);
+		connect(back, drm, 0);
+		connect(cont, drm, 1);
+		connect(less, drm, 2);
+		connect(more, drm, 3);
+		connect(Min, drm, 4);
+		connect(Max, drm, 5);
+		connect(use, drawQieup);
+		connect(w1, handuse, true);
+		connect(w2, handuse, false);
+		connect(p1, potionuse, true);
+		connect(p2, potionuse, false);
+		readPerson();
+		inventor.seekSlot("wooden_axe",weapons,1);
+		/*
+		seekSlot("grass", resources, 100);
+		seekSlot("wood", resources, 100);
+		seekSlot("stick", resources, 100);*/
+	}
+	
 	void process(Input input)
     {
         using namespace gamebase::InputKey;
-		
+		if (selector.selected() == 3)
+		{
+			if (fight.Your)
+			if (input.justPressed(MouseLeft))
+			{
+				fight.Your = false;
+			}
+			if (fight.Your)
+			if (input.justPressed(MouseRight))
+			{
+				fight.Your = false;
+			}
+			if (fight.Your)
+			if (input.justPressed(Q))
+			{
+				fight.Your = false;
+			}
+			if (fight.Your)
+			if (input.justPressed(E))
+			{
+				fight.Your = false;
+			}
+			if (fight.nowPos>1 && fight.Your)
+			if (input.justPressed(A))
+			{
+				fight.Your = false;
+			}
+			if (fight.nowPos<5 && fight.Your)
+			if (input.justPressed(D))
+			{
+				fight.Your = false;
+			}
+		}
 		if (selector.selected() == 2)
 		{
 			if (input.justPressed(Escape))
@@ -804,33 +856,48 @@ class MyApp : public App
 						obj.kill();
 						showCursor();
 						world.nowObjInter = false;
+						int i=0;
+						design.child<Layout>("weapon1f").hide();
+						design.child<Layout>("weapon2f").hide();
+						design.child<Layout>("potion1f").hide();
+						design.child<Layout>("potion2f").hide();
+						for (auto a : inventor.slot.all())
+						{
+							if ((inventor.slots[i].data.armor.active && inventor.slots[i].type == armors) ||
+								(inventor.slots[i].data.weapon.active && inventor.slots[i].type == weapons) ||
+								(inventor.slots[i].data.potion.active && inventor.slots[i].type == potions))
+							{
+								if (inventor.slots[i].type == weapons && inventor.slots[i].data.weapon.isLeft)
+								{
+									design.child<Layout>("weapon1f").show();
+									design.child<Layout>("weapon1f").child<Texture>("obj").setImageName(inventor.DB[inventor.slots[i].name].file);
+								}
+								if (inventor.slots[i].type == weapons && !inventor.slots[i].data.weapon.isLeft)
+								{
+									design.child<Layout>("weapon2f").show();
+									design.child<Layout>("weapon2f").child<Texture>("obj").setImageName(inventor.DB[inventor.slots[i].name].file);
+								}
+								if (inventor.slots[i].type == potions && inventor.slots[i].data.potion.isLeft)
+								{
+									design.child<Layout>("potion1f").show();
+									design.child<Layout>("potion1f").child<Texture>("obj").setImageName(inventor.DB[inventor.slots[i].name].file);
+									design.child<Label>("fpotion1").setText(toString(inventor.DB[inventor.slots[i].name].data.potion.num));
+								}
+								if (inventor.slots[i].type == potions && !inventor.slots[i].data.potion.isLeft)
+								{
+									design.child<Layout>("potion2f").show();
+									design.child<Layout>("potion2f").child<Texture>("obj").setImageName(inventor.DB[inventor.slots[i].name].file);
+									design.child<Label>("fpotion2").setText(toString(inventor.DB[inventor.slots[i].name].data.potion.num));
+								}
+							}
+							i++;
+						}
+						fight.loadMap();
 					}
 				}
 			}
 		}
     }
-
-	IntVec2 Vec2ToIntVec2(Vec2 v)
-	{
-		IntVec2 iv;
-		if (v.x + w / 2 >= 0)
-		{
-			iv.x = (v.x + w / 2) / w / 10;
-		}
-		else
-		{
-			iv.x = (v.x + w / 2) / w / 10 - 1;
-		}
-		if (v.y + h / 2 >= 0)
-		{
-			iv.y = (v.y + h / 2) / h / 10;
-		}
-		else
-		{
-			iv.y = (v.y + h / 2) / h / 10-1;
-		}
-		return iv;
-	}
 
     void move()
     {
@@ -850,17 +917,12 @@ class MyApp : public App
 		}
     }
 
-	struct enemy_data
-	{
-
-	};
-
 	World world;
 	Inventor inventor;
+	Fight fight;
 
 	LayerFromDesign(void, you);
 	LayerFromDesign(void, enemys);
-	
 	LayerFromDesign(void, slot2);
 	LayerFromDesign(void, Player);
 	FromDesign(Button, inventors);
@@ -886,6 +948,7 @@ class MyApp : public App
 	FromDesign(Button, p1);
 	FromDesign(Button, p2);
 	FromDesign(GameView, field);
+	FromDesign(GameView, fightField);
 	FromDesign(Selector, selector);
 	FromDesign(Selector, changer);
 	FromDesign(Selector, changerCr);
@@ -917,6 +980,7 @@ int main(int argc, char** argv)
 	randomize();
 	w = sf::VideoMode::getDesktopMode().width / 10.0;
 	h = sf::VideoMode::getDesktopMode().height / 6.0;
+	hf = sf::VideoMode::getDesktopMode().height / 3;
 	w3 = sf::VideoMode::getDesktopMode().width * 0.11;
 	h2 = sf::VideoMode::getDesktopMode().height * 0.19;
 	app.setSize(sf::VideoMode::getDesktopMode().width, sf::VideoMode::getDesktopMode().height);
