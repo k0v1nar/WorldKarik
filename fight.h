@@ -8,6 +8,7 @@ using namespace std;
 
 struct enemyType
 {
+	int chance;
 	int armN;
 	int armM;
 	int level;
@@ -35,17 +36,27 @@ struct enemyDB
 class Fight
 {
 	public:
+
 	void load(Layout design,float h2)
 	{
-		h = h2;
-		you = design.child<Layer<void>>("you");
+		you = design.child<Layer<bool>>("you");
 		enemys = design.child<Layer<enemyInfo>>("enemys");
 		loadDB();
+		updateYou();
 	}
-	void loadMap()
+	void loadMap(string name, string type)
 	{
 		nowPos = 3;
 		Your = true;
+		for (auto& a : enemys.all())
+		{
+			a.child<Texture>("enem").setImageName(DB[type].enemy[name].file);
+			a.child<Label>("col").setText(toString(DB[type].enemy[name].level));
+			enemys.data(a).life = DB[type].enemy[name].Maxlife;
+			enemys.data(a).name = name;
+			enemys.data(a).type = type;
+			enemys.data(a).pos = a.id()+1;
+		}
 	}
 	void loadDB()
 	{
@@ -59,6 +70,7 @@ class Fight
 			string a2;
 			input >> a2;
 			enemyType b2;
+			input >> b2.chance;
 			input >> b2.level;
 			input >> b2.armN;
 			input >> b2.armM;
@@ -77,11 +89,33 @@ class Fight
 				input >> b4;
 				b2.drop[a3] = b4;
 			}
+			DB[a].enemy[a2] = b2;
 		}
 	}
+	
+	void updateYou()
+	{
+		for (auto& a : you.all())
+		{
+			if (a.id() != nowPos - 1)
+			{
+				you.data(a) = false;
+				a.hide();
+			}
+			else
+			{
+				you.data(a) = true;
+				a.show();
+				a.child<Texture>("youm").setImageName("emodj0.png");
+			}
+		}
+	}
+
+
+
 	bool Your;
-	int nowPos;
+	int nowPos=3;
 	map<string , enemyDB> DB;
-	Layer<void> you;
+	Layer<bool> you;
 	Layer<enemyInfo> enemys;
 };

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <gamebase/Gamebase.h>
+#include "fight.h"
 
 using namespace gamebase;
 using namespace std;
@@ -40,6 +41,7 @@ struct objset
 	int hp = 50;
 	IntVec2 thisObj;
 	string type;
+	string rare;
 	chunkObj typ;
 	float vision = 255;
 };
@@ -55,6 +57,7 @@ struct object
 };
 struct RObj
 {
+	string rare;
 	string file;
 	int chance;
 	TypE type;
@@ -140,7 +143,7 @@ public:
 					DB[name][name2].type = enemy;
 					string c;
 					input >> c;
-					DB[name][name2].file = c;
+					DB[name][name2].rare = c;
 				}
 			}
 
@@ -162,7 +165,6 @@ public:
 			objs.front().anim.play("highlight");
 		}
 	}
-
 
 	//generation Chunk
 	void chunkload(Chunk& chunk)
@@ -222,9 +224,11 @@ public:
 								auto&object = Front.load("obj.json", (i.x * 10 + x) * w, (i.y * 10 + y) * h);
 								object.setSize(w - 0.001, h - 0.01);
 								Front.data(object).thisObj = IntVec2(x, y);
-								Front.data(object).type = b.first;
+								
+								Front.data(object).type = "spider"; 
+								Front.data(object).rare = "Normal";
 								Front.data(object).typ = Enemy;
-								object.skin<Texture>().setImageName(b.second.file);
+								object.skin<Texture>().setImageName("enemy/spider.png");
 								break;
 							}
 						}

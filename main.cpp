@@ -599,32 +599,36 @@ class MyApp : public App
 			if (fight.Your)
 			if (input.justPressed(MouseLeft))
 			{
-				fight.Your = false;
+				//fight.Your = false;
 			}
 			if (fight.Your)
 			if (input.justPressed(MouseRight))
 			{
-				fight.Your = false;
+				//fight.Your = false;
 			}
 			if (fight.Your)
 			if (input.justPressed(Q))
 			{
-				fight.Your = false;
+				//fight.Your = false;
 			}
 			if (fight.Your)
 			if (input.justPressed(E))
 			{
-				fight.Your = false;
+				//fight.Your = false;
 			}
 			if (fight.nowPos>1 && fight.Your)
 			if (input.justPressed(A))
 			{
-				fight.Your = false;
+				fight.nowPos--;
+				fight.updateYou();
+				//fight.Your = false;
 			}
 			if (fight.nowPos<5 && fight.Your)
 			if (input.justPressed(D))
 			{
-				fight.Your = false;
+				fight.nowPos++;
+				fight.updateYou();
+				//fight.Your = false;
 			}
 		}
 		if (selector.selected() == 2)
@@ -857,6 +861,7 @@ class MyApp : public App
 						showCursor();
 						world.nowObjInter = false;
 						int i=0;
+						fight.nowPos = 3;
 						design.child<Layout>("weapon1f").hide();
 						design.child<Layout>("weapon2f").hide();
 						design.child<Layout>("potion1f").hide();
@@ -892,7 +897,7 @@ class MyApp : public App
 							}
 							i++;
 						}
-						fight.loadMap();
+						fight.loadMap(world.Front.data(world.nowObj).type, world.Front.data(world.nowObj).rare);
 					}
 				}
 			}
