@@ -237,6 +237,8 @@ class Inventor
 			b.child<Texture>("obj").hide();
 			b.child<DrawObj>("num").hide();
 			b.child<Texture>("active").hide();
+			b.child<Texture>("left").hide();
+			b.child<Texture>("right").hide();
 			return;
 		}
 		b.child<DrawObj>("num").show();
@@ -245,9 +247,21 @@ class Inventor
 			b.child<DrawObj>("num").show();
 			b.child<Label>("col").setText(toString(a.data.resource.number));
 			b.child<Texture>("obj").setImageName(DB[a.name].file);
+			b.child<Texture>("left").hide();
+			b.child<Texture>("right").hide();
 		}
 		if (a.type == weapons)
 		{
+			if (a.data.weapon.isLeft && a.data.weapon.active)
+			{
+				b.child<Texture>("left").show();
+				b.child<Texture>("active").show();
+			}
+			if (!a.data.weapon.isLeft && a.data.weapon.active)
+			{
+				b.child<Texture>("right").show();
+				b.child<Texture>("active").show();
+			}
 			b.child<DrawObj>("num").hide();
 			b.child<Texture>("obj").setImageName(DB[a.name].file);
 		}

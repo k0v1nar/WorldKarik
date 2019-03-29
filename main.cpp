@@ -25,6 +25,8 @@ class MyApp : public App
 	void clearQieup()
 	{
 		inventor.slot.get(inventor.nowSlot).child<Texture>("active").hide();
+		inventor.slot.get(inventor.nowSlot).child<Texture>("left").hide();
+		inventor.slot.get(inventor.nowSlot).child<Texture>("right").hide();
 		if (inventor.slots[inventor.nowSlot].type == weapons)
 		{
 			if (inventor.slots[inventor.nowSlot].data.weapon.active)
@@ -85,6 +87,7 @@ class MyApp : public App
 			{
 				icon_use("weapon1", inventor.nowSlot);
 				MenuW.hide();
+				inventor.slot.get(inventor.nowSlot).child<Texture>("left").show();
 				inventor.slots[inventor.nowSlot].data.weapon.active = true;
 				inventor.slots[inventor.nowSlot].data.weapon.isLeft = true;
 				inventor.nowSlot = -1;
@@ -93,6 +96,7 @@ class MyApp : public App
 			{
 				icon_use("weapon2", inventor.nowSlot);
 				MenuW.hide();
+				inventor.slot.get(inventor.nowSlot).child<Texture>("right").show();
 				inventor.slots[inventor.nowSlot].data.weapon.active = true;
 				inventor.slots[inventor.nowSlot].data.weapon.isLeft = false;
 				inventor.nowSlot = -1;

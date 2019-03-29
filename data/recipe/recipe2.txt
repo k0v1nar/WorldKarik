@@ -1,0 +1,9 @@
+1
+wooden_axe
+3
+stick
+2
+rope
+1
+stone
+2
