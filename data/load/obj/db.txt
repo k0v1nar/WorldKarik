@@ -1,5 +1,5 @@
 forest
-7
+5
 grass
 	100
 	fon
@@ -31,21 +31,11 @@ tree
 	20
 	stick
 
-normal_spider
-	20
+spider_normal
+	15
 	enemy
 	Normal
-
-elite_spider
-	5
-	enemy
-	Elite
-
-boss_spider
-	1
-	enemy
-	Boss
-	
+	enemy/spider.png
 swamp
 2
 grass

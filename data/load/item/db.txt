@@ -1,4 +1,4 @@
-﻿stone
+stone
 	resources
 	Камень
 	obj/stone.png
@@ -23,15 +23,16 @@ rope
 	Веревка
 	obj/rope.png
 string
-	resource
+	resources
 	Нить
 	obj/string.png
+
 wooden_axe
 	weapon
 	Каменный_топор
 	1
 	axe
-	Near_natural
+	1
 	5
 	obj/axe.png	
 end

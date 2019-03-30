@@ -144,6 +144,8 @@ public:
 					string c;
 					input >> c;
 					DB[name][name2].rare = c;
+					input >> c;
+					DB[name][name2].file = c;
 				}
 			}
 
@@ -225,10 +227,10 @@ public:
 								object.setSize(w - 0.001, h - 0.01);
 								Front.data(object).thisObj = IntVec2(x, y);
 								
-								Front.data(object).type = "spider"; 
-								Front.data(object).rare = "Normal";
+								Front.data(object).type = b.first; 
+								Front.data(object).rare = b.second.rare;
 								Front.data(object).typ = Enemy;
-								object.skin<Texture>().setImageName("enemy/spider.png");
+								object.skin<Texture>().setImageName(b.second.file);
 								break;
 							}
 						}

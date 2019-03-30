@@ -24,23 +24,24 @@ class MyApp : public App
 	
 	void clearQieup()
 	{
-		inventor.slot.get(inventor.nowSlot).child<Texture>("active").hide();
-		inventor.slot.get(inventor.nowSlot).child<Texture>("left").hide();
-		inventor.slot.get(inventor.nowSlot).child<Texture>("right").hide();
 		if (inventor.slots[inventor.nowSlot].type == weapons)
 		{
+			inventor.slot.get(inventor.nowSlot).child<Texture>("left").hide();
+			inventor.slot.get(inventor.nowSlot).child<Texture>("right").hide();
 			if (inventor.slots[inventor.nowSlot].data.weapon.active)
 			{
 				if (inventor.slots[inventor.nowSlot].data.weapon.isLeft)
 				{
 					icon_del("weapon1");
 					MenuW.hide();
+					inventor.leftIs = false;
 					inventor.slots[inventor.nowSlot].data.weapon.active = false;
 					inventor.slots[inventor.nowSlot].data.weapon.isLeft = false;
 					inventor.nowSlot = -1;
 				}
 				else
 				{
+					inventor.rightIs = false;
 					icon_del("weapon2");
 					MenuW.hide();
 					inventor.slots[inventor.nowSlot].data.weapon.active = false;
@@ -85,6 +86,7 @@ class MyApp : public App
 		{
 			if (i)
 			{
+				inventor.leftIs = true;
 				icon_use("weapon1", inventor.nowSlot);
 				MenuW.hide();
 				inventor.slot.get(inventor.nowSlot).child<Texture>("left").show();
@@ -94,6 +96,7 @@ class MyApp : public App
 			}
 			else
 			{
+				inventor.rightIs = true;
 				icon_use("weapon2", inventor.nowSlot);
 				MenuW.hide();
 				inventor.slot.get(inventor.nowSlot).child<Texture>("right").show();
@@ -133,7 +136,6 @@ class MyApp : public App
 	
 	void drawQieup()
 	{
-		inventor.slot.get(inventor.nowSlot).child<Texture>("active").show();
 		if (inventor.slots[inventor.nowSlot].type == weapons)
 		{
 			connect(w1,handuse, true);
@@ -589,12 +591,56 @@ class MyApp : public App
 		connect(p2, potionuse, false);
 		readPerson();
 		inventor.seekSlot("wooden_axe",weapons,1);
-		/*
-		seekSlot("grass", resources, 100);
-		seekSlot("wood", resources, 100);
-		seekSlot("stick", resources, 100);*/
 	}
 	
+	Attac attact(bool isLeft)
+	{
+		int i=0;
+		for (auto a : inventor.slot.all())
+		{
+			if (inventor.slots[i].data.weapon.active && 
+				inventor.slots[i].type == weapons)
+			{
+				if (inventor.slots[i].data.weapon.isLeft == isLeft)
+				{
+					Attac b;
+					b.dam = inventor.slots[i].data.weapon.dam;
+					b.TypeD = inventor.slots[i].data.weapon.typeD;
+					return b;
+				}
+			}
+			i++;
+		}
+	}
+	void resultFight()
+	{
+		int d = 0;
+		for (auto& c : fight.enemys.all())
+		{
+			if (!c.isVisible())
+			{
+				d++;
+			}
+		}
+		if (d == 5)
+		{
+			selector.select(1);
+			for (auto& a : fight.enemys.all())
+			{
+				string b = fight.enemys.data(a).name;
+				string c = fight.enemys.data(a).type;
+				for (auto& e : fight.DB[c].enemy[b].drop)
+				{
+					int f = randomInt(1, 100);
+					if (f <= e.second)
+					{
+						inventor.seekSlot(e.first, resources, 1);
+					}
+				}
+			}
+			world.nowObj = GameObj();
+		}
+	}
 	void process(Input input)
     {
         using namespace gamebase::InputKey;
@@ -603,12 +649,22 @@ class MyApp : public App
 			if (fight.Your)
 			if (input.justPressed(MouseLeft))
 			{
-				//fight.Your = false;
+				if (inventor.leftIs == true)
+				{
+					fight.resultAttact(attact(true), fight.enemyPosLocat());
+					//fight.Your = false;
+					resultFight();
+				}
 			}
 			if (fight.Your)
 			if (input.justPressed(MouseRight))
 			{
-				//fight.Your = false;
+				if (inventor.rightIs == true)
+				{
+					fight.resultAttact(attact(false), fight.enemyPosLocat());
+					resultFight();
+					//fight.Your = false;
+				}
 			}
 			if (fight.Your)
 			if (input.justPressed(Q))
@@ -861,6 +917,7 @@ class MyApp : public App
 					{
 						auto obj = world.Front.find(world.nowObj).front();
 						selector.select(3);
+						fight.loadMap(world.Front.data(world.nowObj).type, world.Front.data(world.nowObj).rare);
 						obj.kill();
 						showCursor();
 						world.nowObjInter = false;
@@ -901,7 +958,7 @@ class MyApp : public App
 							}
 							i++;
 						}
-						fight.loadMap(world.Front.data(world.nowObj).type, world.Front.data(world.nowObj).rare);
+						
 					}
 				}
 			}

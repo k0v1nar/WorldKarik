@@ -20,9 +20,15 @@ struct enemyType
 	map<string, int>drop;
 };
 
+struct Attac
+{
+	int dam;
+	int TypeD;
+};
+
 struct enemyInfo
 {
-	int life;
+	float life;
 	string type;
 	string name;
 	int pos;
@@ -48,14 +54,17 @@ class Fight
 	{
 		nowPos = 3;
 		Your = true;
+		int b = 1;
 		for (auto& a : enemys.all())
 		{
 			a.child<Texture>("enem").setImageName(DB[type].enemy[name].file);
 			a.child<Label>("col").setText(toString(DB[type].enemy[name].level));
+			a.child<FilledRect>("hp").setSize(196,16);
 			enemys.data(a).life = DB[type].enemy[name].Maxlife;
 			enemys.data(a).name = name;
 			enemys.data(a).type = type;
-			enemys.data(a).pos = a.id()+1;
+			enemys.data(a).pos = b;
+			b++;
 		}
 	}
 	void loadDB()
@@ -70,7 +79,6 @@ class Fight
 			string a2;
 			input >> a2;
 			enemyType b2;
-			input >> b2.chance;
 			input >> b2.level;
 			input >> b2.armN;
 			input >> b2.armM;
@@ -83,10 +91,10 @@ class Fight
 			input >> b3;
 			for (auto i2 = 0; i2 < b3; i2++)
 			{
-				string a3;
-				input >> a3;
 				int b4;
 				input >> b4;
+				string a3;
+				input >> a3;
 				b2.drop[a3] = b4;
 			}
 			DB[a].enemy[a2] = b2;
@@ -110,9 +118,61 @@ class Fight
 			}
 		}
 	}
+	void updateEnemy()
+	{
+		for (auto& a : enemys.all())
+		{
+			a.child<FilledRect>("hp").setSize(196*(enemys.data(a).life/ DB[enemys.data(a).type].enemy[enemys.data(a).name].Maxlife),16);
+			if (enemys.data(a).life <= 0)
+			{
+				a.hide();
+			}
+		}
+	}
+	int enemyPosLocat()
+	{
+		for (auto& a : enemys.all())
+		{
+			if (a.isMouseOn())
+			{
+				return enemys.data(a).pos;
+			}
+		}
+	}
+	void resultAttact(Attac a,int b)
+	{
+		for (auto& c : enemys.all())
+		{
+			if (enemys.data(c).pos == b)
+			{
+				cout << a.dam<<endl;
+				if (a.TypeD == 1)
+				{
+					int d = a.dam - DB[enemys.data(c).type].enemy[enemys.data(c).name].armN;
+					if (d <= 0)
+						enemys.data(c).life -= 1;
+					else
+						enemys.data(c).life -= d;
+					updateEnemy();
+				}
+				if (a.TypeD == 2)
+				{
+					int d = DB[enemys.data(c).type].enemy[enemys.data(c).name].armM - a.dam;
+					if (d <= 0)
+						enemys.data(c).life -= 1;
+					else
+						enemys.data(c).life -= d;
+					updateEnemy();
+				}
+				
+				break;
+			}
 
+		}
+		
+	}
 
-
+	int Kill = 0;
 	bool Your;
 	int nowPos=3;
 	map<string , enemyDB> DB;

@@ -50,13 +50,6 @@ struct Armor
 };
 struct Weapon
 {
-	enum TypeD
-	{
-		Near_natural,
-		Distant_natural,
-		Near_magic,
-		Distant_magic,
-	};
 	enum Type
 	{
 		sword,
@@ -64,7 +57,7 @@ struct Weapon
 		pickaxe
 	};
 	int dam, level;
-	TypeD typeD;
+	int typeD;
 	Type typeW;
 	Rarity rarity;
 	bool active;
@@ -91,6 +84,8 @@ struct Slot
 	} data;
 	int x, y, num;
 };
+
+
 
 struct Item
 {
@@ -189,8 +184,9 @@ class Inventor
 				if (typ == "axe")
 				{
 					DB[name2].data.weapon.typeW = DB[name2].data.weapon.axe;
-					input >> typ;
-					DB[name2].data.weapon.typeD = DB[name2].data.weapon.Near_natural;
+					int c;
+					input >> c;
+					DB[name2].data.weapon.typeD = c;
 					input >> g;
 					DB[name2].data.weapon.dam = g;
 				}
@@ -236,7 +232,6 @@ class Inventor
 		{
 			b.child<Texture>("obj").hide();
 			b.child<DrawObj>("num").hide();
-			b.child<Texture>("active").hide();
 			b.child<Texture>("left").hide();
 			b.child<Texture>("right").hide();
 			return;
@@ -255,12 +250,10 @@ class Inventor
 			if (a.data.weapon.isLeft && a.data.weapon.active)
 			{
 				b.child<Texture>("left").show();
-				b.child<Texture>("active").show();
 			}
 			if (!a.data.weapon.isLeft && a.data.weapon.active)
 			{
 				b.child<Texture>("right").show();
-				b.child<Texture>("active").show();
 			}
 			b.child<DrawObj>("num").hide();
 			b.child<Texture>("obj").setImageName(DB[a.name].file);
@@ -316,14 +309,14 @@ class Inventor
 					{
 						a.type = weapons;
 						a.name = type;
+						a.data.weapon = DB[type].data.weapon;
+						a.data.weapon.active = false;
 						c--;
 						if (c == 0)
 						{
 							break;
 						}
 					}
-
-
 				}
 			}
 		}
@@ -382,6 +375,8 @@ class Inventor
 	map<string, Item> DB;
 	vector <Slot> slots;
 	Layer<void> slot;
+	bool leftIs=false;
+	bool rightIs=false;
 	int nowSlot;
 	int recipeCol = 0;
 	int w3;
