@@ -652,8 +652,8 @@ class MyApp : public App
 				if (inventor.leftIs == true)
 				{
 					fight.resultAttact(attact(true), fight.enemyPosLocat());
-					//fight.Your = false;
 					resultFight();
+					fight.Your = false;
 				}
 			}
 			if (fight.Your)
@@ -663,32 +663,32 @@ class MyApp : public App
 				{
 					fight.resultAttact(attact(false), fight.enemyPosLocat());
 					resultFight();
-					//fight.Your = false;
+					fight.Your = false;
 				}
 			}
 			if (fight.Your)
 			if (input.justPressed(Q))
 			{
-				//fight.Your = false;
+				fight.Your = false;
 			}
 			if (fight.Your)
 			if (input.justPressed(E))
 			{
-				//fight.Your = false;
+				fight.Your = false;
 			}
 			if (fight.nowPos>1 && fight.Your)
 			if (input.justPressed(A))
 			{
 				fight.nowPos--;
 				fight.updateYou();
-				//fight.Your = false;
+				fight.Your = false;
 			}
 			if (fight.nowPos<5 && fight.Your)
 			if (input.justPressed(D))
 			{
 				fight.nowPos++;
 				fight.updateYou();
-				//fight.Your = false;
+				fight.Your = false;
 			}
 		}
 		if (selector.selected() == 2)
@@ -967,7 +967,6 @@ class MyApp : public App
 
     void move()
     {
-		
 		field.setView(world.player.pos());
 		auto viewBox = field.viewBox();
 		viewBox.extend(w, h);
@@ -979,6 +978,20 @@ class MyApp : public App
 			for (int y = iv2_min.y; y <= iv2_max.y; y++)
 			{
 				world.genchunk(IntVec2(x, y));
+			}
+		}
+		if (selector.selected()==3)
+		if (!fight.Your)
+		{
+			fight.enemyAttact();
+		}
+		if (selector.selected()==3)
+		for (auto& a : fight.you.all())
+		{
+			if (fight.you.data(a).life <= 0)
+			{
+				selector.select(1);
+				world.nowObj = GameObj();
 			}
 		}
     }
