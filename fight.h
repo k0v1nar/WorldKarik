@@ -27,7 +27,6 @@ struct Attac
 };
 struct yOu
 {
-	bool active;
 	float life;
 };
 struct enemyInfo
@@ -36,7 +35,6 @@ struct enemyInfo
 	int dam;
 	string type;
 	string name;
-	int pos;
 };
 
 struct enemyDB
@@ -50,16 +48,15 @@ class Fight
 
 	void load(Layout design,float h2)
 	{
-		you = design.child<Layer<yOu>>("you");
+		you = design.child<Layer<void>>("you");
 		enemys = design.child<Layer<enemyInfo>>("enemys");
+		dam_ = design.child<Layer<void>>("dam_");
 		loadDB();
-		updateYou();
 	}
 	void loadMap(string name, string type)
 	{
-		nowPos = 3;
+		nowPos = 2;
 		Your = true;
-		int b = 1;
 		for (auto& a : enemys.all())
 		{
 			a.show();
@@ -70,14 +67,13 @@ class Fight
 			enemys.data(a).dam = DB[type].enemy[name].dam;
 			enemys.data(a).name = name;
 			enemys.data(a).type = type;
-			enemys.data(a).pos = b;
-			b++;
 		}
 		for (auto& a : you.all())
 		{
-			you.data(a).life = 50;
+			dataYou.life = 50;
 			a.child<FilledRect>("hp").setSize(196, 16);
 		}
+		updateYou();
 	}
 	void loadDB()
 	{
@@ -117,17 +113,15 @@ class Fight
 	{
 		for (auto& a : you.all())
 		{
-			if (a.id() != nowPos - 1)
+			if (a.id() != nowPos)
 			{
-				you.data(a).active = false;
 				a.hide();
 			}
 			else
 			{
-				you.data(a).active = true;
 				a.show();
 				a.child<Texture>("youm").setImageName("emodj0.png");
-				a.child<FilledRect>("hp").setSize(196 * (you.data(a).life / 50), 16);
+				a.child<FilledRect>("hp").setSize(196 * (dataYou.life / 50), 16);
 			}
 		}
 	}
@@ -147,120 +141,87 @@ class Fight
 	{
 		for (auto& a : enemys.all())
 		{
-			if (a.isMouseOn())
+			if (a.isMouseOn() && a.isVisible())
 			{
-				return enemys.data(a).pos;
+				return a.id();
 			}
 		}
+		return -1;
 	}
 	void resultAttact(Attac a,int b)
 	{
 		for (auto& c : enemys.all())
 		{
-			if (enemys.data(c).pos == b)
+			if (c.id() == b)
 			{
-				cout << a.dam<<endl;
 				if (a.TypeD == 1)
 				{
-					int d = a.dam - DB[enemys.data(c).type].enemy[enemys.data(c).name].armN;
-					if (d <= 0)
-						enemys.data(c).life -= 1;
-					else
-						enemys.data(c).life -= d;
+					int d2 = a.dam - DB[enemys.data(c).type].enemy[enemys.data(c).name].armN;
+					if (d2 <= 0)
+						d2 = 1;
+					enemys.data(c).life -= d2;
 					updateEnemy();
+					auto& d = dam_.load("dam_anim.json", c.box().center().x+randomInt(-50,50), c.box().center().y + randomInt(-50, 50));
+					d.skin<Label>().setText("-" + toString(d2));
+					d.anim.play("play");
 				}
 				if (a.TypeD == 2)
 				{
-					int d = DB[enemys.data(c).type].enemy[enemys.data(c).name].armM - a.dam;
-					if (d <= 0)
-						enemys.data(c).life -= 1;
-					else
-						enemys.data(c).life -= d;
+					int d2 = a.dam - DB[enemys.data(c).type].enemy[enemys.data(c).name].armM;
+					if (d2 <= 0)
+						d2 = 1;
+					enemys.data(c).life -= d2;
 					updateEnemy();
+					auto& d = dam_.load("dam_anim.json",c.box().center());
+					d.skin<Label>().setText("-" + toString(d2));
+					d.anim.play("play");
 				}
-				
 				break;
 			}
-
 		}
-		
 	}
-
-	void enemyAttact()
+	void attactEnemy(int i)
 	{
-
-		for (auto a : enemys.all())
+		auto a = enemys.get(i);
+		if (a.isVisible())
 		{
-			if (a.isVisible)
+			if (positions[nowPos].count(a.id()))
 			{
-				if (nowPos == 1)
-				{
-					for (auto b : you.all())
-					{
-						you.data(b).life -= enemys.data(a).dam;
-					}
-					if (a.id() == 1)
-					{
-						break;
-					}
-				}
-				if (nowPos == 2)
-				{
-					for (auto b : you.all())
-					{
-						you.data(b).life -= enemys.data(a).dam;
-					}
-					if (a.id() == 2)
-					{
-						break;
-					}
-				}
-				if (nowPos == 3)
-				{
-					if (a.id() > 0)
-					{
-						for (auto b : you.all())
-						{
-							you.data(b).life -= enemys.data(a).dam;
-							cout << you.data(b).life << endl;
-							cout << enemys.data(a).dam << endl;
-						}
-					}
-					if (a.id() == 3)
-					{
-						break;
-					}
-				}
-				if (nowPos == 4)
-				{
-					if (a.id() > 1)
-					{
-						for (auto b : you.all())
-						{
-							you.data(b).life -= enemys.data(a).dam;
-						}
-					}
-				}
-				if (nowPos == 5)
-				{
-					if (a.id() > 2)
-					{
-						for (auto b : you.all())
-						{
-							you.data(b).life -= enemys.data(a).dam;
-						}
-					}
-				}
+				dataYou.life -= enemys.data(a).dam;
+				auto b = you.get(nowPos);
+				auto& c = dam_.load("dam_anim.json", b.box().center().x + randomInt(-50, 50), b.box().center().y + randomInt(-50, 50));
+				c.skin<Label>().setText("-" + toString(enemys.data(a).dam));
+				c.anim.play("play");
 				updateYou();
+				a.anim.play("down");
+				a.anim.play("up");
 			}
 		}
-		Your = true;
+		if (i == 4)
+		{
+			Your = true;
+			return;
+		}
+		callOnce(0.20, attactEnemy, i + 1);
 	}
-
+	void enemyAttact()
+	{
+		Your = false;
+		attactEnemy(0);
+	}
+	yOu dataYou;
 	int Kill = 0;
 	bool Your;
-	int nowPos=3;
+	int nowPos=2;
 	map<string , enemyDB> DB;
-	Layer<yOu> you;
+	Layer<void> you;
+	Layer<void> dam_; 
 	Layer<enemyInfo> enemys;
+	set<int> positions[5] = {
+		{ 0, 1 },
+		{ 0, 1, 2 },
+		{ 1, 2, 3 },
+		{ 2, 3, 4 },
+		{ 3, 4 }
+	};
 };

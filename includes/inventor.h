@@ -33,6 +33,7 @@ struct Potion
 	bool isLeft;
 	bool active;
 	int num;
+	bool full() { return num == 15; };
 };
 struct Armor
 {
@@ -85,7 +86,11 @@ struct Slot
 	int x, y, num;
 };
 
-
+struct boool
+{
+	bool is;
+	int i;
+};
 
 struct Item
 {
@@ -193,6 +198,32 @@ class Inventor
 				input >> file;
 				DB[name2].file = file;
 			}
+			else if (b == "potion")
+			{
+				string name;
+				input >> name;
+				for (auto& f : name)
+				{
+					if (f == '_')
+					{
+						f = ' ';
+					}
+				}
+				string type;
+				input >> type;
+				int c;
+				input >> c;
+				if (type == "life")
+				{
+					DB[name2].data.potion.type = DB[name2].data.potion.Heal;
+					DB[name2].data.potion.PowEffects = c;
+				}
+				string file;
+				input >> file;
+				DB[name2].name = name;
+				DB[name2].type = potions;
+				DB[name2].file = file;
+			}
 		}
 		input.close();
 	}
@@ -258,6 +289,20 @@ class Inventor
 			b.child<DrawObj>("num").hide();
 			b.child<Texture>("obj").setImageName(DB[a.name].file);
 		}
+		if (a.type == potions)
+		{
+			if (a.data.potion.isLeft && a.data.potion.active)
+			{
+				b.child<Texture>("left").show();
+			}
+			if (!a.data.potion.isLeft && a.data.potion.active)
+			{
+				b.child<Texture>("right").show();
+			}
+			b.child<DrawObj>("num").show();
+			b.child<Label>("col").setText(toString(a.data.potion.num));
+			b.child<Texture>("obj").setImageName(DB[a.name].file);
+		}
 		b.child<Texture>("obj").show();
 	}
 	void seekSlot(string type, TypeIt i, int c)
@@ -283,7 +328,17 @@ class Inventor
 			else
 				if (a.type == potions)
 				{
-
+					if (a.data.potion.full() && a.name == type)
+					{
+						if (a.data.potion.num + c <= 15)
+						{
+							a.data.potion.num += c;
+							c = 0;
+							break;
+						}
+						c -= 15 - a.data.potion.num;
+						a.data.potion.num = 15;
+					}
 				};
 		}
 		if (c > 0)
@@ -316,6 +371,19 @@ class Inventor
 						{
 							break;
 						}
+					}
+					if (i == potions)
+					{
+						a.type = potions;
+						a.name = type;
+						a.data.potion = DB[type].data.potion;
+						a.data.potion.active = false;
+						if (c <= 15)
+						{
+							a.data.potion.num += c;
+							break;
+						}
+						c -= 15;
 					}
 				}
 			}
@@ -375,8 +443,10 @@ class Inventor
 	map<string, Item> DB;
 	vector <Slot> slots;
 	Layer<void> slot;
-	bool leftIs=false;
-	bool rightIs=false;
+	boool leftIs;
+	boool rightIs;
+	boool leftPotion;
+	boool rightPotion;
 	int nowSlot;
 	int recipeCol = 0;
 	int w3;

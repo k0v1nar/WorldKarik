@@ -5628,7 +5628,40 @@
                                  {
                                     "_name" : "enemy1",
                                     "_typeName" : "ObjectConstruct",
-                                    "animations" : [],
+                                    "animations" : [
+                                       {
+                                          "_key" : "down",
+                                          "_value" : {
+                                             "_typeName" : "AdvancedMove",
+                                             "changeFunc" : 0,
+                                             "coordType" : 1,
+                                             "objName" : "",
+                                             "parentHeightRelativeCoord" : 0,
+                                             "parentWidthRelativeCoord" : 0,
+                                             "period" : 500,
+                                             "pixelCoord" : -50,
+                                             "relativeMove" : true,
+                                             "selfHeightRelativeCoord" : 0,
+                                             "selfWidthRelativeCoord" : 0
+                                          }
+                                       },
+                                       {
+                                          "_key" : "up",
+                                          "_value" : {
+                                             "_typeName" : "AdvancedMove",
+                                             "changeFunc" : 0,
+                                             "coordType" : 1,
+                                             "objName" : "",
+                                             "parentHeightRelativeCoord" : 0,
+                                             "parentWidthRelativeCoord" : 0,
+                                             "period" : 500,
+                                             "pixelCoord" : 50,
+                                             "relativeMove" : true,
+                                             "selfHeightRelativeCoord" : 0,
+                                             "selfWidthRelativeCoord" : 0
+                                          }
+                                       }
+                                    ],
                                     "finder" : {
                                        "_typeName" : "FindableGeometryElement",
                                        "geom" : {
@@ -6024,7 +6057,40 @@
                                  {
                                     "_name" : "enemy2",
                                     "_typeName" : "ObjectConstruct",
-                                    "animations" : [],
+                                    "animations" : [
+                                       {
+                                          "_key" : "down",
+                                          "_value" : {
+                                             "_typeName" : "AdvancedMove",
+                                             "changeFunc" : 0,
+                                             "coordType" : 1,
+                                             "objName" : "",
+                                             "parentHeightRelativeCoord" : 0,
+                                             "parentWidthRelativeCoord" : 0,
+                                             "period" : 500,
+                                             "pixelCoord" : -50,
+                                             "relativeMove" : true,
+                                             "selfHeightRelativeCoord" : 0,
+                                             "selfWidthRelativeCoord" : 0
+                                          }
+                                       },
+                                       {
+                                          "_key" : "up",
+                                          "_value" : {
+                                             "_typeName" : "AdvancedMove",
+                                             "changeFunc" : 0,
+                                             "coordType" : 1,
+                                             "objName" : "",
+                                             "parentHeightRelativeCoord" : 0,
+                                             "parentWidthRelativeCoord" : 0,
+                                             "period" : 500,
+                                             "pixelCoord" : 50,
+                                             "relativeMove" : true,
+                                             "selfHeightRelativeCoord" : 0,
+                                             "selfWidthRelativeCoord" : 0
+                                          }
+                                       }
+                                    ],
                                     "finder" : {
                                        "_typeName" : "FindableGeometryElement",
                                        "geom" : {
@@ -6420,7 +6486,40 @@
                                  {
                                     "_name" : "enemy3",
                                     "_typeName" : "ObjectConstruct",
-                                    "animations" : [],
+                                    "animations" : [
+                                       {
+                                          "_key" : "down",
+                                          "_value" : {
+                                             "_typeName" : "AdvancedMove",
+                                             "changeFunc" : 0,
+                                             "coordType" : 1,
+                                             "objName" : "",
+                                             "parentHeightRelativeCoord" : 0,
+                                             "parentWidthRelativeCoord" : 0,
+                                             "period" : 500,
+                                             "pixelCoord" : -50,
+                                             "relativeMove" : true,
+                                             "selfHeightRelativeCoord" : 0,
+                                             "selfWidthRelativeCoord" : 0
+                                          }
+                                       },
+                                       {
+                                          "_key" : "up",
+                                          "_value" : {
+                                             "_typeName" : "AdvancedMove",
+                                             "changeFunc" : 0,
+                                             "coordType" : 1,
+                                             "objName" : "",
+                                             "parentHeightRelativeCoord" : 0,
+                                             "parentWidthRelativeCoord" : 0,
+                                             "period" : 500,
+                                             "pixelCoord" : 50,
+                                             "relativeMove" : true,
+                                             "selfHeightRelativeCoord" : 0,
+                                             "selfWidthRelativeCoord" : 0
+                                          }
+                                       }
+                                    ],
                                     "finder" : {
                                        "_typeName" : "FindableGeometryElement",
                                        "geom" : {
@@ -6816,7 +6915,40 @@
                                  {
                                     "_name" : "enemy4",
                                     "_typeName" : "ObjectConstruct",
-                                    "animations" : [],
+                                    "animations" : [
+                                       {
+                                          "_key" : "down",
+                                          "_value" : {
+                                             "_typeName" : "AdvancedMove",
+                                             "changeFunc" : 0,
+                                             "coordType" : 1,
+                                             "objName" : "",
+                                             "parentHeightRelativeCoord" : 0,
+                                             "parentWidthRelativeCoord" : 0,
+                                             "period" : 500,
+                                             "pixelCoord" : -50,
+                                             "relativeMove" : true,
+                                             "selfHeightRelativeCoord" : 0,
+                                             "selfWidthRelativeCoord" : 0
+                                          }
+                                       },
+                                       {
+                                          "_key" : "up",
+                                          "_value" : {
+                                             "_typeName" : "AdvancedMove",
+                                             "changeFunc" : 0,
+                                             "coordType" : 1,
+                                             "objName" : "",
+                                             "parentHeightRelativeCoord" : 0,
+                                             "parentWidthRelativeCoord" : 0,
+                                             "period" : 500,
+                                             "pixelCoord" : 50,
+                                             "relativeMove" : true,
+                                             "selfHeightRelativeCoord" : 0,
+                                             "selfWidthRelativeCoord" : 0
+                                          }
+                                       }
+                                    ],
                                     "finder" : {
                                        "_typeName" : "FindableGeometryElement",
                                        "geom" : {
@@ -7212,7 +7344,40 @@
                                  {
                                     "_name" : "enemy5",
                                     "_typeName" : "ObjectConstruct",
-                                    "animations" : [],
+                                    "animations" : [
+                                       {
+                                          "_key" : "down",
+                                          "_value" : {
+                                             "_typeName" : "AdvancedMove",
+                                             "changeFunc" : 0,
+                                             "coordType" : 1,
+                                             "objName" : "",
+                                             "parentHeightRelativeCoord" : 0,
+                                             "parentWidthRelativeCoord" : 0,
+                                             "period" : 500,
+                                             "pixelCoord" : -50,
+                                             "relativeMove" : true,
+                                             "selfHeightRelativeCoord" : 0,
+                                             "selfWidthRelativeCoord" : 0
+                                          }
+                                       },
+                                       {
+                                          "_key" : "up",
+                                          "_value" : {
+                                             "_typeName" : "AdvancedMove",
+                                             "changeFunc" : 0,
+                                             "coordType" : 1,
+                                             "objName" : "",
+                                             "parentHeightRelativeCoord" : 0,
+                                             "parentWidthRelativeCoord" : 0,
+                                             "period" : 500,
+                                             "pixelCoord" : 50,
+                                             "relativeMove" : true,
+                                             "selfHeightRelativeCoord" : 0,
+                                             "selfWidthRelativeCoord" : 0
+                                          }
+                                       }
+                                    ],
                                     "finder" : {
                                        "_typeName" : "FindableGeometryElement",
                                        "geom" : {
@@ -8724,6 +8889,18 @@
                                     "transitionAnimations" : []
                                  }
                               ],
+                              "order" : {
+                                 "_typeName" : "SortByIDOrder"
+                              }
+                           },
+                           {
+                              "_name" : "dam_",
+                              "_typeName" : "Layer",
+                              "index" : {
+                                 "_typeName" : "FlatIndex",
+                                 "keyType" : 2
+                              },
+                              "list" : [],
                               "order" : {
                                  "_typeName" : "SortByIDOrder"
                               }

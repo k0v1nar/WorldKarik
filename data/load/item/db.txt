@@ -22,6 +22,7 @@ rope
 	resources
 	Веревка
 	obj/rope.png
+	
 string
 	resources
 	Нить
@@ -35,4 +36,10 @@ wooden_axe
 	1
 	5
 	obj/axe.png	
+lowheal
+	potion
+	Малое_зелье_жизни
+	life
+	10
+	obj/lowheal.png
 end

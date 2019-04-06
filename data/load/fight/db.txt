@@ -9,6 +9,8 @@ meeleN
 20
 15
 enemy/spider.png
-1
+2
 100
 string
+75
+lowheal

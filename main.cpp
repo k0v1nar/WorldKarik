@@ -34,14 +34,14 @@ class MyApp : public App
 				{
 					icon_del("weapon1");
 					MenuW.hide();
-					inventor.leftIs = false;
+					inventor.leftIs.is = false;
 					inventor.slots[inventor.nowSlot].data.weapon.active = false;
 					inventor.slots[inventor.nowSlot].data.weapon.isLeft = false;
 					inventor.nowSlot = -1;
 				}
 				else
 				{
-					inventor.rightIs = false;
+					inventor.rightIs.is = false;
 					icon_del("weapon2");
 					MenuW.hide();
 					inventor.slots[inventor.nowSlot].data.weapon.active = false;
@@ -52,7 +52,29 @@ class MyApp : public App
 		}
 		if (inventor.slots[inventor.nowSlot].type == potions)
 		{
-
+			inventor.slot.get(inventor.nowSlot).child<Texture>("left").hide();
+			inventor.slot.get(inventor.nowSlot).child<Texture>("right").hide();
+			if (inventor.slots[inventor.nowSlot].data.potion.active)
+			{
+				if (inventor.slots[inventor.nowSlot].data.potion.isLeft)
+				{
+					icon_del("potion1");
+					MenuP.hide();
+					inventor.leftPotion.is = false;
+					inventor.slots[inventor.nowSlot].data.potion.active = false;
+					inventor.slots[inventor.nowSlot].data.potion.isLeft = false;
+					inventor.nowSlot = -1;
+				}
+				else
+				{
+					inventor.rightPotion.is = false;
+					icon_del("potion2");
+					MenuP.hide();
+					inventor.slots[inventor.nowSlot].data.potion.active = false;
+					inventor.slots[inventor.nowSlot].data.potion.isLeft = false;
+					inventor.nowSlot = -1;
+				}
+			}
 		}
 		if (inventor.slots[inventor.nowSlot].data.armor.active)
 			if (inventor.slots[inventor.nowSlot].type == armors)
@@ -86,7 +108,8 @@ class MyApp : public App
 		{
 			if (i)
 			{
-				inventor.leftIs = true;
+				inventor.leftIs.is = true;
+				inventor.leftIs.i = inventor.nowSlot;
 				icon_use("weapon1", inventor.nowSlot);
 				MenuW.hide();
 				inventor.slot.get(inventor.nowSlot).child<Texture>("left").show();
@@ -96,7 +119,8 @@ class MyApp : public App
 			}
 			else
 			{
-				inventor.rightIs = true;
+				inventor.rightIs.is = true;
+				inventor.rightIs.i = inventor.nowSlot;
 				icon_use("weapon2", inventor.nowSlot);
 				MenuW.hide();
 				inventor.slot.get(inventor.nowSlot).child<Texture>("right").show();
@@ -111,20 +135,23 @@ class MyApp : public App
 	{
 		if (i)
 		{
-			icon_use("poiton1", inventor.nowSlot);
+			icon_use("potion1", inventor.nowSlot);
 			MenuP.hide();
+			inventor.leftPotion = true;
 			inventor.slots[inventor.nowSlot].data.potion.active = true;
 			inventor.slots[inventor.nowSlot].data.potion.isLeft = true;
-			inventor.nowSlot = -1;
 		}
 		else
 		{
-			icon_use("poiton2", inventor.nowSlot);
+			icon_use("potion2", inventor.nowSlot);
 			MenuP.hide();
+			inventor.rightPotion = true;
 			inventor.slots[inventor.nowSlot].data.potion.active = true;
-			inventor.slots[inventor.nowSlot].data.potion.isLeft = true;
-			inventor.nowSlot = -1;
+			inventor.slots[inventor.nowSlot].data.potion.isLeft = false;
+			
 		}
+		inventor.updateSlot(inventor.nowSlot);
+		inventor.nowSlot = -1;
 	}
 	
 	void icon_use(string i, int i2)
@@ -591,6 +618,7 @@ class MyApp : public App
 		connect(p2, potionuse, false);
 		readPerson();
 		inventor.seekSlot("wooden_axe",weapons,1);
+		inventor.seekSlot("lowheal",potions,1);
 	}
 	
 	Attac attact(bool isLeft)
@@ -634,10 +662,14 @@ class MyApp : public App
 					int f = randomInt(1, 100);
 					if (f <= e.second)
 					{
+						if (inventor.DB[e.first].type == resources)
 						inventor.seekSlot(e.first, resources, 1);
+						if (inventor.DB[e.first].type == potions)
+							inventor.seekSlot(e.first, potions, 1);
 					}
 				}
 			}
+			hideCursor();
 			world.nowObj = GameObj();
 		}
 	}
@@ -647,48 +679,61 @@ class MyApp : public App
 		if (selector.selected() == 3)
 		{
 			if (fight.Your)
-			if (input.justPressed(MouseLeft))
 			{
-				if (inventor.leftIs == true)
+				if (input.justPressed(MouseLeft))
 				{
-					fight.resultAttact(attact(true), fight.enemyPosLocat());
-					resultFight();
-					fight.Your = false;
+					if (inventor.leftIs.is)
+					{
+						int a = fight.enemyPosLocat();
+						if (a >= 0)
+						{
+							fight.resultAttact(attact(true), a);
+							resultFight();
+							fight.enemyAttact();
+						}
+					}
 				}
-			}
-			if (fight.Your)
-			if (input.justPressed(MouseRight))
-			{
-				if (inventor.rightIs == true)
+				if (input.justPressed(MouseRight))
 				{
-					fight.resultAttact(attact(false), fight.enemyPosLocat());
-					resultFight();
-					fight.Your = false;
+					if (inventor.rightIs.is)
+					{
+						int a = fight.enemyPosLocat();
+						if (a >= 0)
+						{
+							fight.resultAttact(attact(false), a);
+							resultFight();
+							fight.enemyAttact();
+						}
+					}
 				}
-			}
-			if (fight.Your)
-			if (input.justPressed(Q))
-			{
-				fight.Your = false;
-			}
-			if (fight.Your)
-			if (input.justPressed(E))
-			{
-				fight.Your = false;
-			}
-			if (fight.nowPos>1 && fight.Your)
-			if (input.justPressed(A))
-			{
-				fight.nowPos--;
-				fight.updateYou();
-				fight.Your = false;
-			}
-			if (fight.nowPos<5 && fight.Your)
-			if (input.justPressed(D))
-			{
-				fight.nowPos++;
-				fight.updateYou();
-				fight.Your = false;
+				if (input.justPressed(Q))
+				{
+					if (inventor.leftPotion.is)
+					{
+						
+					}
+					fight.enemyAttact();
+				}
+				else if (input.justPressed(E))
+				{
+					if (inventor.rightPotion.is)
+					{
+
+					}
+					fight.enemyAttact();
+				}
+				else if (fight.nowPos>0 && input.justPressed(A))
+				{
+					fight.nowPos--;
+					fight.updateYou();
+					fight.enemyAttact();
+				}
+				else if (fight.nowPos<4 && input.justPressed(D))
+				{
+					fight.nowPos++;
+					fight.updateYou();
+					fight.enemyAttact();
+				}
 			}
 		}
 		if (selector.selected() == 2)
@@ -922,7 +967,6 @@ class MyApp : public App
 						showCursor();
 						world.nowObjInter = false;
 						int i=0;
-						fight.nowPos = 3;
 						design.child<Layout>("weapon1f").hide();
 						design.child<Layout>("weapon2f").hide();
 						design.child<Layout>("potion1f").hide();
@@ -947,13 +991,13 @@ class MyApp : public App
 								{
 									design.child<Layout>("potion1f").show();
 									design.child<Layout>("potion1f").child<Texture>("obj").setImageName(inventor.DB[inventor.slots[i].name].file);
-									design.child<Label>("fpotion1").setText(toString(inventor.DB[inventor.slots[i].name].data.potion.num));
+									design.child<Label>("fpotion1").setText(toString(inventor.slots[i].data.potion.num));
 								}
 								if (inventor.slots[i].type == potions && !inventor.slots[i].data.potion.isLeft)
 								{
 									design.child<Layout>("potion2f").show();
 									design.child<Layout>("potion2f").child<Texture>("obj").setImageName(inventor.DB[inventor.slots[i].name].file);
-									design.child<Label>("fpotion2").setText(toString(inventor.DB[inventor.slots[i].name].data.potion.num));
+									design.child<Label>("fpotion2").setText(toString(inventor.slots[i].data.potion.num));
 								}
 							}
 							i++;
@@ -981,16 +1025,12 @@ class MyApp : public App
 			}
 		}
 		if (selector.selected()==3)
-		if (!fight.Your)
-		{
-			fight.enemyAttact();
-		}
-		if (selector.selected()==3)
 		for (auto& a : fight.you.all())
 		{
-			if (fight.you.data(a).life <= 0)
+			if (fight.dataYou.life <= 0)
 			{
 				selector.select(1);
+				hideCursor();
 				world.nowObj = GameObj();
 			}
 		}
