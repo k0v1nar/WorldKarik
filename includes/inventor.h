@@ -254,6 +254,20 @@ class Inventor
 		}
 	}
 
+	boool findWeapon(bool isLeft)
+	{
+		for (auto& a : slots)
+			if (a.type == weapons && a.data.weapon.active && a.data.weapon.isLeft==isLeft)
+				return { true, a.num };
+		return { false,-1 };
+	}
+	boool findPotion(bool isLeft)
+	{
+		for (auto& a : slots)
+			if (a.type == potions && a.data.potion.active && a.data.potion.isLeft == isLeft)
+				return { true, a.num };
+		return { false,-1 };
+	}
 	//slot_work
 	void updateSlot(int i)
 	{
@@ -294,6 +308,11 @@ class Inventor
 			if (a.data.potion.isLeft && a.data.potion.active)
 			{
 				b.child<Texture>("left").show();
+			}
+			if (!a.data.potion.active)
+			{
+				b.child<Texture>("left").hide();
+				b.child<Texture>("right").hide();
 			}
 			if (!a.data.potion.isLeft && a.data.potion.active)
 			{
@@ -384,6 +403,7 @@ class Inventor
 							break;
 						}
 						c -= 15;
+						a.data.potion.num = 15;
 					}
 				}
 			}
@@ -403,6 +423,13 @@ class Inventor
 					if (a.name == i)
 					{
 						b += a.data.resource.number;
+					}
+				}
+				if (a.type == potions)
+				{
+					if (a.name == i)
+					{
+						b += a.data.potion.num;
 					}
 				}
 			}
@@ -434,6 +461,26 @@ class Inventor
 						}
 					}
 				}
+				if (b.type == potions)
+				{
+					if (b.name == i)
+					{
+						if (a > b.data.potion.num)
+						{
+							a -= b.data.potion.num;
+							b.empty = true;
+							updateSlot(b.num);
+						}
+						if (a <= b.data.potion.num)
+						{
+							b.data.potion.num -= a;
+							if (b.data.potion.num == 0)
+								b.empty = true;
+
+							updateSlot(b.num);
+						}
+					}
+				}
 			}
 		}
 	}
@@ -443,10 +490,6 @@ class Inventor
 	map<string, Item> DB;
 	vector <Slot> slots;
 	Layer<void> slot;
-	boool leftIs;
-	boool rightIs;
-	boool leftPotion;
-	boool rightPotion;
 	int nowSlot;
 	int recipeCol = 0;
 	int w3;

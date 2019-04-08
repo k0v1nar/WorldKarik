@@ -34,14 +34,12 @@ class MyApp : public App
 				{
 					icon_del("weapon1");
 					MenuW.hide();
-					inventor.leftIs.is = false;
 					inventor.slots[inventor.nowSlot].data.weapon.active = false;
 					inventor.slots[inventor.nowSlot].data.weapon.isLeft = false;
 					inventor.nowSlot = -1;
 				}
 				else
 				{
-					inventor.rightIs.is = false;
 					icon_del("weapon2");
 					MenuW.hide();
 					inventor.slots[inventor.nowSlot].data.weapon.active = false;
@@ -60,14 +58,12 @@ class MyApp : public App
 				{
 					icon_del("potion1");
 					MenuP.hide();
-					inventor.leftPotion.is = false;
 					inventor.slots[inventor.nowSlot].data.potion.active = false;
 					inventor.slots[inventor.nowSlot].data.potion.isLeft = false;
 					inventor.nowSlot = -1;
 				}
 				else
 				{
-					inventor.rightPotion.is = false;
 					icon_del("potion2");
 					MenuP.hide();
 					inventor.slots[inventor.nowSlot].data.potion.active = false;
@@ -108,8 +104,6 @@ class MyApp : public App
 		{
 			if (i)
 			{
-				inventor.leftIs.is = true;
-				inventor.leftIs.i = inventor.nowSlot;
 				icon_use("weapon1", inventor.nowSlot);
 				MenuW.hide();
 				inventor.slot.get(inventor.nowSlot).child<Texture>("left").show();
@@ -119,8 +113,6 @@ class MyApp : public App
 			}
 			else
 			{
-				inventor.rightIs.is = true;
-				inventor.rightIs.i = inventor.nowSlot;
 				icon_use("weapon2", inventor.nowSlot);
 				MenuW.hide();
 				inventor.slot.get(inventor.nowSlot).child<Texture>("right").show();
@@ -137,7 +129,6 @@ class MyApp : public App
 		{
 			icon_use("potion1", inventor.nowSlot);
 			MenuP.hide();
-			inventor.leftPotion = true;
 			inventor.slots[inventor.nowSlot].data.potion.active = true;
 			inventor.slots[inventor.nowSlot].data.potion.isLeft = true;
 		}
@@ -145,7 +136,6 @@ class MyApp : public App
 		{
 			icon_use("potion2", inventor.nowSlot);
 			MenuP.hide();
-			inventor.rightPotion = true;
 			inventor.slots[inventor.nowSlot].data.potion.active = true;
 			inventor.slots[inventor.nowSlot].data.potion.isLeft = false;
 			
@@ -467,10 +457,21 @@ class MyApp : public App
 		if (i == 1)
 		{
 			Menudr.hide();
-			inventor.slots[inventor.nowSlot].data.resource.number -= dropnum;
-			if (inventor.slots[inventor.nowSlot].data.resource.number == 0)
+			if (inventor.slots[inventor.nowSlot].type == potions)
 			{
-				inventor.slots[inventor.nowSlot].empty = true;
+				inventor.slots[inventor.nowSlot].data.potion.num -= dropnum;
+				if (inventor.slots[inventor.nowSlot].data.potion.num == 0)
+				{
+					inventor.slots[inventor.nowSlot].empty = true;
+				}
+			}
+			if (inventor.slots[inventor.nowSlot].type == resources)
+			{
+				inventor.slots[inventor.nowSlot].data.resource.number -= dropnum;
+				if (inventor.slots[inventor.nowSlot].data.resource.number == 0)
+				{
+					inventor.slots[inventor.nowSlot].empty = true;
+				}
 			}
 			inventor.updateSlot(inventor.nowSlot);
 			design.update();
@@ -618,7 +619,7 @@ class MyApp : public App
 		connect(p2, potionuse, false);
 		readPerson();
 		inventor.seekSlot("wooden_axe",weapons,1);
-		inventor.seekSlot("lowheal",potions,1);
+		inventor.seekSlot("lowheal",potions,15);
 	}
 	
 	Attac attact(bool isLeft)
@@ -682,7 +683,8 @@ class MyApp : public App
 			{
 				if (input.justPressed(MouseLeft))
 				{
-					if (inventor.leftIs.is)
+					auto b = inventor.findWeapon(true);
+					if (b.is)
 					{
 						int a = fight.enemyPosLocat();
 						if (a >= 0)
@@ -695,7 +697,8 @@ class MyApp : public App
 				}
 				if (input.justPressed(MouseRight))
 				{
-					if (inventor.rightIs.is)
+					auto b = inventor.findWeapon(false);
+					if (b.is)
 					{
 						int a = fight.enemyPosLocat();
 						if (a >= 0)
@@ -708,19 +711,53 @@ class MyApp : public App
 				}
 				if (input.justPressed(Q))
 				{
-					if (inventor.leftPotion.is)
+					auto b = inventor.findPotion(true);
+					if (b.is)
 					{
-						
+						auto a = inventor.slots[b.i];
+						if (a.data.potion.type == a.data.potion.Heal)
+						{
+							if (fight.dataYou.life + a.data.potion.PowEffects <= 50)
+								fight.dataYou.life += a.data.potion.PowEffects;
+							else
+								fight.dataYou.life = 50;
+							fight.updateYou();
+							a.data.potion.num--;
+							inventor.delItem(a.name, 1);
+							design.child<Label>("fpotion1").setText(toString(a.data.potion.num));
+							design.update();
+							if (a.data.potion.num <= 0)
+							{
+								design.child<Layout>("potion1f").hide();
+							}
+						}
+						fight.enemyAttact();
 					}
-					fight.enemyAttact();
 				}
 				else if (input.justPressed(E))
 				{
-					if (inventor.rightPotion.is)
+					auto b = inventor.findPotion(false);
+					if (b.is)
 					{
-
+						auto a = inventor.slots[b.i];
+						if (a.data.potion.type == a.data.potion.Heal)
+						{
+							if (fight.dataYou.life + a.data.potion.PowEffects <= 50)
+								fight.dataYou.life += a.data.potion.PowEffects;
+							else
+								fight.dataYou.life = 50;
+							fight.updateYou();
+							a.data.potion.num--;
+							design.child<Label>("fpotion2").setText(toString(a.data.potion.num));
+							design.update();
+							inventor.delItem(a.name, 1);
+							if (a.data.potion.num <= 0)
+							{
+								design.child<Layout>("potion2f").hide();
+							}
+						}
+						fight.enemyAttact();
 					}
-					fight.enemyAttact();
 				}
 				else if (fight.nowPos>0 && input.justPressed(A))
 				{
@@ -811,6 +848,9 @@ class MyApp : public App
 						int a = Vec2ToInt(fieldInventor.mousePos());
 						auto b2 = inventor.slot.get(inventor.nowSlot);
 						b2.child<DrawObj>("sel").hide();
+						int a2 = inventor.slots[inventor.nowSlot].num;
+						inventor.slots[inventor.nowSlot].num = inventor.slots[a].num;
+						inventor.slots[a].num = a2;
 						swap(inventor.slots[inventor.nowSlot], inventor.slots[a]);
 						inventor.updateSlot(inventor.nowSlot);
 						inventor.updateSlot(a);
