@@ -13,4 +13,4 @@ enemy/spider.png
 100
 string
 75
-lowheal
+bottle

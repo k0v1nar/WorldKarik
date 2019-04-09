@@ -36,10 +36,21 @@ wooden_axe
 	1
 	5
 	obj/axe.png	
+
 lowheal
 	potion
 	Малое_зелье_жизни
 	life
 	10
 	obj/lowheal.png
+
+bottle
+	resources
+	Пустая_склянка
+	obj/bottle.png
+	
+heal_berry
+	resources
+	Ягоды_жизни
+	obj/berry_heal.png
 end

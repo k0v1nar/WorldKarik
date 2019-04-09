@@ -1,9 +1,10 @@
 forest
-5
+6
 grass
 	100
 	fon
 	roundWorld/grass1.png
+	
 gras
 	50
 	obj	
@@ -12,6 +13,7 @@ gras
 	1
 	100
 	grass
+	
 stone
 	20
 	obj
@@ -20,6 +22,7 @@ stone
 	1
 	100
 	stone
+	
 tree
 	60
 	obj
@@ -30,12 +33,22 @@ tree
 	wood
 	20
 	stick
-
+	
+berry_life
+	45
+	obj
+	50
+	roundWorld/berry.png
+	1
+	100
+	heal_berry
+	
 spider_normal
 	15
 	enemy
 	Normal
 	enemy/spider.png
+	
 swamp
 2
 grass
