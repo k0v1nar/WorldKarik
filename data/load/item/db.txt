@@ -27,15 +27,66 @@ string
 	resources
 	Нить
 	obj/string.png
-
+wooden_sword
+	weapon
+	Каменный_меч
+	1
+	sword
+	1
+	5
+	obj/sword.png
+wooden_pickaxe
+	weapon
+	Каменная_кирка
+	1
+	pickaxe
+	1
+	1
+	obj/pickaxe.png
 wooden_axe
 	weapon
 	Каменный_топор
 	1
 	axe
 	1
-	5
+	3
 	obj/axe.png	
+wooden_leggs
+	armour
+	Деревянные_поножи
+	leggs
+	1
+	2
+	Baff
+	0
+	obj/leggs_from_wood.png
+wooden_boots
+	armour
+	Деревянные_ботинки
+	boots
+	1
+	1
+	Baff
+	0
+	obj/boots_from_wood.png
+wooden_chesplate
+	armour
+	Деревянный_нагрудник
+	chesplate
+	1
+	3
+	Baff
+	0
+	obj/armor_from_wood.png
+wooden_helmet
+	armour
+	Деревянный_шлем
+	helmet
+	1
+	1
+	Baff
+	0
+	obj/helmet_from_wood.png
 lowheal
 	potion
 	Малое_зелье_жизни

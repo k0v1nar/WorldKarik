@@ -1,0 +1,41 @@
+4
+wooden_leggs
+	3
+	wood
+		0
+		4
+	rope
+		0
+		4
+	wooden_axe
+		1
+wooden_boots
+	3
+	wood
+		0
+		2
+	rope
+		0
+		2
+	wooden_axe
+		1
+wooden_chesplate
+	3
+	wood
+		0
+		6
+	rope
+		0
+		6
+	wooden_axe
+		1
+wooden_helmet
+	3
+	wood
+		0
+		1
+	rope
+		0
+		1
+	wooden_axe
+		1

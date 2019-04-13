@@ -2,8 +2,10 @@
 rope
 	1
 	string
-	8
+		0
+		8
 string
 	1
 	grass
-	1
+		0
+		1
