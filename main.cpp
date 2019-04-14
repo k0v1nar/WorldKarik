@@ -635,11 +635,24 @@ class MyApp : public App
 		connect(w2, handuse, false);
 		connect(p1, potionuse, true);
 		connect(p2, potionuse, false);
+		connect(continue_m, menu, true);
+		connect(exit_m, menu, false);
 		readPerson();
 		inventor.seekSlot("wooden_axe",weapons,1);
 		inventor.seekSlot("lowheal",potions,15);
 	}
-	
+	void menu(bool i)
+	{
+		if (i)
+		{
+			selector.select(1);
+		}
+		else
+		{
+			close();
+		}
+		hideCursor();
+	}
 	Attac attact(bool isLeft)
 	{
 		int i=0;
@@ -1112,6 +1125,8 @@ class MyApp : public App
 	LayerFromDesign(void, enemys);
 	LayerFromDesign(void, slot2);
 	LayerFromDesign(void, Player);
+	FromDesign(Button, continue_m);
+	FromDesign(Button, exit_m);
 	FromDesign(Button, inventors);
 	FromDesign(Button, crafts);
 	FromDesign(Button, map);
