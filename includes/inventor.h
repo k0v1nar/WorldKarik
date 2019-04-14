@@ -35,16 +35,17 @@ struct Potion
 	int num;
 	bool full() { return num == 15; };
 };
+enum TypeA
+	{
+		helmet, //0
+		chesplat, //1
+		leggs, //2
+		boots //3
+	};
 struct Armor
 {
-	enum Type
-	{
-		helmet,
-		chesplat,
-		leggs,
-		boots
-	};
-	Type type;
+	
+	TypeA type;
 	int def, level;
 	Rarity rarity;
 	bool active;
@@ -105,12 +106,16 @@ struct Item
 		Potion potion;
 	} data;
 };
-
+struct RecipeD
+{
+	int col;
+	bool use;
+};
 struct Recipe
 {
 	int col;
 	int from;
-	map<string, int> recipe;
+	map<string, RecipeD> recipe;
 };
 class Inventor
 {
@@ -195,6 +200,24 @@ class Inventor
 					input >> g;
 					DB[name2].data.weapon.dam = g;
 				}
+				if (typ == "sword")
+				{
+					DB[name2].data.weapon.typeW = DB[name2].data.weapon.sword;
+					int c;
+					input >> c;
+					DB[name2].data.weapon.typeD = c;
+					input >> g;
+					DB[name2].data.weapon.dam = g;
+				}
+				if (typ == "pickaxe")
+				{
+					DB[name2].data.weapon.typeW = DB[name2].data.weapon.pickaxe;
+					int c;
+					input >> c;
+					DB[name2].data.weapon.typeD = c;
+					input >> g;
+					DB[name2].data.weapon.dam = g;
+				}
 				input >> file;
 				DB[name2].file = file;
 			}
@@ -224,6 +247,52 @@ class Inventor
 				DB[name2].type = potions;
 				DB[name2].file = file;
 			}
+			else if (b == "armour")
+			{
+				string name;
+				input >> name;
+				for (auto& f : name)
+				{
+					if (f == '_')
+					{
+						f = ' ';
+					}
+				}
+				string type;
+				input >> type;
+				int level;
+				input >> level;
+				int def;
+				input >> def;
+				string Baff;
+				input >> Baff;
+				int bafcol;
+				input >> bafcol;
+				for (auto c = 0; c < bafcol; c++)
+				{
+
+				}
+				string file;
+				input >> file;
+				DB[name2].name = name;
+				DB[name2].file = file;
+				DB[name2].type = armors;
+				if (type == "leggs")
+				{
+					DB[name2].data.armor.type = leggs;
+				} else if (type == "boots")
+				{
+					DB[name2].data.armor.type = boots;
+				} else if (type == "chesplate")
+				{
+					DB[name2].data.armor.type = chesplat;
+				} else if (type == "helmet")
+				{
+					DB[name2].data.armor.type = helmet;
+				}
+				DB[name2].data.armor.level = level;
+				DB[name2].data.armor.def = def;
+			}
 		}
 		input.close();
 	}
@@ -238,18 +307,32 @@ class Inventor
 			{
 				string name;
 				input >> name;
-				int c;
-				input >> c;
-				RDB[name].col = c;
-				RDB[name].from = b;
-				for (auto i2 = 0; i2 < c; i2++)
-				{
-					string namerec;
-					input >> namerec;
-					int c2;
-					input >> c2;
-					RDB[name].recipe[namerec] = c2;
-				}
+				
+				
+					int c;
+					input >> c;
+					RDB[name].col = c;
+					RDB[name].from = b;
+					
+					for (auto i2 = 0; i2 < c; i2++)
+					{
+						string namerec;
+						input >> namerec;
+						int b2;
+						input >> b2;
+						int c2 = 1;
+						if (b2 == 0)
+						{
+							input >> c2;
+							RDB[name].recipe[namerec].use = false;
+						}
+						else
+						{
+							RDB[name].recipe[namerec].use = true;
+						}
+						RDB[name].recipe[namerec].col = c2;
+					}
+				
 			}
 		}
 	}
@@ -257,14 +340,14 @@ class Inventor
 	boool findWeapon(bool isLeft)
 	{
 		for (auto& a : slots)
-			if (a.type == weapons && a.data.weapon.active && a.data.weapon.isLeft==isLeft)
+			if (!a.empty && a.type == weapons && a.data.weapon.active && a.data.weapon.isLeft==isLeft)
 				return { true, a.num };
 		return { false,-1 };
 	}
 	boool findPotion(bool isLeft)
 	{
 		for (auto& a : slots)
-			if (a.type == potions && a.data.potion.active && a.data.potion.isLeft == isLeft)
+			if (!a.empty && a.type == potions && a.data.potion.active && a.data.potion.isLeft == isLeft)
 				return { true, a.num };
 		return { false,-1 };
 	}
@@ -279,6 +362,7 @@ class Inventor
 			b.child<DrawObj>("num").hide();
 			b.child<Texture>("left").hide();
 			b.child<Texture>("right").hide();
+			b.child<Texture>("active").hide();
 			return;
 		}
 		b.child<DrawObj>("num").show();
@@ -289,9 +373,12 @@ class Inventor
 			b.child<Texture>("obj").setImageName(DB[a.name].file);
 			b.child<Texture>("left").hide();
 			b.child<Texture>("right").hide();
+			b.child<Texture>("active").hide();
 		}
 		if (a.type == weapons)
 		{
+			b.child<Texture>("left").hide();
+			b.child<Texture>("right").hide();
 			if (a.data.weapon.isLeft && a.data.weapon.active)
 			{
 				b.child<Texture>("left").show();
@@ -302,9 +389,25 @@ class Inventor
 			}
 			b.child<DrawObj>("num").hide();
 			b.child<Texture>("obj").setImageName(DB[a.name].file);
+			b.child<Texture>("active").hide();
+		}
+		if (a.type == armors)
+		{
+			b.child<Texture>("left").hide();
+			b.child<Texture>("right").hide();
+			b.child<Texture>("active").show();
+			if (!a.data.armor.active)
+			{
+				b.child<Texture>("active").hide();
+			}
+			b.child<DrawObj>("num").hide();
+			b.child<Texture>("obj").setImageName(DB[a.name].file);
 		}
 		if (a.type == potions)
 		{
+			b.child<Texture>("left").hide();
+			b.child<Texture>("right").hide();
+			b.child<Texture>("active").hide();
 			if (a.data.potion.isLeft && a.data.potion.active)
 			{
 				b.child<Texture>("left").show();
@@ -405,6 +508,18 @@ class Inventor
 						c -= 15;
 						a.data.potion.num = 15;
 					}
+					if (i == armors)
+					{
+						a.type = armors;
+						a.name = type;
+						a.data.armor = DB[type].data.armor;
+						a.data.armor.active = false;
+						c--;
+						if (c == 0)
+						{
+							break;
+						}
+					}
 				}
 			}
 		}
@@ -430,6 +545,13 @@ class Inventor
 					if (a.name == i)
 					{
 						b += a.data.potion.num;
+					}
+				}
+				if (a.type == weapons)
+				{
+					if (a.name == i)
+					{
+						b++;
 					}
 				}
 			}

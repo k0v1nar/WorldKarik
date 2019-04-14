@@ -2,14 +2,18 @@
 rope
 	1
 	string
-	8
+		0
+		8
 string
 	1
 	grass
-	1
+		0
+		1
 lowheal
 	2
 	bottle
-	1
+		0
+		1
 	heal_berry
-	5
+		0
+		5

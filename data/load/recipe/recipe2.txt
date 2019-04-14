@@ -1,9 +1,34 @@
-1
-wooden_axe
 3
-stick
-2
-rope
-1
-stone
-2
+wooden_axe
+	3
+	stick
+		0
+		2
+	rope
+		0
+		1
+	stone
+		0
+		2
+wooden_sword
+	3
+	stick
+		0
+		1
+	rope
+		0
+		1
+	stone
+		0
+		2
+wooden_pickaxe
+	3
+	stick
+		0
+		2
+	rope
+		0
+		1
+	stone
+		0
+		3

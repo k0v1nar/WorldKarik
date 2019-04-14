@@ -75,23 +75,24 @@ class MyApp : public App
 		if (inventor.slots[inventor.nowSlot].data.armor.active)
 			if (inventor.slots[inventor.nowSlot].type == armors)
 			{
-				if (inventor.slots[inventor.nowSlot].data.armor.type == inventor.slots[inventor.nowSlot].data.armor.boots)
+				if (inventor.slots[inventor.nowSlot].data.armor.type == boots)
 				{
 					icon_del("boots");
 				}
-				if (inventor.slots[inventor.nowSlot].data.armor.type == inventor.slots[inventor.nowSlot].data.armor.chesplat)
+				if (inventor.slots[inventor.nowSlot].data.armor.type == chesplat)
 				{
 					icon_del("chair_armor");
 				}
-				if (inventor.slots[inventor.nowSlot].data.armor.type == inventor.slots[inventor.nowSlot].data.armor.helmet)
+				if (inventor.slots[inventor.nowSlot].data.armor.type == helmet)
 				{
 					icon_del("helmet");
 				}
-				if (inventor.slots[inventor.nowSlot].data.armor.type == inventor.slots[inventor.nowSlot].data.armor.leggs)
+				if (inventor.slots[inventor.nowSlot].data.armor.type == leggs)
 				{
 					icon_del("legss");
 				}
 				inventor.slots[inventor.nowSlot].data.armor.active = false;
+				inventor.updateSlot(inventor.nowSlot);
 				inventor.nowSlot = -1;
 			}
 		Menu.hide();
@@ -168,23 +169,24 @@ class MyApp : public App
 		if (!inventor.slots[inventor.nowSlot].data.armor.active)
 			if (inventor.slots[inventor.nowSlot].type == armors)
 			{
-				if (inventor.slots[inventor.nowSlot].data.armor.type == inventor.slots[inventor.nowSlot].data.armor.boots)
+				if (inventor.slots[inventor.nowSlot].data.armor.type == boots)
 				{
 					icon_use("boots", inventor.nowSlot);
 				}
-				if (inventor.slots[inventor.nowSlot].data.armor.type == inventor.slots[inventor.nowSlot].data.armor.chesplat)
+				if (inventor.slots[inventor.nowSlot].data.armor.type == chesplat)
 				{
 					icon_use("chair_armor", inventor.nowSlot);
 				}
-				if (inventor.slots[inventor.nowSlot].data.armor.type == inventor.slots[inventor.nowSlot].data.armor.helmet)
+				if (inventor.slots[inventor.nowSlot].data.armor.type == helmet)
 				{
 					icon_use("helmet", inventor.nowSlot);
 				}
-				if (inventor.slots[inventor.nowSlot].data.armor.type == inventor.slots[inventor.nowSlot].data.armor.leggs)
+				if (inventor.slots[inventor.nowSlot].data.armor.type == leggs)
 				{
 					icon_use("legss", inventor.nowSlot);
 				}
 				inventor.slots[inventor.nowSlot].data.armor.active = true;
+				inventor.updateSlot(inventor.nowSlot);
 				inventor.nowSlot = -1;
 			}
 		Menu.hide();
@@ -203,9 +205,10 @@ class MyApp : public App
 		icon_del("helmet");
 		for (auto a : inventor.slot.all())
 		{
-			if ((inventor.slots[i].data.armor.active && inventor.slots[i].type == armors) || 
-				(inventor.slots[i].data.weapon.active && inventor.slots[i].type == weapons) ||
-				(inventor.slots[i].data.potion.active && inventor.slots[i].type == potions))
+			if (!inventor.slots[i].empty &&
+				((inventor.slots[i].type == armors && inventor.slots[i].data.armor.active) ||
+				(inventor.slots[i].type == weapons && inventor.slots[i].data.weapon.active) ||
+				(inventor.slots[i].type == potions && inventor.slots[i].data.potion.active)))
 			{
 				if (inventor.slots[i].type == weapons && inventor.slots[i].data.weapon.isLeft)
 				{
@@ -225,19 +228,19 @@ class MyApp : public App
 				}
 				if (inventor.slots[i].type == armors)
 				{
-					if (inventor.slots[i].data.armor.type == inventor.slots[i].data.armor.boots)
+					if (inventor.slots[i].data.armor.type == boots)
 					{
 						icon_use("boots", i);
 					}
-					if (inventor.slots[i].data.armor.type == inventor.slots[i].data.armor.chesplat)
+					if (inventor.slots[i].data.armor.type == chesplat)
 					{
 						icon_use("chair_armor", i);
 					}
-					if (inventor.slots[i].data.armor.type == inventor.slots[i].data.armor.helmet)
+					if (inventor.slots[i].data.armor.type == helmet)
 					{
 						icon_use("helmet", i);
 					}
-					if (inventor.slots[i].data.armor.type == inventor.slots[i].data.armor.leggs)
+					if (inventor.slots[i].data.armor.type == leggs)
 					{
 						icon_use("legss", i);
 					}
@@ -264,7 +267,7 @@ class MyApp : public App
 			{
 				auto bb = b2.child<Layout>("item").load("sl.json");
 				bb.child<Texture>("pict").setImageName(inventor.DB[i.first].file);
-				bb.child<Label>("col") << " x " << i.second;
+				bb.child<Label>("col") << " x " << i.second.col;
 			}
 			connect(b2.child<Button>("create"), craftItem, b.first);
 		}
@@ -285,7 +288,8 @@ class MyApp : public App
 			Menudr.hide();
 			for (auto& b : inventor.RDB[a].recipe)
 			{
-				inventor.delItem(b.first,dropnumcr*b.second);
+				if (!b.second.use)
+				inventor.delItem(b.first,dropnumcr*b.second.col);
 			}
 			inventor.seekSlot(a, inventor.DB[a].type, dropnumcr);
 			dropnumcr = 1;
@@ -343,10 +347,20 @@ class MyApp : public App
 		int min = 99999999;
 		for (auto& a : inventor.RDB[i].recipe)
 		{
-			int c = inventor.seekItem(a.first) / a.second;
-			if (c < min)
+			if (!a.second.use)
 			{
-				min = c;
+				int c = inventor.seekItem(a.first) / a.second.col;
+				if (c < min)
+				{
+					min = c;
+				}
+			}
+			else
+			{
+				if (inventor.seekItem(a.first) < 1)
+				{
+					min = 0;
+				}
 			}
 		}
 		inventor.recipeCol = min;
@@ -556,6 +570,10 @@ class MyApp : public App
 		a.x = (i.x + w3 / 2) / w3;
 		a.y = (i.y + h2 / 2) / h2;
 		int b = a.y * 9 + a.x;
+		if (b > 45)
+		{
+			b = -1;
+		}
 		return b;
 	}
 
@@ -799,36 +817,39 @@ class MyApp : public App
 					else
 					{
 						int a = Vec2ToInt(fieldInventor.mousePos());
-						inventor.nowSlot = a;
-						if (!inventor.slots[inventor.nowSlot].empty)
+						if (a >= 0)
 						{
-							auto b = inventor.slot.get(inventor.nowSlot);
-							if (inventor.nowSlot==8|| inventor.nowSlot==17|| inventor.nowSlot==26|| inventor.nowSlot==35|| inventor.nowSlot==44)
-							Menu.setPos(b.pos().x - w3, b.pos().y);
-							else
-								Menu.setPos(b.pos().x + w3, b.pos().y);
-							Menu.show();
-							Menu.child<Button>("use").show();
-							if (inventor.slots[inventor.nowSlot].type == resources)
-								Menu.child<Button>("use").hide();
-							if ((inventor.slots[inventor.nowSlot].data.armor.active && inventor.slots[inventor.nowSlot].type==armors) || 
-								(inventor.slots[inventor.nowSlot].data.weapon.active && inventor.slots[inventor.nowSlot].type == weapons) ||
-								(inventor.slots[inventor.nowSlot].data.potion.active && inventor.slots[inventor.nowSlot].type == potions))
+							inventor.nowSlot = a;
+							if (!inventor.slots[inventor.nowSlot].empty)
 							{
-								Menu.child<Button>("use").child<Label>("label").setText(tr("drop"));
-								connect(use, clearQieup);
+								auto b = inventor.slot.get(inventor.nowSlot);
+								if (inventor.nowSlot == 8 || inventor.nowSlot == 17 || inventor.nowSlot == 26 || inventor.nowSlot == 35 || inventor.nowSlot == 44)
+									Menu.setPos(b.pos().x - w3, b.pos().y);
+								else
+									Menu.setPos(b.pos().x + w3, b.pos().y);
+								Menu.show();
+								Menu.child<Button>("use").show();
+								if (inventor.slots[inventor.nowSlot].type == resources)
+									Menu.child<Button>("use").hide();
+								if ((inventor.slots[inventor.nowSlot].data.armor.active && inventor.slots[inventor.nowSlot].type == armors) ||
+									(inventor.slots[inventor.nowSlot].data.weapon.active && inventor.slots[inventor.nowSlot].type == weapons) ||
+									(inventor.slots[inventor.nowSlot].data.potion.active && inventor.slots[inventor.nowSlot].type == potions))
+								{
+									Menu.child<Button>("use").child<Label>("label").setText(tr("drop"));
+									connect(use, clearQieup);
+								}
+								if ((!inventor.slots[inventor.nowSlot].data.armor.active && inventor.slots[inventor.nowSlot].type == armors) ||
+									(!inventor.slots[inventor.nowSlot].data.weapon.active && inventor.slots[inventor.nowSlot].type == weapons) ||
+									(!inventor.slots[inventor.nowSlot].data.potion.active && inventor.slots[inventor.nowSlot].type == potions))
+								{
+									Menu.child<Button>("use").child<Label>("label").setText(tr("use"));
+									connect(use, drawQieup);
+								}
+								connect(drop, Drop, inventor.nowSlot);
 							}
-							if ((!inventor.slots[inventor.nowSlot].data.armor.active && inventor.slots[inventor.nowSlot].type == armors) ||
-								(!inventor.slots[inventor.nowSlot].data.weapon.active && inventor.slots[inventor.nowSlot].type == weapons) ||
-								(!inventor.slots[inventor.nowSlot].data.potion.active && inventor.slots[inventor.nowSlot].type == potions))
-							{
-								Menu.child<Button>("use").child<Label>("label").setText(tr("use"));
-								connect(use, drawQieup);
-							}
-							connect(drop, Drop, inventor.nowSlot);
+							isMouse = 2;
+							design.update();
 						}
-						isMouse = 2;
-						design.update();
 					}
 				}
 			
@@ -839,22 +860,29 @@ class MyApp : public App
 					{
 						isMouse = 1;
 						inventor.nowSlot = Vec2ToInt(fieldInventor.mousePos());
-						auto b = inventor.slot.get(inventor.nowSlot);
-						b.child<DrawObj>("sel").show();
+						if (inventor.nowSlot >= 0)
+						{
+							auto b = inventor.slot.get(inventor.nowSlot);
+							b.child<DrawObj>("sel").show();
+						}
 					}
 					else
 					{
 						isMouse = 0;
+
 						int a = Vec2ToInt(fieldInventor.mousePos());
-						auto b2 = inventor.slot.get(inventor.nowSlot);
-						b2.child<DrawObj>("sel").hide();
-						int a2 = inventor.slots[inventor.nowSlot].num;
-						inventor.slots[inventor.nowSlot].num = inventor.slots[a].num;
-						inventor.slots[a].num = a2;
-						swap(inventor.slots[inventor.nowSlot], inventor.slots[a]);
-						inventor.updateSlot(inventor.nowSlot);
-						inventor.updateSlot(a);
-						design.update();
+						if (a >= 0)
+						{
+							auto b2 = inventor.slot.get(inventor.nowSlot);
+							b2.child<DrawObj>("sel").hide();
+							int a2 = inventor.slots[inventor.nowSlot].num;
+							inventor.slots[inventor.nowSlot].num = inventor.slots[a].num;
+							inventor.slots[a].num = a2;
+							swap(inventor.slots[inventor.nowSlot], inventor.slots[a]);
+							inventor.updateSlot(inventor.nowSlot);
+							inventor.updateSlot(a);
+							design.update();
+						}
 					}
 				}
 			}
