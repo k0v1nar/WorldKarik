@@ -1,5 +1,5 @@
 forest
-6
+9
 grass
 	100
 	fon
@@ -42,13 +42,32 @@ berry_life
 	1
 	100
 	heal_berry
-	
+mini_boulder
+	20
+	obj
+	10
+	roundWorld/mini_boulder.png
+	1
+	100
+	stone
+stick
+	30
+	obj
+	10
+	roundWorld/stick.png
+	1
+	100
+	stick
 spider_normal
 	15
 	enemy
 	Normal
 	enemy/spider.png
-	
+pig_normal
+	10
+	enemy
+	Normal
+	enemy/pig.png
 swamp
 2
 grass

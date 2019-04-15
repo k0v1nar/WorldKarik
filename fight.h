@@ -27,7 +27,10 @@ struct Attac
 };
 struct yOu
 {
+	float Maxlife;
 	float life;
+	float armorN;
+	float armorM;
 };
 struct enemyInfo
 {
@@ -68,9 +71,10 @@ class Fight
 			enemys.data(a).name = name;
 			enemys.data(a).type = type;
 		}
+		dataYou.life = dataYou.Maxlife;
 		for (auto& a : you.all())
 		{
-			dataYou.life = 50;
+			
 			a.child<FilledRect>("hp").setSize(196, 16);
 		}
 		updateYou();
@@ -121,7 +125,7 @@ class Fight
 			{
 				a.show();
 				a.child<Texture>("youm").setImageName("emodj0.png");
-				a.child<FilledRect>("hp").setSize(196 * (dataYou.life / 50), 16);
+				a.child<FilledRect>("hp").setSize(196 * (dataYou.life / dataYou.Maxlife), 16);
 			}
 		}
 	}
@@ -187,7 +191,10 @@ class Fight
 		{
 			if (positions[nowPos].count(a.id()))
 			{
-				dataYou.life -= enemys.data(a).dam;
+				if (dataYou.armorN < enemys.data(a).dam)
+					dataYou.life -= enemys.data(a).dam;
+				else
+					dataYou.life--;
 				auto b = you.get(nowPos);
 				auto& c = dam_.load("dam_anim.json", b.box().center().x + randomInt(-50, 50), b.box().center().y + randomInt(-50, 50));
 				c.skin<Label>().setText("-" + toString(enemys.data(a).dam));

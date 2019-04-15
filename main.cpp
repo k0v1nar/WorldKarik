@@ -78,26 +78,34 @@ class MyApp : public App
 				if (inventor.slots[inventor.nowSlot].data.armor.type == boots)
 				{
 					icon_del("boots");
+					fight.dataYou.armorN -= inventor.slots[inventor.nowSlot].data.armor.def;
 				}
 				if (inventor.slots[inventor.nowSlot].data.armor.type == chesplat)
 				{
 					icon_del("chair_armor");
+					fight.dataYou.armorN -= inventor.slots[inventor.nowSlot].data.armor.def;
 				}
 				if (inventor.slots[inventor.nowSlot].data.armor.type == helmet)
 				{
 					icon_del("helmet");
+					fight.dataYou.armorN -= inventor.slots[inventor.nowSlot].data.armor.def;
 				}
 				if (inventor.slots[inventor.nowSlot].data.armor.type == leggs)
 				{
 					icon_del("legss");
+					fight.dataYou.armorN -= inventor.slots[inventor.nowSlot].data.armor.def;
 				}
+				updateStats();
 				inventor.slots[inventor.nowSlot].data.armor.active = false;
 				inventor.updateSlot(inventor.nowSlot);
 				inventor.nowSlot = -1;
 			}
 		Menu.hide();
 	}
-	
+	void updateStats()
+	{
+		stats.get<Label>(3).setText(tr("arm") + toString(fight.dataYou.armorN));
+	}
 	void handuse(bool i)
 	{
 
@@ -107,6 +115,7 @@ class MyApp : public App
 			{
 				icon_use("weapon1", inventor.nowSlot);
 				MenuW.hide();
+				
 				inventor.slot.get(inventor.nowSlot).child<Texture>("left").show();
 				inventor.slots[inventor.nowSlot].data.weapon.active = true;
 				inventor.slots[inventor.nowSlot].data.weapon.isLeft = true;
@@ -172,19 +181,24 @@ class MyApp : public App
 				if (inventor.slots[inventor.nowSlot].data.armor.type == boots)
 				{
 					icon_use("boots", inventor.nowSlot);
+					fight.dataYou.armorN += inventor.slots[inventor.nowSlot].data.armor.def;
 				}
 				if (inventor.slots[inventor.nowSlot].data.armor.type == chesplat)
 				{
 					icon_use("chair_armor", inventor.nowSlot);
+					fight.dataYou.armorN += inventor.slots[inventor.nowSlot].data.armor.def;
 				}
 				if (inventor.slots[inventor.nowSlot].data.armor.type == helmet)
 				{
 					icon_use("helmet", inventor.nowSlot);
+					fight.dataYou.armorN += inventor.slots[inventor.nowSlot].data.armor.def;
 				}
 				if (inventor.slots[inventor.nowSlot].data.armor.type == leggs)
 				{
 					icon_use("legss", inventor.nowSlot);
+					fight.dataYou.armorN += inventor.slots[inventor.nowSlot].data.armor.def;
 				}
+				updateStats();
 				inventor.slots[inventor.nowSlot].data.armor.active = true;
 				inventor.updateSlot(inventor.nowSlot);
 				inventor.nowSlot = -1;
@@ -427,26 +441,29 @@ class MyApp : public App
 		}	
 		string b;
 		input >> b;
-		auto& name = stats.load<Label>("stat.json");	
+		auto& name = stats.load<Label>(0,"stat.json");	
 		name.setText(tr("name") + b);
 		input >> b;
-		auto& clas = stats.load<Label>("stat.json");
+		auto& clas = stats.load<Label>(1,"stat.json");
 		clas.setText(tr("class") + tr(b));
 		int b2;
 		input >> b2;
-		auto& lev = stats.load<Label>("stat.json");
+		auto& lev = stats.load<Label>(2,"stat.json");
 		lev.setText(tr("level") + toString(b2));
 		input >> b2;
-		auto& life = stats.load<Label>("stat.json");
+		auto& life = stats.load<Label>(3,"stat.json");
 		life.setText(tr("life") + toString(b2));
+		fight.dataYou.Maxlife = b2;
 		input >> b2;
-		auto& armor = stats.load<Label>("stat.json");
+		auto& armor = stats.load<Label>(4,"stat.json");
 		armor.setText(tr("arm") + toString(b2));
+		fight.dataYou.armorN = b2;
 		input >> b2;
-		auto& armorM = stats.load<Label>("stat.json");
+		auto& armorM = stats.load<Label>(5,"stat.json");
 		armorM.setText(tr("armM") + toString(b2));
+		fight.dataYou.armorM = b2;
 		input >> b2;
-		auto& manna = stats.load<Label>("stat.json");
+		auto& manna = stats.load<Label>(6,"stat.json");
 		manna.setText(tr("manna") + toString(b2));
 	}
 	
@@ -638,8 +655,6 @@ class MyApp : public App
 		connect(continue_m, menu, true);
 		connect(exit_m, menu, false);
 		readPerson();
-		inventor.seekSlot("wooden_axe",weapons,1);
-		inventor.seekSlot("lowheal",potions,15);
 	}
 	void menu(bool i)
 	{
@@ -1014,30 +1029,137 @@ class MyApp : public App
 				if (world.nowObjInter == true)
 				{
 					if (world.Front.data(world.nowObj).typ == Obj)
-					{
-						world.Front.data(world.nowObj).vision -= 25.5;
-						auto color = world.nowObj.skin<Texture>().color();
-						color.a = world.Front.data(world.nowObj).vision;
-						world.nowObj.skin<Texture>().setColor(color);
-						world.Front.data(world.nowObj).hp -= 10;
-						auto& b = world.DB["forest"][world.Front.data(world.nowObj).type];
-						for (auto& b2 : b.obect.drop)
+					{ 
+						bool cac = false;
+						if (world.Front.data(world.nowObj).type == "tree")
 						{
-							int dd2 = randomInt(1, 100);
-							if (dd2 <= b2.chance)
+							int i = 0;
+							for (auto a : inventor.slot.all())
 							{
-								inventor.seekSlot(b2.name, resources, 1);
+								if (inventor.slots[i].data.weapon.active && inventor.slots[i].type == weapons)
+								{
+									if (inventor.slots[i].type == weapons && inventor.slots[i].data.weapon.isLeft)
+									{
+										if (inventor.slots[i].data.weapon.typeW == inventor.slots[i].data.weapon.axe)
+										{
+											cac = true;
+										}
+									}
+									if (inventor.slots[i].type == weapons && !inventor.slots[i].data.weapon.isLeft)
+									{
+										if (inventor.slots[i].data.weapon.typeW == inventor.slots[i].data.weapon.axe)
+										{
+											cac = true;
+										}
+									}
+								}
+								i++;
+							}
+							if (cac)
+							{
+								world.Front.data(world.nowObj).vision -= 25.5;
+								auto color = world.nowObj.skin<Texture>().color();
+								color.a = world.Front.data(world.nowObj).vision;
+								world.nowObj.skin<Texture>().setColor(color);
+								world.Front.data(world.nowObj).hp -= 10;
+								auto& b = world.DB["forest"][world.Front.data(world.nowObj).type];
+								for (auto& b2 : b.obect.drop)
+								{
+									int dd2 = randomInt(1, 100);
+									if (dd2 <= b2.chance)
+									{
+										inventor.seekSlot(b2.name, resources, 1);
+									}
+								}
+								if (world.Front.data(world.nowObj).hp <= 0)
+								{
+									auto obj = world.Front.find(world.nowObj).front();
+									GameObj i;
+									world.nowObj = i;
+									world.chunks[Vec2ToIntVec2(obj.pos())].map[world.Front.data(obj).thisObj] = None;
+									obj.kill();
+									world.nowObjInter = false;
+								}
+							}
+						} else if (world.Front.data(world.nowObj).type == "stone")
+						{
+							int i = 0;
+							for (auto a : inventor.slot.all())
+							{
+								if (inventor.slots[i].data.weapon.active && inventor.slots[i].type == weapons)
+								{
+									if (inventor.slots[i].type == weapons && inventor.slots[i].data.weapon.isLeft)
+									{
+										if (inventor.slots[i].data.weapon.typeW == inventor.slots[i].data.weapon.pickaxe)
+										{
+											cac = true;
+										}
+									}
+									if (inventor.slots[i].type == weapons && !inventor.slots[i].data.weapon.isLeft)
+									{
+										if (inventor.slots[i].data.weapon.typeW == inventor.slots[i].data.weapon.pickaxe)
+										{
+											cac = true;
+										}
+									}
+								}
+								i++;
+							}
+							if (cac)
+							{
+								world.Front.data(world.nowObj).vision -= 25.5;
+								auto color = world.nowObj.skin<Texture>().color();
+								color.a = world.Front.data(world.nowObj).vision;
+								world.nowObj.skin<Texture>().setColor(color);
+								world.Front.data(world.nowObj).hp -= 10;
+								auto& b = world.DB["forest"][world.Front.data(world.nowObj).type];
+								for (auto& b2 : b.obect.drop)
+								{
+									int dd2 = randomInt(1, 100);
+									if (dd2 <= b2.chance)
+									{
+										inventor.seekSlot(b2.name, resources, 1);
+									}
+								}
+								if (world.Front.data(world.nowObj).hp <= 0)
+								{
+									auto obj = world.Front.find(world.nowObj).front();
+									GameObj i;
+									world.nowObj = i;
+									world.chunks[Vec2ToIntVec2(obj.pos())].map[world.Front.data(obj).thisObj] = None;
+									obj.kill();
+									world.nowObjInter = false;
+								}
 							}
 						}
-						if (world.Front.data(world.nowObj).hp <= 0)
+						else
 						{
-							auto obj = world.Front.find(world.nowObj).front();
-							GameObj i;
-							world.nowObj = i;
-							world.chunks[Vec2ToIntVec2(obj.pos())].map[world.Front.data(obj).thisObj] = None;
-							obj.kill();
-							world.nowObjInter = false;
+								world.Front.data(world.nowObj).vision -= 25.5;
+								auto color = world.nowObj.skin<Texture>().color();
+								color.a = world.Front.data(world.nowObj).vision;
+								world.nowObj.skin<Texture>().setColor(color);
+								world.Front.data(world.nowObj).hp -= 10;
+								auto& b = world.DB["forest"][world.Front.data(world.nowObj).type];
+								for (auto& b2 : b.obect.drop)
+								{
+									int dd2 = randomInt(1, 100);
+									if (dd2 <= b2.chance)
+									{
+										inventor.seekSlot(b2.name, resources, 1);
+									}
+								}
+								if (world.Front.data(world.nowObj).hp <= 0)
+								{
+									auto obj = world.Front.find(world.nowObj).front();
+									GameObj i;
+									world.nowObj = i;
+									world.chunks[Vec2ToIntVec2(obj.pos())].map[world.Front.data(obj).thisObj] = None;
+									obj.kill();
+									world.nowObjInter = false;
+								}
 						}
+						
+						
 					}
 					else if (world.Front.data(world.nowObj).typ == Enemy)
 					{
@@ -1170,7 +1292,6 @@ class MyApp : public App
 	FromDesign(Layout, MenuP);
 	FromDesign(Layout, stats);
 	FromDesign(Label, coldrop);
-	
 	
 };
 

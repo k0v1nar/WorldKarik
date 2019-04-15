@@ -1,16 +1,28 @@
 Normal
-1
-spider_normal
-1
-1
-0
-1
-meeleN
-20
-15
-enemy/spider.png
 2
-100
-string
-75
-bottle
+spider_normal
+	1
+	1
+	0
+	1
+	meeleN
+	20
+	15
+	enemy/spider.png
+	2
+	100
+	string
+	75
+	bottle
+pig_normal
+	1
+	2
+	0
+	5
+	meeleN
+	80
+	15
+	enemy/pig.png
+	1
+	100
+	bottle

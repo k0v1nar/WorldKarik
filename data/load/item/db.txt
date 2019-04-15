@@ -33,7 +33,7 @@ wooden_sword
 	1
 	sword
 	1
-	5
+	10
 	obj/sword.png
 wooden_pickaxe
 	weapon

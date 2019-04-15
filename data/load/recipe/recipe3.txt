@@ -1,14 +1,4 @@
-3
-rope
-	1
-	string
-		0
-		8
-string
-	1
-	grass
-		0
-		1
+1
 lowheal
 	2
 	bottle
