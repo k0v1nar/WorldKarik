@@ -156,7 +156,7 @@ class Fight
 	{
 		for (auto& c : enemys.all())
 		{
-			if (c.id() == b)
+			if (c.id() == b && positions[nowPos].count(c.id()))
 			{
 				if (a.TypeD == 1)
 				{

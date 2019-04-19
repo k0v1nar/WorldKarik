@@ -102,10 +102,12 @@ class MyApp : public App
 			}
 		Menu.hide();
 	}
+
 	void updateStats()
 	{
-		stats.get<Label>(3).setText(tr("arm") + toString(fight.dataYou.armorN));
+		stats.get<Label>(4).setText(tr("arm") + toString(fight.dataYou.armorN));
 	}
+
 	void handuse(bool i)
 	{
 
@@ -655,6 +657,12 @@ class MyApp : public App
 		connect(continue_m, menu, true);
 		connect(exit_m, menu, false);
 		readPerson();
+		inventor.seekSlot("wooden_boots", armors, 1);
+		inventor.seekSlot("wooden_leggs", armors, 1);
+		inventor.seekSlot("wooden_chesplate", armors, 1);
+		inventor.seekSlot("wooden_helmet", armors, 1);
+		inventor.seekSlot("wooden_sword", weapons, 1);
+		inventor.seekSlot("lowheal", potions, 15);
 	}
 	void menu(bool i)
 	{
@@ -763,11 +771,14 @@ class MyApp : public App
 						auto a = inventor.slots[b.i];
 						if (a.data.potion.type == a.data.potion.Heal)
 						{
-							if (fight.dataYou.life + a.data.potion.PowEffects <= 50)
-								fight.dataYou.life += a.data.potion.PowEffects;
-							else
-								fight.dataYou.life = 50;
-							fight.updateYou();
+							if (fight.dataYou.life <= fight.dataYou.Maxlife*0.75)
+							{
+								if (fight.dataYou.life + a.data.potion.PowEffects <= fight.dataYou.Maxlife*0.75)
+									fight.dataYou.life += a.data.potion.PowEffects;
+								else
+									fight.dataYou.life = fight.dataYou.Maxlife*0.75;
+								fight.updateYou();
+							}
 							a.data.potion.num--;
 							inventor.delItem(a.name, 1);
 							design.child<Label>("fpotion1").setText(toString(a.data.potion.num));
@@ -788,10 +799,14 @@ class MyApp : public App
 						auto a = inventor.slots[b.i];
 						if (a.data.potion.type == a.data.potion.Heal)
 						{
-							if (fight.dataYou.life + a.data.potion.PowEffects <= 50)
-								fight.dataYou.life += a.data.potion.PowEffects;
-							else
-								fight.dataYou.life = 50;
+							if (fight.dataYou.life <= fight.dataYou.Maxlife*0.75)
+							{
+								if (fight.dataYou.life + a.data.potion.PowEffects <= fight.dataYou.Maxlife*0.75)
+									fight.dataYou.life += a.data.potion.PowEffects;
+								else
+									fight.dataYou.life = fight.dataYou.Maxlife*0.75;
+								fight.updateYou();
+							}
 							fight.updateYou();
 							a.data.potion.num--;
 							design.child<Label>("fpotion2").setText(toString(a.data.potion.num));
