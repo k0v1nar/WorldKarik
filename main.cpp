@@ -95,7 +95,6 @@ class MyApp : public App
 					icon_del("legss");
 					fight.dataYou.armorN -= inventor.slots[inventor.nowSlot].data.armor.def;
 				}
-				updateStats();
 				inventor.slots[inventor.nowSlot].data.armor.active = false;
 				inventor.updateSlot(inventor.nowSlot);
 				inventor.nowSlot = -1;
@@ -103,10 +102,6 @@ class MyApp : public App
 		Menu.hide();
 	}
 
-	void updateStats()
-	{
-		stats.get<Label>(4).setText(tr("arm") + toString(fight.dataYou.armorN));
-	}
 
 	void handuse(bool i)
 	{
@@ -200,7 +195,6 @@ class MyApp : public App
 					icon_use("legss", inventor.nowSlot);
 					fight.dataYou.armorN += inventor.slots[inventor.nowSlot].data.armor.def;
 				}
-				updateStats();
 				inventor.slots[inventor.nowSlot].data.armor.active = true;
 				inventor.updateSlot(inventor.nowSlot);
 				inventor.nowSlot = -1;
@@ -443,30 +437,16 @@ class MyApp : public App
 		}	
 		string b;
 		input >> b;
-		auto& name = stats.load<Label>(0,"stat.json");	
-		name.setText(tr("name") + b);
 		input >> b;
-		auto& clas = stats.load<Label>(1,"stat.json");
-		clas.setText(tr("class") + tr(b));
 		int b2;
 		input >> b2;
-		auto& lev = stats.load<Label>(2,"stat.json");
-		lev.setText(tr("level") + toString(b2));
 		input >> b2;
-		auto& life = stats.load<Label>(3,"stat.json");
-		life.setText(tr("life") + toString(b2));
 		fight.dataYou.Maxlife = b2;
 		input >> b2;
-		auto& armor = stats.load<Label>(4,"stat.json");
-		armor.setText(tr("arm") + toString(b2));
 		fight.dataYou.armorN = b2;
 		input >> b2;
-		auto& armorM = stats.load<Label>(5,"stat.json");
-		armorM.setText(tr("armM") + toString(b2));
 		fight.dataYou.armorM = b2;
 		input >> b2;
-		auto& manna = stats.load<Label>(6,"stat.json");
-		manna.setText(tr("manna") + toString(b2));
 	}
 	
 	void conmenu()
@@ -656,13 +636,13 @@ class MyApp : public App
 		connect(p2, potionuse, false);
 		connect(continue_m, menu, true);
 		connect(exit_m, menu, false);
-		readPerson();
 		inventor.seekSlot("wooden_boots", armors, 1);
 		inventor.seekSlot("wooden_leggs", armors, 1);
 		inventor.seekSlot("wooden_chesplate", armors, 1);
 		inventor.seekSlot("wooden_helmet", armors, 1);
 		inventor.seekSlot("wooden_sword", weapons, 1);
 		inventor.seekSlot("lowheal", potions, 15);
+		
 	}
 	void menu(bool i)
 	{
@@ -698,9 +678,9 @@ class MyApp : public App
 	void resultFight()
 	{
 		int d = 0;
-		for (auto& c : fight.enemys.all())
+		for (auto& c : fight.fight_map.all())
 		{
-			if (!c.isVisible())
+			if (!c.isVisible() && fight.fight_map.data(c).active)
 			{
 				d++;
 			}
@@ -708,10 +688,10 @@ class MyApp : public App
 		if (d == 5)
 		{
 			selector.select(1);
-			for (auto& a : fight.enemys.all())
+			for (auto& a : fight.fight_map.all())
 			{
-				string b = fight.enemys.data(a).name;
-				string c = fight.enemys.data(a).type;
+				string b = fight.fight_map.data(a).name;
+				string c = fight.fight_map.data(a).type;
 				for (auto& e : fight.DB[c].enemy[b].drop)
 				{
 					int f = randomInt(1, 100);
@@ -740,13 +720,7 @@ class MyApp : public App
 					auto b = inventor.findWeapon(true);
 					if (b.is)
 					{
-						int a = fight.enemyPosLocat();
-						if (a >= 0)
-						{
-							fight.resultAttact(attact(true), a);
-							resultFight();
-							fight.enemyAttact();
-						}
+						
 					}
 				}
 				if (input.justPressed(MouseRight))
@@ -754,13 +728,7 @@ class MyApp : public App
 					auto b = inventor.findWeapon(false);
 					if (b.is)
 					{
-						int a = fight.enemyPosLocat();
-						if (a >= 0)
-						{
-							fight.resultAttact(attact(false), a);
-							resultFight();
-							fight.enemyAttact();
-						}
+						
 					}
 				}
 				if (input.justPressed(Q))
@@ -788,7 +756,6 @@ class MyApp : public App
 								design.child<Layout>("potion1f").hide();
 							}
 						}
-						fight.enemyAttact();
 					}
 				}
 				else if (input.justPressed(E))
@@ -817,20 +784,27 @@ class MyApp : public App
 								design.child<Layout>("potion2f").hide();
 							}
 						}
-						fight.enemyAttact();
 					}
 				}
-				else if (fight.nowPos>0 && input.justPressed(A))
+				else if (fight.nowPos.x>0 && input.justPressed(A))
 				{
-					fight.nowPos--;
-					fight.updateYou();
-					fight.enemyAttact();
+					fight.nowPos.x--;
+					fight.you.get(0).move(w_f, 0);
 				}
-				else if (fight.nowPos<4 && input.justPressed(D))
+				else if (fight.nowPos.x<4 && input.justPressed(D))
 				{
-					fight.nowPos++;
-					fight.updateYou();
-					fight.enemyAttact();
+					fight.nowPos.x++;
+					fight.you.get(0).move(-w_f, 0);
+				}
+				else if (fight.nowPos.y > 0 && input.justPressed(S))
+				{
+					fight.nowPos.y--;
+					fight.you.get(0).move(0, -h_f);
+				}
+				else if (fight.nowPos.y < 3 && input.justPressed(W))
+				{
+					fight.nowPos.y++;
+					fight.you.get(0).move(0, h_f);
 				}
 			}
 		}
@@ -1189,7 +1163,7 @@ class MyApp : public App
 						design.child<Layout>("weapon2f").hide();
 						design.child<Layout>("potion1f").hide();
 						design.child<Layout>("potion2f").hide();
-						for (auto a : inventor.slot.all())
+						/*for (auto a : inventor.slot.all())
 						{
 							if ((inventor.slots[i].data.armor.active && inventor.slots[i].type == armors) ||
 								(inventor.slots[i].data.weapon.active && inventor.slots[i].type == weapons) ||
@@ -1220,7 +1194,7 @@ class MyApp : public App
 							}
 							i++;
 						}
-						
+						*/
 					}
 				}
 			}
@@ -1243,23 +1217,19 @@ class MyApp : public App
 			}
 		}
 		if (selector.selected()==3)
-		for (auto& a : fight.you.all())
-		{
 			if (fight.dataYou.life <= 0)
 			{
 				selector.select(1);
 				hideCursor();
 				world.nowObj = GameObj();
 			}
-		}
     }
 
 	World world;
 	Inventor inventor;
 	Fight fight;
 
-	LayerFromDesign(void, you);
-	LayerFromDesign(void, enemys);
+	LayerFromDesign(enemyType, fight_map);
 	LayerFromDesign(void, slot2);
 	LayerFromDesign(void, Player);
 	FromDesign(Button, continue_m);
@@ -1305,7 +1275,6 @@ class MyApp : public App
 	FromDesign(Layout, Menudr);
 	FromDesign(Layout, MenuW);
 	FromDesign(Layout, MenuP);
-	FromDesign(Layout, stats);
 	FromDesign(Label, coldrop);
 	
 };
@@ -1317,6 +1286,8 @@ int main(int argc, char** argv)
     app.setDesign("Design.json");
 	randomize();
 	w = sf::VideoMode::getDesktopMode().width / 10.0;
+	w_f = sf::VideoMode::getDesktopMode().width / 5;
+	h_f = (sf::VideoMode::getDesktopMode().height-216) / 4;
 	h = sf::VideoMode::getDesktopMode().height / 6.0;
 	hf = sf::VideoMode::getDesktopMode().height / 3;
 	w3 = sf::VideoMode::getDesktopMode().width * 0.11;
