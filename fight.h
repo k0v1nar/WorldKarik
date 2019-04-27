@@ -16,7 +16,7 @@ struct enemyType
 	int armM;
 	int level;
 	int dam;
-	int Maxlife;
+	int Maxlife=100;
 	int change_miss;
 	string file;
 	string typeD;
@@ -87,11 +87,12 @@ class Fight
 					fight_map.data(a).dam = DB[type].enemy[name].dam;
 					fight_map.data(a).name = name;
 					fight_map.data(a).type = type;
+					fight_map.data(a).active = true;
 				}
 			}
 		}
 		dataYou.life = dataYou.Maxlife;
-		updateYou();
+		//updateYou();
 	}
 
 	void loadDB()

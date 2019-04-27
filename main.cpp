@@ -675,39 +675,6 @@ class MyApp : public App
 			i++;
 		}
 	}
-	void resultFight()
-	{
-		int d = 0;
-		for (auto& c : fight.fight_map.all())
-		{
-			if (!c.isVisible() && fight.fight_map.data(c).active)
-			{
-				d++;
-			}
-		}
-		if (d == 5)
-		{
-			selector.select(1);
-			for (auto& a : fight.fight_map.all())
-			{
-				string b = fight.fight_map.data(a).name;
-				string c = fight.fight_map.data(a).type;
-				for (auto& e : fight.DB[c].enemy[b].drop)
-				{
-					int f = randomInt(1, 100);
-					if (f <= e.second)
-					{
-						if (inventor.DB[e.first].type == resources)
-						inventor.seekSlot(e.first, resources, 1);
-						if (inventor.DB[e.first].type == potions)
-							inventor.seekSlot(e.first, potions, 1);
-					}
-				}
-			}
-			hideCursor();
-			world.nowObj = GameObj();
-		}
-	}
 	void process(Input input)
     {
         using namespace gamebase::InputKey;
