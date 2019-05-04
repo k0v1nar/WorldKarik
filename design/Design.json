@@ -10016,8 +10016,8 @@
                            "_typeName" : "RelativeBox",
                            "height" : {
                               "_typeName" : "RelativeValue",
-                              "type" : 0,
-                              "value" : 0.0
+                              "type" : 3,
+                              "value" : 216.0
                            },
                            "offset" : {
                               "_empty" : true
@@ -10095,20 +10095,7 @@
                                           {
                                              "_typeName" : "StaticTextureRect",
                                              "box" : {
-                                                "_typeName" : "RelativeBox",
-                                                "height" : {
-                                                   "_typeName" : "RelativeValue",
-                                                   "type" : 0,
-                                                   "value" : 0.0
-                                                },
-                                                "offset" : {
-                                                   "_empty" : true
-                                                },
-                                                "width" : {
-                                                   "_typeName" : "RelativeValue",
-                                                   "type" : 0,
-                                                   "value" : 0.0
-                                                }
+                                                "_typeName" : "SquareBox"
                                              },
                                              "color" : [ 1.0, 1.0, 1.0, 1.0 ],
                                              "imageName" : ".\\emodj0.png",
@@ -10461,11 +10448,11 @@
                                              "type" : 1,
                                              "value" : 0.0
                                           },
-                                          "vertAlign" : 2,
+                                          "vertAlign" : 1,
                                           "vertOffset" : {
                                              "_typeName" : "RelativeValue",
                                              "type" : 1,
-                                             "value" : 200.0
+                                             "value" : 0.0
                                           }
                                        }
                                     },
@@ -10485,7 +10472,7 @@
                               "type" : 1,
                               "value" : 0.0
                            },
-                           "vertAlign" : 1,
+                           "vertAlign" : 0,
                            "vertOffset" : {
                               "_typeName" : "RelativeValue",
                               "type" : 1,

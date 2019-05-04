@@ -684,94 +684,53 @@ class MyApp : public App
 			{
 				if (input.justPressed(MouseLeft))
 				{
-					auto b = inventor.findWeapon(true);
-					if (b.is)
-					{
-						
-					}
+
 				}
 				if (input.justPressed(MouseRight))
 				{
-					auto b = inventor.findWeapon(false);
-					if (b.is)
-					{
-						
-					}
+
 				}
 				if (input.justPressed(Q))
 				{
-					auto b = inventor.findPotion(true);
-					if (b.is)
-					{
-						auto a = inventor.slots[b.i];
-						if (a.data.potion.type == a.data.potion.Heal)
-						{
-							if (fight.dataYou.life <= fight.dataYou.Maxlife*0.75)
-							{
-								if (fight.dataYou.life + a.data.potion.PowEffects <= fight.dataYou.Maxlife*0.75)
-									fight.dataYou.life += a.data.potion.PowEffects;
-								else
-									fight.dataYou.life = fight.dataYou.Maxlife*0.75;
-								fight.updateYou();
-							}
-							a.data.potion.num--;
-							inventor.delItem(a.name, 1);
-							design.child<Label>("fpotion1").setText(toString(a.data.potion.num));
-							design.update();
-							if (a.data.potion.num <= 0)
-							{
-								design.child<Layout>("potion1f").hide();
-							}
-						}
-					}
+					
 				}
 				else if (input.justPressed(E))
 				{
-					auto b = inventor.findPotion(false);
-					if (b.is)
-					{
-						auto a = inventor.slots[b.i];
-						if (a.data.potion.type == a.data.potion.Heal)
-						{
-							if (fight.dataYou.life <= fight.dataYou.Maxlife*0.75)
-							{
-								if (fight.dataYou.life + a.data.potion.PowEffects <= fight.dataYou.Maxlife*0.75)
-									fight.dataYou.life += a.data.potion.PowEffects;
-								else
-									fight.dataYou.life = fight.dataYou.Maxlife*0.75;
-								fight.updateYou();
-							}
-							fight.updateYou();
-							a.data.potion.num--;
-							design.child<Label>("fpotion2").setText(toString(a.data.potion.num));
-							design.update();
-							inventor.delItem(a.name, 1);
-							if (a.data.potion.num <= 0)
-							{
-								design.child<Layout>("potion2f").hide();
-							}
-						}
-					}
+					
 				}
 				else if (fight.nowPos.x>0 && input.justPressed(A))
 				{
-					fight.nowPos.x--;
-					fight.you.get(0).move(w_f, 0);
+
+					if (!fight.fight_map.data((fight.nowPos.x-1)*4 + fight.nowPos.y).active)
+					{
+						fight.nowPos.x--;
+						fight.you.move(-w_f, 0);
+					}
+
 				}
 				else if (fight.nowPos.x<4 && input.justPressed(D))
 				{
-					fight.nowPos.x++;
-					fight.you.get(0).move(-w_f, 0);
+					if (!fight.fight_map.data((fight.nowPos.x+1)*4 + fight.nowPos.y).active)
+					{
+						fight.nowPos.x++;
+						fight.you.move(w_f, 0);
+					}
 				}
 				else if (fight.nowPos.y > 0 && input.justPressed(S))
 				{
-					fight.nowPos.y--;
-					fight.you.get(0).move(0, -h_f);
+					if (!fight.fight_map.data(fight.nowPos.x*4 + fight.nowPos.y-1).active)
+					{
+						fight.nowPos.y--;
+						fight.you.move(0, -h_f);
+					}
 				}
 				else if (fight.nowPos.y < 3 && input.justPressed(W))
 				{
-					fight.nowPos.y++;
-					fight.you.get(0).move(0, h_f);
+					if (!fight.fight_map.data(fight.nowPos.x*4 + fight.nowPos.y + 1).active)
+					{
+						fight.nowPos.y++;
+						fight.you.move(0, h_f);
+					}
 				}
 			}
 		}
@@ -1119,12 +1078,13 @@ class MyApp : public App
 					}
 					else if (world.Front.data(world.nowObj).typ == Enemy)
 					{
-						auto obj = world.Front.find(world.nowObj).front();
 						selector.select(3);
 						fight.loadMap(world.Front.data(world.nowObj).type, world.Front.data(world.nowObj).rare);
-						obj.kill();
-						showCursor();
+						world.nowObj.kill();
+						world.nowObj = GameObj();
+						fightField.setView(2*w_f,1.5*h_f);
 						world.nowObjInter = false;
+						showCursor();
 						int i=0;
 						design.child<Layout>("weapon1f").hide();
 						design.child<Layout>("weapon2f").hide();
@@ -1188,7 +1148,6 @@ class MyApp : public App
 			{
 				selector.select(1);
 				hideCursor();
-				world.nowObj = GameObj();
 			}
     }
 

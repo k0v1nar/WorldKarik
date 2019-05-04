@@ -34,14 +34,14 @@ struct Attac
 
 struct yOu
 {
-	float Maxlife;
-	float life;
+	float Maxlife=100;
+	float life=100;
 	float armorN;
 	float armorM;
-	float energy;
-	float mana;
-	float Maxmana;
-	float Maxenergy;
+	float energy=100;
+	float mana=100;
+	float Maxmana=100;
+	float Maxenergy=100;
 };
 
 
@@ -56,8 +56,9 @@ class Fight
 
 	void load(Layout design,float h2)
 	{
+		this->design = design;
 		fight_map = design.child<Layer<enemyType>>("fight_map");
-		you = design.child<Layer<yOu>>("you");
+		you = design.child<Layer<void>>("you").get(0);
 		dam_ = design.child<Layer<void>>("dam_");
 		loadDB();
 	}
@@ -68,21 +69,18 @@ class Fight
 		nowPos.y = 0;
 		Your = true;
 		int i = randomInt(3, 7);
-		for (int x = 1; x <= 5; x++)
+		for (int x = 0; x < 5; x++)
 		{
-			for (int y = 1; y <= 4; y++)
+			for (int y = 0; y < 4; y++)
 			{
 				auto a = fight_map.load("slot_fight.json", w_f*x, h_f*y);
 				a.setSize(w_f, h_f);
-				if (randomInt(1, 20) < 5)
+				if (i > 0 && randomInt(1, 20) < 5)
 				{
+					a.child<Layout>("enemy").show();
 					a.child<Texture>("enem").setImageName(DB[type].enemy[name].file);
-					i--;
-					if (i <= 0)
-					{
-						break;
-					}
 					a.child<FilledRect>("life").setSize(w_f, 10);
+					i--;
 					fight_map.data(a).life = DB[type].enemy[name].Maxlife;
 					fight_map.data(a).dam = DB[type].enemy[name].dam;
 					fight_map.data(a).name = name;
@@ -92,7 +90,10 @@ class Fight
 			}
 		}
 		dataYou.life = dataYou.Maxlife;
-		//updateYou();
+		dataYou.mana = dataYou.Maxmana;
+		dataYou.energy = dataYou.Maxenergy;
+		you.setSize(w_f, h_f);
+		updateYou();
 	}
 
 	void loadDB()
@@ -131,18 +132,20 @@ class Fight
 
 	void updateYou()
 	{
-		auto a = you.get(0);
-		a.child<FilledRect>("life_you").setSize(w_f * (dataYou.life / dataYou.Maxlife), 16);
-		a.child<FilledRect>("energy_you").setSize(w_f*(dataYou.energy/dataYou.Maxenergy),10);
-		a.child<FilledRect>("mana_you").setSize(w_f*(dataYou.mana/dataYou.Maxmana), 10);
+		you.setPos(nowPos.x*w_f,nowPos.y*h_f);
+		you.child<FilledRect>("life_you").setSize(w_f * (dataYou.life / dataYou.Maxlife), 8);
+		you.child<FilledRect>("energy_you").setSize(w_f * (dataYou.energy/dataYou.Maxenergy),8);
+		you.child<FilledRect>("mana_you").setSize(w_f * (dataYou.mana/dataYou.Maxmana), 8);
+		design.update();
 	}
 	
+	Layout design;
 	yOu dataYou;
 	int Kill = 0;
 	bool Your;
 	IntVec2 nowPos=IntVec2(3,0);
 	map<string , enemyDB> DB;
-	Layer<yOu> you;
+	GameObj you;
 	Layer<enemyType> fight_map;
 	Layer<void> dam_; 
 	

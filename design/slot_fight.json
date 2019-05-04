@@ -236,7 +236,7 @@
                         "type" : 1,
                         "value" : 0.0
                      },
-                     "vertAlign" : 2,
+                     "vertAlign" : 0,
                      "vertOffset" : {
                         "_typeName" : "RelativeValue",
                         "type" : 1,
